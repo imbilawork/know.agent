@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Skills Explained — An Imbila.AI Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:26px;height:26px;">
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#cases">Cases</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="8" width="28" height="32" rx="3" stroke="var(--text-muted)" stroke-width="2" fill="none"/>
+      <line x1="16" y1="16" x2="32" y2="16" stroke="var(--honey-dark)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="22" x2="28" y2="22" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="27" x2="30" y2="27" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="36" cy="34" r="8" fill="#EDAF42"/>
+      <path d="M33 34l2 2 4-4" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>Claude Code Skills<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">Turn your AI coding agent into a specialist. On demand.</p>
+  <div class="hero-meta">
+    <span>Claude Code · Anthropic</span>
+    <span>SKILL.md Pattern</span>
+    <span>Context on Demand</span>
+    <span>Open Ecosystem</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT ARE CLAUDE CODE SKILLS ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Are Claude Code Skills</div>
+  <h2>Specialised knowledge, <span class="accent">loaded only when needed.</span></h2>
+  <p style="margin-bottom:24px;">Claude Code is Anthropic's command-line AI coding agent. Out of the box, it's a strong generalist — it can write code, run tests, refactor files, and navigate repos. But it doesn't know <em>your</em> preferred tech stack, your company's API conventions, or the latest community techniques for a tool released last month. Skills fix that.</p>
+  <p>A skill is a Markdown file (typically <code>SKILL.md</code>) that contains instructions, best practices, and executable workflows for a specific domain. When you invoke a skill, its contents are loaded into Claude's context window — giving it focused expertise for exactly the task at hand, without bloating every interaction with irrelevant instructions.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Generic knowledge decays fast</h4>
+      <p style="font-size:14px;">AI models are trained on data that's months or years old. Community best practices, new tool versions, and emerging patterns aren't in the training data. A prompt instruction from six months ago produces mediocre results today.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Context on demand</h4>
+      <p style="font-size:14px;">Skills are modular instruction sets stored as files. They're only loaded when relevant — keeping the base agent lean while giving it deep expertise when you need it. Think of them as context cartridges you snap in and out.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Specialist output from a generalist agent</h4>
+      <p style="font-size:14px;">Your AI assistant goes from "I can probably help with that" to "here's exactly how to do this, based on what's working right now." The difference in output quality is substantial — and measurable.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">📄</div>
+      <div class="flow-label">SKILL.md</div>
+      <div class="flow-desc">Instructions file</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">💬</div>
+      <div class="flow-label">Trigger</div>
+      <div class="flow-desc">User invokes skill</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🧠</div>
+      <div class="flow-label">Context Load</div>
+      <div class="flow-desc">Injected into agent</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">⚡</div>
+      <div class="flow-label">Specialist Output</div>
+      <div class="flow-desc">Domain-expert results</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The skills ecosystem <span class="accent">is growing fast.</span></h2>
+  <p style="margin-bottom:40px;">Claude Code skills went from a niche developer trick to a full ecosystem in a matter of months. Marketplaces have emerged, curated lists are actively maintained, and individual skills like the Remotion video skill have gone viral. This isn't theoretical — the community is building, sharing, and using these at scale.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">87K+</div>
+      <div class="stat-label">Skills on SkillsMP marketplace</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">10K+</div>
+      <div class="stat-label">GitHub stars on /last30days</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">17.3K</div>
+      <div class="stat-label">Likes on Remotion skill launch</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">9</div>
+      <div class="stat-label">Signal sources in /last30days v2.9</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use a long system prompt?</h4>
+    <p style="font-size:14px; margin-top:8px;">You could jam all your instructions into <code>CLAUDE.md</code>, but context windows are finite and attention degrades with length. The community consensus: keep your base CLAUDE.md short (around 1K tokens) and use skills for "context on demand." This way, the agent only loads specialist knowledge when it's relevant — keeping every interaction sharp and focused.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Anatomy of a skill. <span class="accent">Four moving parts.</span></h2>
+  <p style="margin-bottom:40px;">Skills follow a consistent pattern. Once you understand the structure, you can read any skill, write your own, or evaluate whether a community skill is worth installing.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Part 01</h3>
+      <h4>SKILL.md — The Instruction File</h4>
+      <p style="font-size:14px;">The core of every skill. A Markdown file containing instructions, constraints, workflow steps, and output templates. This is what gets injected into the agent's context when the skill is triggered. The best skills are specific about format, order of operations, and anti-patterns to avoid.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs"># ~/.claude/skills/last30days/SKILL.md</span>
+
+<span class="ck">Research</span> <span class="cv">ANY topic across Reddit, X,</span>
+<span class="cv">Bluesky, YouTube, TikTok, HN, Polymarket.</span>
+
+<span class="ck">Parse</span> <span class="cv">the user's input for:</span>
+  <span class="cv">TOPIC: What they want to learn about</span>
+  <span class="cv">TARGET TOOL: Where they'll use prompts</span></pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Part 02</h3>
+      <h4>Trigger Description</h4>
+      <p style="font-size:14px;">Skills need a description that tells the agent <em>when</em> to activate them. This is essentially a routing instruction — it contains the keywords and intent patterns that should cause the skill to load. Good descriptions are specific; bad ones are vague and cause false triggers or missed activations.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Part 03</h3>
+      <h4>Scripts &amp; Executables</h4>
+      <p style="font-size:14px;">Many skills aren't just instructions — they include actual code. The /last30days skill ships with a full Python pipeline: API clients for Reddit, X, YouTube, and more, plus scoring, deduplication, and rendering modules. The SKILL.md tells the agent how to orchestrate these scripts.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Part 04</h3>
+      <h4>Fixtures &amp; Tests</h4>
+      <p style="font-size:14px;">Production-grade skills include mock data for offline testing and evaluation scripts to measure output quality. This matters when you're building skills for business use — you need to know the skill produces consistent, reliable results before deploying it across a team.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · THE ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>Not just Claude Code. <span class="accent">An open pattern.</span></h2>
+  <p style="margin-bottom:40px;">While skills originated in Claude Code, the pattern has spread. Codex CLI, Gemini extensions, and other agents now support similar skill-loading mechanisms. The SKILL.md format is becoming a de facto standard for agent extensibility.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Marketplace</span>
+      <h4 style="margin-top:12px;">SkillsMP</h4>
+      <p style="font-size:14px;">The largest directory of community skills. Browse, install, and publish skills. Covers everything from document creation to security auditing to video production.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Curated Lists</span>
+      <h4 style="margin-top:12px;">awesome-claude-skills</h4>
+      <p style="font-size:14px;">Community-maintained GitHub repos that curate the best skills by category. Multiple lists compete for comprehensiveness — a sign of a healthy ecosystem.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Frameworks</span>
+      <h4 style="margin-top:12px;">Superpowers &amp; SuperClaude</h4>
+      <p style="font-size:14px;">Meta-frameworks that bundle multiple skills into coherent capability sets. Superpowers alone has 27K+ GitHub stars. These let you bootstrap a fully-loaded agent in one install.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Browse available skills</td>
+        <td><span class="tag">SkillsMP</span></td>
+        <td>Largest directory, searchable by category and use case</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Find vetted, high-quality skills</td>
+        <td><span class="tag">awesome-claude-skills</span></td>
+        <td>Curated by developers — quality over quantity</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Full agent capability upgrade</td>
+        <td><span class="tag">Superpowers</span></td>
+        <td>Bundled skill sets for common workflows</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Custom business workflow</td>
+        <td><span class="tag">Build your own</span></td>
+        <td>Maximum control — encode your team's exact process</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · CASE STUDY: /LAST30DAYS ═══════ -->
+<section id="cases" class="fade-up">
+  <div class="section-label">05 · Case Study: /last30days</div>
+  <h2>What a production skill <span class="accent">actually looks like.</span></h2>
+  <p style="margin-bottom:40px;">The /last30days skill by Matt Van Horn (co-founder of Lyft) is the most visible skill in the ecosystem — 10K+ GitHub stars and nine integrated signal sources. It's worth studying because it demonstrates every principle of good skill design at scale.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>What It Does</h3>
+      <h4>Real-time research across 9 platforms</h4>
+      <p style="font-size:14px;">Scans Reddit, X, Bluesky, YouTube, TikTok, Instagram, Hacker News, Polymarket, and the web for the last 30 days of discussion on any topic. Scores results by recency, relevance, and engagement, then synthesises a grounded summary with engagement metrics and — if requested — copy-paste-ready prompts optimised for a target tool.</p>
+    </div>
+    <div class="card">
+      <h3>Why It Matters</h3>
+      <h4>The skill pattern at its best</h4>
+      <p style="font-size:14px;">It combines a rich SKILL.md (with format-matching instructions, anti-patterns, and output templates) with a full Python pipeline for data gathering and scoring. It proves that skills aren't just static instructions — they can orchestrate complex multi-step workflows with real API calls, caching, deduplication, and quality scoring.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>What the community actually builds with it</h4>
+    <p style="font-size:14px; margin-top:8px;">Prompt research (discovering what techniques work for tools like ChatGPT, Midjourney, or Suno), product intelligence (gauging community sentiment on a new release), developer workflow discovery (finding emerging patterns for tools like Cursor or Remotion), trend detection (viral content, music, culture), and competitive analysis. The range shows how a well-designed skill becomes a platform for multiple use cases.</p>
+  </div>
+
+  <div class="grid-3" style="margin-top:32px;">
+    <div class="card">
+      <h3>Architecture</h3>
+      <h4>Modular Python pipeline</h4>
+      <p style="font-size:14px;">Separate modules for environment loading, date handling, caching, HTTP, model selection, schema, platform-specific API clients (Reddit, X, YouTube, etc.), normalisation, scoring, deduplication, and rendering. Each concern is isolated.</p>
+    </div>
+    <div class="card">
+      <h3>Quality Controls</h3>
+      <h4>Fixtures, evals, and scoring</h4>
+      <p style="font-size:14px;">Ships with mock data for offline testing, evaluation scripts for synthesis quality, and a scoring algorithm that weighs recency, relevance, and engagement. The kind of rigour that separates a production skill from a quick hack.</p>
+    </div>
+    <div class="card">
+      <h3>Cross-Platform</h3>
+      <h4>Claude Code, Codex CLI, Gemini</h4>
+      <p style="font-size:14px;">Installable on Claude Code, Codex CLI, and Gemini via their respective extension mechanisms. Also available through the plugin marketplace. One skill, multiple agents.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · MORE USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">06 · More Use Cases</div>
+  <h2>What people actually <span class="accent">build with skills.</span></h2>
+  <p style="margin-bottom:40px;">Beyond /last30days, the skills ecosystem covers a wide range of professional workflows. Here are the categories that matter for business adoption.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Video Production</h3>
+      <h4>Remotion Skill</h4>
+      <p style="font-size:14px;">Generate animated launch videos, explainers, and marketing content from Claude Code. The viral skill post gathered 17.3K likes on X — proof that skills can automate expensive creative workflows.</p>
+    </div>
+    <div class="card">
+      <h3>Security Auditing</h3>
+      <h4>Trail of Bits Skills</h4>
+      <p style="font-size:14px;">Professional security skills for CodeQL and Semgrep that turn Claude Code into a security auditor. Run static analysis, identify vulnerabilities, and generate fix suggestions from the terminal.</p>
+    </div>
+    <div class="card">
+      <h3>Document Creation</h3>
+      <h4>docx / pptx / xlsx Skills</h4>
+      <p style="font-size:14px;">Create polished Word documents, presentations, and spreadsheets with proper formatting, tables of contents, and brand styling. Output that usually requires manual work.</p>
+    </div>
+    <div class="card">
+      <h3>Image Generation</h3>
+      <h4>Nano Banana Pro Skills</h4>
+      <p style="font-size:14px;">Research current community techniques for AI image generation, then produce optimised prompts in the right format. The skill adapts its output based on what's actually working this month.</p>
+    </div>
+    <div class="card">
+      <h3>Developer Workflow</h3>
+      <h4>Review Loop (Codex + Claude)</h4>
+      <p style="font-size:14px;">Wire Claude Code and Codex together via MCP. Claude implements, Codex reviews, Claude fixes. An automated code review loop that catches bugs without human context-switching.</p>
+    </div>
+    <div class="card">
+      <h3>Task Automation</h3>
+      <h4>Claude Command Suite</h4>
+      <p style="font-size:14px;">148+ commands and 54 agents bundled into a single skill set. Covers everything from Git workflows to test-driven development to systematic debugging patterns.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">07 · Evolution</div>
+  <h2>From coding assistant <span class="accent">to agent platform.</span></h2>
+  <p style="margin-bottom:16px;">Skills emerged from a simple observation: the best AI output comes from highly specific instructions. The evolution from monolithic config files to modular, shareable skills mirrors what happened with package managers in software development.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">MID 2024</div>
+      <h4>Claude Code launches</h4>
+      <p>Anthropic releases Claude Code as a command-line coding agent. Users start experimenting with CLAUDE.md files to customise behaviour — hand-written system prompts for the terminal.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">LATE 2024</div>
+      <h4>The CLAUDE.md problem</h4>
+      <p>Power users hit context window limits. A single CLAUDE.md file containing every instruction degrades performance. The community starts splitting instructions into separate files — the seed of the skills pattern.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">EARLY 2025</div>
+      <h4>Skills formalise</h4>
+      <p>The SKILL.md convention stabilises. Skills get description frontmatter for trigger routing. GitHub repos for individual skills start appearing. /last30days launches and gains rapid adoption.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MID 2025</div>
+      <h4>Ecosystem explosion</h4>
+      <p>SkillsMP launches as a marketplace with 87K+ skills. Remotion skill goes viral. Superpowers bundles skills into meta-packages. The pattern spreads to Codex CLI and Gemini extensions.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2026</div>
+      <h4>Multi-source, multi-agent</h4>
+      <p>/last30days reaches v2.9+ with nine signal sources. Skills now orchestrate multi-agent workflows — Claude implements while Codex reviews. The agent-as-platform paradigm solidifies.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Decision Guide</div>
+  <h2>Are skills right <span class="accent">for your team?</span></h2>
+  <p style="margin-bottom:32px;">Skills are powerful, but they're not always the answer. Here's an honest assessment.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use skills when</h4>
+      <p style="font-size:14px; margin-top:12px;">Your team repeats the same complex workflow (document generation, code review, research) and wants consistent, high-quality output every time.<br><br>You need domain-specific knowledge that changes frequently — current community best practices, up-to-date API patterns, or evolving industry standards.<br><br>You're building AI agents that need to operate autonomously with reliable, repeatable behaviour.<br><br>You want to encode institutional knowledge — coding standards, proposal formats, client communication styles — into shareable, version-controlled files.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip skills when</h4>
+      <p style="font-size:14px; margin-top:12px;">The task is genuinely simple and one-off. Writing a skill for something you'll do once is over-engineering.<br><br>Your team doesn't use Claude Code (or a compatible agent). Skills are agent-specific — they don't help with ChatGPT or browser-based assistants.<br><br>You need real-time data but don't have API keys. Research skills like /last30days require API access to function.<br><br>You're looking for a no-code solution. Skills involve Markdown files, terminal commands, and sometimes Python scripts. They're developer-friendly, not beginner-friendly.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · PRACTICAL GUIDANCE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">09 · Practical Guidance</div>
+  <h2>Where skills <span class="accent">fit best.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Summary</h4>
+    <p style="font-size:14px; margin-top:8px;">Skills are where AI moves from "helpful assistant" to "operational teammate." When you write a skill, you're not just prompting — you're encoding a repeatable process that runs the same way every time. That's the difference between using AI and operating with AI. The /last30days skill is a good example of the pattern — it combines real-time data gathering, scoring algorithms, and structured output into a single invocation.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise Use Cases</h3>
+      <h4>Custom Workflow Skills</h4>
+      <p style="font-size:14px;">Skills can encode team processes — from proposal generation to compliance checking to competitive intelligence. Each skill is version-controlled, testable, and auditable. The AI agent works the way the business works.</p>
+    </div>
+    <div class="card">
+      <h3>Architecture</h3>
+      <h4>Skill Design Patterns</h4>
+      <p style="font-size:14px;">Structuring the SKILL.md pattern, setting up trigger descriptions, building supporting scripts, and integrating with MCP servers. The goal: a skill library that scales with the team.</p>
+    </div>
+    <div class="card">
+      <h3>Learning</h3>
+      <h4>Building Your First Skill</h4>
+      <p style="font-size:14px;">The best way to learn is to build one from scratch. Start with the SKILL.md pattern, add a trigger description, test with real prompts, and share with your team. The pattern clicks fast once you've done it once.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 10 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">10 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official &amp; Community</h3>
+      <h4>Claude Code Skills Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://github.com/mvanhorn/last30days-skill" target="_blank" rel="noopener">/last30days on GitHub</a> — The research skill that anchors this explainer ↗<br>
+        <a href="https://docs.claude.com" target="_blank" rel="noopener">Claude Code Documentation</a> — Official Anthropic docs for Claude Code ↗<br>
+        <a href="https://github.com/mvanhorn" target="_blank" rel="noopener">Matt Van Horn (GitHub)</a> — /last30days creator, Lyft co-founder ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>More Explainers</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        This page is part of the <strong style="color:var(--text-heading);">Know</strong> knowledge base — independent AI explainers published by Imbila.AI.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="/" class="btn btn-primary">Browse all explainers</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">imbila.ai ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources &amp; References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://github.com/mvanhorn/last30days-skill" target="_blank" rel="noopener">/last30days GitHub Repository</a> ·
+      <a href="https://github.com/mvanhorn/last30days-skill/blob/main/SKILL.md" target="_blank" rel="noopener">/last30days SKILL.md</a> ·
+      <a href="https://github.com/mvanhorn/last30days-skill/blob/main/SPEC.md" target="_blank" rel="noopener">/last30days SPEC.md</a> ·
+      <a href="https://docs.claude.com" target="_blank" rel="noopener">Anthropic Claude Code Docs</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. Claude Code is a product of Anthropic. /last30days is an open-source project by Matt Van Horn. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:36px; height:36px; margin:0 auto 16px;">
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
