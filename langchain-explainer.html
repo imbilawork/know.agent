@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangChain Explained — An Imbila.AI Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI DESIGN TOKENS — LIGHT / DARK
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+  --icon-toggle: "☀️";
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+  --icon-toggle: "🌙";
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:26px;height:26px;">
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#when">When</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <!-- Mobile toggle -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 4L28 12L36 8L32 16L40 20L32 24L36 32L28 28L24 36L20 28L12 32L16 24L8 20L16 16L12 8L20 12Z" fill="#EDAF42" opacity="0.15"/>
+      <path d="M24 10L27 17L34 14L31 21L38 24L31 27L34 34L27 31L24 38L21 31L14 34L17 27L10 24L17 21L14 14L21 17Z" fill="#EDAF42" opacity="0.4"/>
+      <circle cx="24" cy="24" r="6" fill="#EDAF42"/>
+      <text x="24" y="28" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" font-weight="800" fill="#0A0A0A">🔗</text>
+    </svg>
+  </div>
+  <h1>LangChain<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The framework that makes AI agents buildable, debuggable, and deployable</p>
+  <div class="hero-meta">
+    <span>Open Source</span>
+    <span>Python & TypeScript</span>
+    <span>v1.0+ Stable</span>
+    <span>50k+ Stars</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS LANGCHAIN ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is LangChain</div>
+  <h2>The plumbing for <span class="accent">AI applications.</span></h2>
+  <p style="margin-bottom:24px;">LangChain is an open-source framework for building applications powered by large language models (LLMs). Instead of wiring up raw API calls, prompt templates, memory management, and tool integrations by hand, LangChain gives you composable building blocks that snap together.</p>
+  <p>Think of it as the standard toolkit that sits between your business logic and the AI model — handling the repetitive orchestration so you can focus on what your application actually does.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Raw API calls don't scale</h4>
+      <p style="font-size:14px;">Building a simple chatbot is easy. Building one with memory, tools, document retrieval, guardrails, and structured output? That's where manual wiring becomes a liability.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Composable abstractions</h4>
+      <p style="font-size:14px;">LangChain provides standardised interfaces for models, prompts, tools, memory, and retrieval — all designed to work together through a consistent API.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Weeks, not months</h4>
+      <p style="font-size:14px;">Teams move from prototype to production faster, swap models without rewriting code, and get observability built in from day one.</p>
+    </div>
+  </div>
+
+  <!-- Visual flow -->
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">💬</div>
+      <div class="flow-label">User Input</div>
+      <div class="flow-desc">Question or task</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📝</div>
+      <div class="flow-label">Prompt</div>
+      <div class="flow-desc">Template + context</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🧠</div>
+      <div class="flow-label">LLM</div>
+      <div class="flow-desc">Any provider</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔧</div>
+      <div class="flow-label">Tools</div>
+      <div class="flow-desc">Search, code, APIs</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📤</div>
+      <div class="flow-label">Output</div>
+      <div class="flow-desc">Parsed & structured</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY LANGCHAIN ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The numbers behind <span class="accent">agent engineering.</span></h2>
+  <p style="margin-bottom:40px;">LangChain isn't the only framework, but it's become the de facto standard. Here's why that matters for teams evaluating their AI stack.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">50k+</div>
+      <div class="stat-label">GitHub stars</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">1,300+</div>
+      <div class="stat-label">Professionals surveyed<br><span style="font-size:11px;color:var(--text-muted);">State of Agent Eng. 2026</span></div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">20+</div>
+      <div class="stat-label">LLM providers<br>supported natively</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">v1.0</div>
+      <div class="stat-label">Stable release<br><span style="font-size:11px;color:var(--text-muted);">November 2025</span></div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use the API directly?</h4>
+    <p style="font-size:14px; margin-top:8px;">You absolutely can — and for simple use cases, you should. LangChain earns its keep when you need conversation memory, tool routing, document processing, and structured output parsing in the same application. Building all of that from scratch is just rebuilding LangChain badly.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Five concepts that handle <span class="accent">90% of use cases.</span></h2>
+  <p style="margin-bottom:40px;">LangChain has a lot of surface area. Not all of it matters for production work. These are the building blocks you'll use daily.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>Chains</h4>
+      <p style="font-size:14px;">A sequence of operations — take input, process it through steps, return output. Chains are LangChain's fundamental building block. Input flows through prompt templates, model calls, and output parsers in a composable pipeline.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="ck">from</span> <span class="cv">langchain_core.prompts</span> <span class="ck">import</span> ChatPromptTemplate
+<span class="ck">from</span> <span class="cv">langchain_openai</span> <span class="ck">import</span> ChatOpenAI
+
+chain = prompt <span class="cs">|</span> model <span class="cs">|</span> parser
+result = chain.<span class="ck">invoke</span>({"topic": "AI agents"})</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>Retrieval (RAG)</h4>
+      <p style="font-size:14px;">Connect LLMs to your own data. Retrieval-Augmented Generation loads documents, chunks them, embeds them into a vector store, and retrieves relevant context at query time. This is how you build a chatbot that knows your company's docs.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs"># Load → Split → Embed → Store → Retrieve</span>
+docs = loader.<span class="ck">load</span>()
+splits = splitter.<span class="ck">split_documents</span>(docs)
+vectorstore.<span class="ck">add_documents</span>(splits)
+retriever = vectorstore.<span class="ck">as_retriever</span>()</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Tools & Function Calling</h4>
+      <p style="font-size:14px;">Give your LLM the ability to act. Tools let the model call external functions — search the web, query a database, execute code, or hit an API. The model decides which tool to use and LangChain handles the execution loop.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="ck">@tool</span>
+<span class="ck">def</span> <span class="cv">search</span>(query: str) -> str:
+    <span class="cs">"""Search the web for information."""</span>
+    <span class="ck">return</span> tavily.<span class="ck">search</span>(query)
+
+agent = <span class="ck">create_agent</span>(model, tools=[search])</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>Memory & State</h4>
+      <p style="font-size:14px;">Conversations need context. LangChain's memory system maintains chat history, summarises long conversations to stay within context windows, and persists state across sessions. Agents can remember what happened 50 messages ago.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey); grid-column: span 2;">
+      <h3>Concept 05</h3>
+      <h4>Agents</h4>
+      <p style="font-size:14px;">The culmination of everything above. Agents combine an LLM with tools and reasoning to iteratively work toward solutions. They decide which tools to use, analyse intermediate results, and adapt their approach. With LangChain v1.0+, creating one is a single function call:</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="ck">from</span> <span class="cv">langchain.agents</span> <span class="ck">import</span> create_agent
+
+agent = <span class="ck">create_agent</span>(
+    <span class="cv">"anthropic:claude-sonnet-4-20250514"</span>,
+    tools=[search, calculator, code_exec],
+    system_prompt=<span class="cv">"You are a research assistant..."</span>
+)</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>LangChain is a platform, <span class="accent">not just a library.</span></h2>
+  <p style="margin-bottom:40px;">What started as an open-source library is now a full agent engineering platform. Here's how the pieces fit together.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Framework</span>
+      <h4 style="margin-top:12px;">LangChain</h4>
+      <p style="font-size:14px;">The high-level framework. Composable chains, prompts, tools, memory, and output parsers. Supports 20+ LLM providers. Great for straightforward agent builds and prototyping.</p>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">Python · TypeScript · v1.0 stable</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Orchestration</span>
+      <h4 style="margin-top:12px;">LangGraph</h4>
+      <p style="font-size:14px;">Low-level agent orchestration. Stateful, graph-based workflows for complex multi-step agents, human-in-the-loop flows, and branching logic. The engine under LangChain's agent layer.</p>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">Cycles · Persistence · Controllability</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Platform</span>
+      <h4 style="margin-top:12px;">LangSmith</h4>
+      <p style="font-size:14px;">Observe, evaluate, and deploy. Tracing, experiment comparison, automated evals, and production monitoring. The DevOps layer for AI agents. Now includes Fleet for no-code agent building.</p>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">Traces · Evals · Deployment · Fleet</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>New in 2026: Deep Agents & Fleet</h4>
+    <p style="font-size:14px; margin-top:8px;"><strong style="color:var(--text-heading);">Deep Agents</strong> are LangChain's production-grade coding and research agents — async subagents, multi-modal file support, and sandboxed execution. <strong style="color:var(--text-heading);">Fleet</strong> (formerly Agent Builder) is the enterprise hub for building, using, and managing agents with natural language. Both represent LangChain's shift from library to platform.</p>
+  </div>
+
+  <!-- Comparison table -->
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Need</th>
+        <th>Use This</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Simple chatbot or RAG app</td>
+        <td><span class="tag">LangChain</span></td>
+        <td>High-level abstractions, fast to build</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Complex multi-step agent</td>
+        <td><span class="tag">LangGraph</span></td>
+        <td>Graph-based control, branching, human-in-the-loop</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Debug & evaluate agents</td>
+        <td><span class="tag">LangSmith</span></td>
+        <td>Tracing, evals, experiment comparison</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Deploy to production</td>
+        <td><span class="tag">LangSmith Fleet</span></td>
+        <td>Enterprise deployment, auth, scaling</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">No-code agent building</td>
+        <td><span class="tag">Fleet Agent Builder</span></td>
+        <td>Describe what you want, it builds the agent</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · REAL-WORLD USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What people actually <span class="accent">build with it.</span></h2>
+  <p style="margin-bottom:40px;">LangChain's versatility means it shows up across industries. Here are the patterns we see most often.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Knowledge</h3>
+      <h4>Document Q&A</h4>
+      <p style="font-size:14px;">Internal docs, manuals, legal contracts — employees ask questions in natural language instead of hunting through PDFs. RAG-powered, always grounded in your data.</p>
+    </div>
+    <div class="card">
+      <h3>Customer</h3>
+      <h4>Support Agents</h4>
+      <p style="font-size:14px;">Agents that resolve tickets, look up order status, escalate complex issues, and learn from past resolutions. Tool-using agents, not keyword bots.</p>
+    </div>
+    <div class="card">
+      <h3>Research</h3>
+      <h4>Data Analysis</h4>
+      <p style="font-size:14px;">Agents that read spreadsheets, query databases, run calculations, and produce reports. Particularly powerful with code execution tools and Deep Agents.</p>
+    </div>
+    <div class="card">
+      <h3>Engineering</h3>
+      <h4>Coding Assistants</h4>
+      <p style="font-size:14px;">Code review, bug detection, documentation generation, and automated testing. Open SWE provides the architecture for internal coding agents.</p>
+    </div>
+    <div class="card">
+      <h3>Workflow</h3>
+      <h4>Process Automation</h4>
+      <p style="font-size:14px;">Agents that monitor inboxes, classify documents, update CRMs, and trigger downstream actions. Multi-agent systems where each agent owns a step.</p>
+    </div>
+    <div class="card">
+      <h3>Content</h3>
+      <h4>Generation Pipelines</h4>
+      <p style="font-size:14px;">Marketing teams using chains to generate, review, and refine content — with brand guidelines baked into the prompt template and structured output enforced.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · TIMELINE ═══════ -->
+<section id="when" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From library <span class="accent">to platform.</span></h2>
+  <p style="margin-bottom:16px;">LangChain's journey from a weekend project to the dominant agent framework.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">Oct 2022</div>
+      <h4>LangChain launches</h4>
+      <p>Harrison Chase releases the initial Python library. Chains and prompt templates for LLM apps.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2023</div>
+      <h4>Explosive growth</h4>
+      <p>TypeScript support, 700+ integrations, LangSmith beta. Becomes the most-starred AI framework on GitHub.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">Jan 2024</div>
+      <h4>LangGraph introduced</h4>
+      <p>Low-level graph-based orchestration for stateful, multi-step agents. Cycles, persistence, human-in-the-loop.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">Nov 2025</div>
+      <h4>v1.0 — Stable release</h4>
+      <p>LangChain and LangGraph hit v1.0 together. create_agent becomes the canonical entry point. Model profiles, middleware, structured output.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2026</div>
+      <h4>Deep Agents, Fleet & beyond</h4>
+      <p>Deep Agents (async subagents, multi-modal), Fleet (enterprise agent management), LangSmith self-hosted expansion. The agent engineering platform emerges.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · WHEN TO USE / NOT USE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Is LangChain right <span class="accent">for your project?</span></h2>
+  <p style="margin-bottom:32px;">LangChain isn't always the answer. Here's an honest breakdown.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use LangChain when</h4>
+      <p style="font-size:14px; margin-top:12px;">You're building agents with tools and reasoning loops.<br><br>You need RAG over your own documents.<br><br>You want to swap models without rewriting code.<br><br>You need observability and evaluation from day one.<br><br>You're orchestrating multi-step workflows with LangGraph.<br><br>Your team wants a standard, well-documented framework.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip LangChain when</h4>
+      <p style="font-size:14px; margin-top:12px;">A single API call solves your problem.<br><br>You're building a simple chatbot with no tools.<br><br>You need maximum control over every HTTP request.<br><br>Your use case is pure text generation with no orchestration.<br><br>You're deeply invested in another framework (CrewAI, AutoGen, etc.).<br><br>The abstraction layer adds complexity you don't need.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · PRACTICAL GUIDANCE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Practical Guidance</div>
+  <h2>Where LangChain <span class="accent">fits best.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Summary</h4>
+    <p style="font-size:14px; margin-top:8px;">LangChain is a strong choice for teams moving beyond prototypes. The v1.0 stability, combined with LangSmith's observability and LangGraph's orchestration, means you're not building on sand. It's particularly well-suited for RAG pipelines, tool-using agents, and workflow automation.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise Use Cases</h3>
+      <h4>Governed agent stacks</h4>
+      <p style="font-size:14px;">LangSmith tracing + LangGraph workflows for regulated industries. Full audit trail, human-in-the-loop approvals, structured outputs.</p>
+    </div>
+    <div class="card">
+      <h3>Prototyping</h3>
+      <h4>Rapid AI sprints</h4>
+      <p style="font-size:14px;">LangChain's high-level abstractions make fast prototyping practical. Swap models, test approaches, and ship in weeks rather than months.</p>
+    </div>
+    <div class="card">
+      <h3>Learning</h3>
+      <h4>Hands-on fundamentals</h4>
+      <p style="font-size:14px;">LangChain is a solid framework for learning AI application development — chains, RAG, agents, and tool use. The best way to understand what AI can do is to build with it.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>LangChain Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://www.langchain.com" target="_blank" rel="noopener">langchain.com</a> — Official site & platform ↗<br>
+        <a href="https://docs.langchain.com" target="_blank" rel="noopener">docs.langchain.com</a> — Documentation & changelog ↗<br>
+        <a href="https://github.com/langchain-ai/langchain" target="_blank" rel="noopener">github.com/langchain-ai</a> — Source code ↗<br>
+        <a href="https://changelog.langchain.com/" target="_blank" rel="noopener">changelog.langchain.com</a> — Product updates ↗<br>
+        <a href="https://academy.langchain.com" target="_blank" rel="noopener">LangChain Academy</a> — Free courses ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>More Explainers</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        This page is part of the <strong style="color:var(--text-heading);">Know</strong> knowledge base — independent AI explainers published by Imbila.AI.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="/" class="btn btn-primary">Browse all explainers</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">imbila.ai ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://www.langchain.com" target="_blank" rel="noopener">langchain.com</a> · 
+      <a href="https://docs.langchain.com/oss/python/releases/changelog" target="_blank" rel="noopener">LangChain Python Changelog</a> · 
+      <a href="https://blog.langchain.com/" target="_blank" rel="noopener">LangChain Blog</a> · 
+      <a href="https://github.com/langchain-ai/langchain/releases" target="_blank" rel="noopener">GitHub Releases</a> · 
+      <a href="https://www.langchain.com/state-of-agent-engineering" target="_blank" rel="noopener">State of Agent Engineering 2026</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. LangChain is a trademark of LangChain, Inc. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

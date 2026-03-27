@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>llama.cpp Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="The open-source C/C++ inference engine that made local AI possible. How llama.cpp works, GGUF quantization, the ecosystem, and when to use it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:26px;height:26px;">
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="8" y="34" font-family="DM Sans, sans-serif" font-size="28" font-weight="800" fill="#EDAF42">🦙</text>
+    </svg>
+  </div>
+  <h1>llama.cpp<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The open-source C/C++ engine that made running LLMs on your own hardware possible</p>
+  <div class="hero-meta">
+    <span>Created March 2023</span>
+    <span>85,000+ GitHub Stars</span>
+    <span>1,200+ Contributors</span>
+    <span>MIT Licensed</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS LLAMA.CPP ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is llama.cpp</div>
+  <h2>LLM inference without the cloud. <span class="accent">On hardware you already own.</span></h2>
+  <p style="margin-bottom:24px;">llama.cpp is an open-source software library, written in pure C/C++ with no external dependencies, that runs large language models on everyday consumer hardware. Laptops, desktops, phones, Raspberry Pis, old MacBooks — if it has a CPU, llama.cpp can probably run an LLM on it. No NVIDIA GPU required. No cloud API keys. No PyTorch.</p>
+  <p>Created by Bulgarian software engineer Georgi Gerganov in March 2023 — just ten days after Meta released LLaMA — it proved that a 7-billion-parameter model could do inference on a MacBook CPU. That single demonstration kicked off the entire local AI movement. Three years later, llama.cpp is the inference backbone behind Ollama, LM Studio, GPT4All, Jan.ai, KoboldCpp, and dozens more tools. If you've ever run an AI model locally, llama.cpp almost certainly made it possible.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>AI locked behind GPUs and cloud APIs</h4>
+      <p style="font-size:14px;">Running LLMs required expensive NVIDIA hardware, CUDA, and heavy Python frameworks like PyTorch. Most people and most businesses couldn't access AI inference without paying cloud providers per-token.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Pure C/C++ inference with quantization</h4>
+      <p style="font-size:14px;">llama.cpp strips away framework dependencies and uses quantization (compressing model weights from 32-bit to 4-bit or lower) to shrink models by 75%+. The result: a 7B model runs in 4GB of RAM on a CPU.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>AI on every device, no cloud needed</h4>
+      <p style="font-size:14px;">Full data privacy (nothing leaves your machine), zero API costs, offline capability, and the ability to run models on everything from ARM processors to old x86 laptops. Sovereign AI, practically.</p>
+    </div>
+  </div>
+
+  <!-- Visual flow diagram -->
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">📦</div>
+      <div class="flow-label">Model Weights</div>
+      <div class="flow-desc">PyTorch / Safetensors</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔄</div>
+      <div class="flow-label">Convert to GGUF</div>
+      <div class="flow-desc">convert_hf_to_gguf.py</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📐</div>
+      <div class="flow-label">Quantize</div>
+      <div class="flow-desc">Q4_K_M / Q5_K_M</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🚀</div>
+      <div class="flow-label">Run Locally</div>
+      <div class="flow-desc">llama-cli / llama-server</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The infrastructure layer <span class="accent">beneath local AI.</span></h2>
+  <p style="margin-bottom:40px;">Every prediction about what local hardware couldn't run has been wrong within 6-12 months. In March 2023, a 7B model on CPU was surprising. By December 2023, quantized 70B models ran on MacBooks. By mid-2025, trillion-parameter mixture-of-experts models loaded on consumer GPUs. llama.cpp has been the constant through all of it — the plumbing that persists while models turn over every few months.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">85K+</div>
+      <div class="stat-label">GitHub stars</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">1,200+</div>
+      <div class="stat-label">Contributors worldwide</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">14K+</div>
+      <div class="stat-label">Forks on GitHub</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">3 yrs</div>
+      <div class="stat-label">Central to local AI since March 2023</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use a cloud API?</h4>
+    <p style="font-size:14px; margin-top:8px;">Cloud APIs are great when you need frontier reasoning, long multi-turn conversations, or can tolerate per-query costs. llama.cpp wins when privacy is non-negotiable (data never leaves the device), when you need offline access, when you're processing high volumes where per-token costs stack up, or when you want full control over model selection and behaviour. It's not either/or — most serious setups use both.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Five concepts that make <span class="accent">local inference tick.</span></h2>
+  <p style="margin-bottom:40px;">llama.cpp's power comes from a handful of well-executed ideas: a custom tensor library, a self-contained file format, aggressive quantization, multi-backend hardware support, and an OpenAI-compatible server. Here's what each does.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>GGML — The Tensor Library</h4>
+      <p style="font-size:14px;">GGML is the low-level C library that handles tensor algebra underneath llama.cpp. Created by Gerganov in late 2022 (inspired by Fabrice Bellard's LibNC), it was designed with strict memory management and multi-threading from day one. GGML is why llama.cpp doesn't need PyTorch — it replaces the entire computation layer.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>GGUF — The File Format</h4>
+      <p style="font-size:14px;">GGUF (GPT-Generated Unified Format) is a self-contained binary that packages everything needed to run a model: architecture metadata, tokenizer vocabulary, quantization parameters, and weight tensors. One file, no separate config.json, no external tokenizer. It supports 40+ model architectures (LLaMA, Mistral, Qwen, Gemma, Phi, and more) and uses memory-mapping for near-instant loading.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Quantization — Shrinking Models to Fit</h4>
+      <p style="font-size:14px;">Quantization compresses model weights from 32-bit or 16-bit floats down to 4-bit integers (or lower). A 7B model drops from ~14GB to ~4GB at Q4_K_M. The "K-quant" family (Q2_K through Q6_K) uses super-blocks with per-layer precision allocation — more bits for attention layers, fewer for redundant ones — preserving quality at aggressive compression. For most users, <code>Q4_K_M</code> is the sweet spot: 92% quality retention with 75% size reduction.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs"># Quantize a model to Q4_K_M (the community default)</span>
+<span class="ck">./llama-quantize</span> <span class="cv">model-f16.gguf model-Q4_K_M.gguf Q4_K_M</span>
+
+<span class="cs"># With importance matrix for better quality at low bits</span>
+<span class="ck">./llama-imatrix</span> <span class="cv">-m model-f16.gguf -f calibration.txt -o imatrix.dat</span>
+<span class="ck">./llama-quantize</span> <span class="cv">--imatrix imatrix.dat model-f16.gguf model-Q4_K_M.gguf Q4_K_M</span></pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>Hardware Backends — Run Anywhere</h4>
+      <p style="font-size:14px;">llama.cpp targets an extraordinary range of hardware via backend modules: Apple Silicon (Metal + Accelerate), NVIDIA GPUs (CUDA), AMD GPUs (HIP/ROCm), Intel GPUs (SYCL + OpenVINO), Huawei Ascend (CANN), Vulkan (cross-platform GPU), and of course bare CPU with AVX/AVX2/AVX-512/AMX optimisations. As of December 2025, it also runs natively on Android and ChromeOS devices with full GPU acceleration.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 05</h3>
+      <h4>llama-server — Production-Ready API</h4>
+      <p style="font-size:14px;">llama-server provides an OpenAI-compatible HTTP API out of the box — including chat completions, embeddings, and tool calling. This means any application built against the OpenAI API can switch to local inference by changing one URL. It includes a built-in web UI, supports streaming, speculative decoding (small draft model predicting tokens for a larger target), and structured output via grammar constraints.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs"># Start an OpenAI-compatible local server</span>
+<span class="ck">llama-server</span> <span class="cv">-m model.gguf --port 8080</span>
+
+<span class="cs"># Or download and serve directly from Hugging Face</span>
+<span class="ck">llama-server</span> <span class="cv">-hf ggml-org/gemma-3-1b-it-GGUF</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>llama.cpp doesn't work alone. <span class="accent">It powers an entire stack.</span></h2>
+  <p style="margin-bottom:40px;">llama.cpp is infrastructure — a library, not an end-user app. An enormous ecosystem of tools builds on top of it, each targeting different audiences. The GGUF format has become the de facto standard for distributing quantized models, and Hugging Face hosts thousands of community-quantized GGUF models ready for download.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">User-Friendly Wrapper</span>
+      <h4 style="margin-top:12px;">Ollama</h4>
+      <p style="font-size:14px;">One-command model pulling and serving (<code>ollama run llama3</code>). Exposes a local HTTP API. Built on llama.cpp. The "Docker for LLMs" — dead simple, but inherits llama.cpp's single-GPU limitations.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Desktop GUI</span>
+      <h4 style="margin-top:12px;">LM Studio</h4>
+      <p style="font-size:14px;">Polished desktop app for browsing, downloading, and chatting with GGUF models. Side-by-side comparison, one-click quantization, and a model discovery UI. The "app store" experience for local AI.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Privacy-First Chat</span>
+      <h4 style="margin-top:12px;">GPT4All</h4>
+      <p style="font-size:14px;">Desktop app by Nomic AI with built-in LocalDocs for private document chat (RAG). The 2026 Reasoner adds on-device reasoning with tool calling and sandboxed code execution. Best for non-technical users.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Single Executable</span>
+      <h4 style="margin-top:12px;">KoboldCpp</h4>
+      <p style="font-size:14px;">One-file, zero-install fork of llama.cpp. Triple API compatibility (KoboldAI + OpenAI + Ollama endpoints). Popular for creative writing and roleplay with built-in memory and world info features.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Privacy Assistant</span>
+      <h4 style="margin-top:12px;">Jan.ai</h4>
+      <p style="font-size:14px;">Open-source (AGPLv3) desktop app with hybrid local + cloud switching. Connect OpenAI, Anthropic, and local models in one interface. MCP integration for agentic workflows. Runs on the Cortex engine (wrapping llama.cpp).</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Apple Silicon</span>
+      <h4 style="margin-top:12px;">MLX (Apple)</h4>
+      <p style="font-size:14px;">Apple's own ML framework with Metal-optimised kernels. Not built on llama.cpp, but a complementary option for Mac-only deployments. Delivers ~230 tokens/sec on M2 Ultra — fastest Apple-native throughput. GGUF files work across both ecosystems.</p>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Fastest setup, local API server</td>
+        <td><span class="tag">Ollama</span></td>
+        <td>One command to pull and run. Built-in HTTP API. No compilation needed.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Model discovery and side-by-side eval</td>
+        <td><span class="tag">LM Studio</span></td>
+        <td>Browse GGUF models, compare outputs, download with a click.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Maximum control, custom builds</td>
+        <td><span class="tag">llama.cpp direct</span></td>
+        <td>Full access to every flag, backend, and quantization option. Compile for your exact hardware.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Multi-GPU production throughput</td>
+        <td><span class="tag">vLLM</span></td>
+        <td>True tensor parallelism with PagedAttention. llama.cpp splits layers sequentially, vLLM processes in parallel.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Apple Silicon max performance</td>
+        <td><span class="tag">MLX</span></td>
+        <td>Apple's own optimised kernels. Higher throughput than llama.cpp on Mac hardware, but Mac-only.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">OpenAI API drop-in replacement</td>
+        <td><span class="tag">LocalAI</span></td>
+        <td>Multi-backend (llama.cpp, vLLM, diffusers). Supports text, images, audio, video, embeddings — all locally.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What people actually <span class="accent">build with it.</span></h2>
+  <p style="margin-bottom:40px;">llama.cpp runs the full range from personal assistants on laptops to production APIs handling thousands of requests. The sweet spot is anywhere data privacy, cost control, or offline access matters more than frontier model quality.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Personal Productivity</h3>
+      <h4>Private AI Assistants</h4>
+      <p style="font-size:14px;">Always-on, offline AI assistants running on Mac Minis, old laptops, or Raspberry Pis. Morning briefings, task automation, code reviews — all with zero data leakage and zero API cost. OpenClaw on NVIDIA Jetson is a popular reference implementation.</p>
+    </div>
+    <div class="card">
+      <h3>Software Development</h3>
+      <h4>Local Code Completion</h4>
+      <p style="font-size:14px;">IDE plugins (VS Code, Vim, Neovim) using llama-server for fill-in-the-middle completions. Qwen2.5-Coder 14B at Q4_K_M runs comfortably on a 24GB Mac Mini — fast enough for real-time autocomplete, private enough for proprietary code.</p>
+    </div>
+    <div class="card">
+      <h3>Enterprise Compliance</h3>
+      <h4>On-Premises AI for Regulated Industries</h4>
+      <p style="font-size:14px;">Healthcare, finance, legal, and government use cases where data cannot leave the building. llama.cpp runs inside air-gapped networks with zero external dependencies. POPIA, GDPR, HIPAA compliance by architecture.</p>
+    </div>
+    <div class="card">
+      <h3>Edge & IoT</h3>
+      <h4>AI on Industrial Devices</h4>
+      <p style="font-size:14px;">Running small models (1-3B) on ARM devices, edge gateways, and embedded systems. Manufacturing quality inspection, real-time sensor analysis, and smart-device interactions — all without cloud connectivity.</p>
+    </div>
+    <div class="card">
+      <h3>Education & Research</h3>
+      <h4>Accessible LLM Experimentation</h4>
+      <p style="font-size:14px;">Students and researchers running billion-parameter models on commodity hardware. Benchmark quantization quality, test fine-tuned models, explore architecture differences — all on a laptop. The great equaliser.</p>
+    </div>
+    <div class="card">
+      <h3>Security & Surveillance</h3>
+      <h4>AI-Powered Camera Systems</h4>
+      <p style="font-size:14px;">Open-source AI camera platforms use llama.cpp with vision-language models (Qwen, LLaVA, SmolVLM) for local video analysis. Real-time scene understanding without sending footage to the cloud.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From a weekend hack <span class="accent">to the backbone of local AI.</span></h2>
+  <p style="margin-bottom:16px;">The original README said: "The main goal is to run the model using 4-bit quantization on a MacBook. This was hacked in an evening — I have no idea if it works correctly." Three years later, it powers the inference layer for millions of users worldwide.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">SEP 2022</div>
+      <h4>GGML Library Created</h4>
+      <p>Georgi Gerganov begins work on the GGML tensor library in C, inspired by Fabrice Bellard's LibNC. Designed for strict memory management and multi-threading from the start.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2023</div>
+      <h4>llama.cpp Released</h4>
+      <p>Ten days after Meta releases LLaMA, Gerganov publishes llama.cpp — proving a 7B model can run on a MacBook CPU. GitHub stars grow faster than Stable Diffusion did. The local AI movement begins.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">AUG 2023</div>
+      <h4>GGUF Format Introduced</h4>
+      <p>GGUF replaces the older GGML format with a flexible key-value metadata system. One self-contained file with architecture, tokenizer, and weights. Backwards-compatible by design. Becomes the standard for distributing quantized models.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">APR 2024</div>
+      <h4>FlashAttention Added</h4>
+      <p>FlashAttention support lands, dramatically improving long-context performance and memory efficiency. Enables practical use of models with 128K+ context windows on consumer hardware.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">APR 2025</div>
+      <h4>Multimodal Support via libmtmd</h4>
+      <p>The libmtmd library reinvigorates multimodal model support, enabling vision-language models (LLaVA, Qwen-VL) to run through the same llama.cpp pipeline. Images in, text out, fully local.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">DEC 2025</div>
+      <h4>Native Android & ChromeOS Acceleration</h4>
+      <p>Full GPU acceleration on Android and ChromeOS via a new GUI binding, moving beyond the previous adb shell workaround. Local LLMs now run natively on phones and tablets.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">FEB 2026</div>
+      <h4>ggml.ai Joins Hugging Face</h4>
+      <p>Gerganov and team formally join Hugging Face. The projects stay fully open-source and MIT-licensed. Roadmap targets single-click integration with the transformers library and first-party GGUF quantizations on Hugging Face Hub. The goal: near-zero friction from "model announced" to "running locally."</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Is llama.cpp right <span class="accent">for your project?</span></h2>
+  <p style="margin-bottom:32px;">llama.cpp is the right choice more often than people think — but it's not always the right choice. Here's an honest breakdown.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use llama.cpp when</h4>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Data cannot leave your network.</strong> Regulatory requirements (POPIA, GDPR, HIPAA), client confidentiality, or competitive IP concerns make cloud APIs a non-starter.<br><br><strong style="color:var(--text-heading);">You need offline or air-gapped AI.</strong> Deployments without reliable internet — industrial sites, remote offices, mobile field teams, military contexts.<br><br><strong style="color:var(--text-heading);">Volume economics make cloud expensive.</strong> When you're running thousands of inferences daily, the per-token cost of cloud APIs adds up. Local inference is free after hardware investment.<br><br><strong style="color:var(--text-heading);">Your task fits small-to-mid models.</strong> Summarisation, classification, code completion, RAG over documents, embeddings, translation — 7-14B models handle these well locally.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip llama.cpp when</h4>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">You need frontier reasoning.</strong> For complex multi-step logic, nuanced creative writing, or tasks where GPT-4o/Claude Opus quality is the floor, local models aren't there yet.<br><br><strong style="color:var(--text-heading);">Multi-GPU throughput is critical.</strong> llama.cpp splits layers sequentially across GPUs (for fitting, not speed). If you need tensor-parallel production serving, use vLLM or TensorRT-LLM.<br><br><strong style="color:var(--text-heading);">Your team has zero appetite for CLI.</strong> While Ollama and LM Studio make it easier, the llama.cpp ecosystem still leans developer-first. Non-technical teams may struggle without support.<br><br><strong style="color:var(--text-heading);">You're building for real-time voice/video.</strong> Current local models and inference speeds struggle with the latency requirements of real-time conversational AI. Cloud APIs still win here.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · PRACTICAL GUIDANCE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Practical Guidance</div>
+  <h2>Where llama.cpp <span class="accent">fits best.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Summary</h4>
+    <p style="font-size:14px; margin-top:8px;">llama.cpp is arguably the single most important open-source AI project of the past three years. It didn't just make local AI possible — it made it practical. For businesses dealing with bandwidth constraints, data sovereignty requirements, and the cost of cloud APIs, local inference is a genuine competitive advantage. It's a strong starting point for any team exploring self-hosted AI.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise Use Cases</h3>
+      <h4>On-Prem AI for Regulated Industries</h4>
+      <p style="font-size:14px;">llama.cpp-based inference can run entirely inside your own infrastructure — compliant by architecture. A typical setup: Ollama or llama-server behind an internal API gateway, serving classification, summarisation, and document-processing workflows. No data crosses the network boundary.</p>
+    </div>
+    <div class="card">
+      <h3>Hybrid Architectures</h3>
+      <h4>Local + Cloud Workflows</h4>
+      <p style="font-size:14px;">llama.cpp handles the cost-sensitive and privacy-sensitive parts of agentic pipelines well — embeddings, classification, first-pass summarisation — while complex reasoning routes to cloud models. The hybrid approach gives teams the best of both worlds.</p>
+    </div>
+    <div class="card">
+      <h3>Learning</h3>
+      <h4>Hands-On Local AI</h4>
+      <p style="font-size:14px;">Installing Ollama, pulling GGUF models, and running inference on your own laptop is one of the fastest ways to build intuition for how LLMs actually work. Zero cloud dependency, zero cost, immediate feedback.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>llama.cpp Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">GitHub Repository</a> — Source code, build instructions, and all CLI tools ↗<br>
+        <a href="https://huggingface.co/blog/ggml-joins-hf" target="_blank" rel="noopener">Hugging Face Partnership</a> — Feb 2026 announcement and roadmap ↗<br>
+        <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" target="_blank" rel="noopener">Quantization Guide</a> — Full documentation for all quant types ↗<br>
+        <a href="https://huggingface.co/spaces/ggml-org/gguf-my-repo" target="_blank" rel="noopener">GGUF-my-repo</a> — Convert any HF model to GGUF in your browser ↗<br>
+        <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> — Easiest way to start running llama.cpp-powered models ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>More Explainers</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        This page is part of the <strong style="color:var(--text-heading);">Know</strong> knowledge base — independent AI explainers published by Imbila.AI.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="/" class="btn btn-primary">Browse all explainers</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">imbila.ai ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">llama.cpp GitHub</a> ·
+      <a href="https://en.wikipedia.org/wiki/Llama.cpp" target="_blank" rel="noopener">Wikipedia: llama.cpp</a> ·
+      <a href="https://huggingface.co/blog/ggml-joins-hf" target="_blank" rel="noopener">HF: GGML Joins HF</a> ·
+      <a href="https://github.com/ggml-org/llama.cpp/discussions/19759" target="_blank" rel="noopener">ggml.ai + HF Discussion</a> ·
+      <a href="https://simonwillison.net/2026/Feb/20/ggmlai-joins-hugging-face/" target="_blank" rel="noopener">Simon Willison</a> ·
+      <a href="https://changelog.com/podcast/532" target="_blank" rel="noopener">Changelog Interview with Gerganov</a> ·
+      <a href="https://arxiv.org/html/2601.14277v1" target="_blank" rel="noopener">GGUF Quantization Study (2026)</a> ·
+      <a href="https://av.codes/blog/local-llms-history" target="_blank" rel="noopener">History of Local LLMs</a> ·
+      <a href="https://blog.starmorph.com/blog/local-llm-inference-tools-guide" target="_blank" rel="noopener">Local LLM Inference Guide 2026</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. llama.cpp is maintained by ggml-org under the MIT license, now part of Hugging Face. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:36px; height:36px; margin:0 auto 16px;">
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
