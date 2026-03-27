@@ -1,0 +1,9 @@
+{
+  "name": "know.imbila.ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Imbila.AI knowledge base — static site with auto-generated index",
+  "scripts": {
+    "build": "node build.js"
+  }
+}
