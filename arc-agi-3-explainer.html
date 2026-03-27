@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARC-AGI-3 Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="ARC-AGI-3 is the first interactive reasoning benchmark for AI agents. Humans score 100%. Frontier models score under 1%. Here's what that means for the AGI debate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── SCORE BAR ─── */
+.score-bar-wrap { margin-top: 8px; }
+.score-bar {
+  height: 8px; border-radius: 4px; background: var(--bg-card-alt);
+  overflow: hidden; position: relative;
+}
+.score-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: var(--honey);
+  transition: width 1s ease;
+}
+.score-bar-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 6px;
+}
+.score-bar-label .model-name { font-size: 14px; font-weight: 600; color: var(--text-heading); }
+.score-bar-label .model-score { font-size: 14px; font-weight: 700; color: var(--honey-deep); }
+[data-theme="dark"] .score-bar-label .model-score { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:32px; height:32px;">
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#scores">Scores</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="8" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.4"/>
+      <rect x="20" y="8" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.6"/>
+      <rect x="32" y="8" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.3"/>
+      <rect x="8" y="20" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.7"/>
+      <rect x="20" y="20" width="8" height="8" rx="2" fill="var(--honey)"/>
+      <rect x="32" y="20" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.5"/>
+      <rect x="8" y="32" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.5"/>
+      <rect x="20" y="32" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.3"/>
+      <rect x="32" y="32" width="8" height="8" rx="2" fill="var(--honey)" opacity="0.8"/>
+    </svg>
+  </div>
+  <h1>ARC-AGI-3<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The first interactive reasoning benchmark — and the hardest reality check for AGI claims</p>
+  <div class="hero-meta">
+    <span>Launched March 2026</span>
+    <span>135 Novel Environments</span>
+    <span>Humans: 100%</span>
+    <span>Best AI: 0.37%</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS ARC-AGI-3 ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is ARC-AGI-3</div>
+  <h2>The test where every frontier model <span class="accent">scores under 1%.</span></h2>
+  <p style="margin-bottom:24px;">ARC-AGI-3 is the third generation of the Abstraction and Reasoning Corpus, created by François Chollet and Mike Knoop's ARC Prize Foundation. It's the first fully interactive AI benchmark — instead of solving static grid puzzles, AI agents are dropped into turn-based game environments with zero instructions, zero stated goals, and no description of the rules. The agent must explore, figure out what winning looks like, build a mental model of the environment, and execute a strategy. All from scratch.</p>
+  <p>Think of it like handing someone a game controller with no tutorial. A five-year-old figures it out in minutes. The most expensive AI systems on the planet cannot. That gap — between human adaptability and AI rigidity — is exactly what ARC-AGI-3 was built to measure.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Old benchmarks are saturated</h4>
+      <p style="font-size:14px;">ARC-AGI-1 is essentially solved (Gemini 3.1 Pro hits 98%). ARC-AGI-2 is approaching saturation at 84.6%. Worse, evidence suggests frontier models may be implicitly trained on ARC data — their reasoning chains reference ARC-specific colour mappings without being told. The signal was dying.</p>
+    </div>
+    <div class="card">
+      <h3>The Shift</h3>
+      <h4>Static puzzles → interactive environments</h4>
+      <p style="font-size:14px;">ARC-AGI-3 replaces image-in/image-out grids with 135 handcrafted turn-based games across 1,000+ levels. Each game has 8–10 levels that progressively introduce new mechanics. Agents observe a 64×64 grid with 16 colours, take actions, and must learn on the fly.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>A measurable intelligence gap</h4>
+      <p style="font-size:14px;">For the first time, there's a direct, quantitative comparison of human vs. AI learning efficiency on novel tasks. Not memorisation. Not pattern matching. Actual adaptive reasoning measured across time. The gap is enormous — and that's the point.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">👁️</div>
+      <div class="flow-label">Perceive</div>
+      <div class="flow-desc">See the grid state</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔍</div>
+      <div class="flow-label">Explore</div>
+      <div class="flow-desc">Try actions, observe results</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🧠</div>
+      <div class="flow-label">Model</div>
+      <div class="flow-desc">Build world model & goals</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🎯</div>
+      <div class="flow-label">Execute</div>
+      <div class="flow-desc">Plan and act efficiently</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The AGI reality check <span class="accent">the industry needed.</span></h2>
+  <p style="margin-bottom:40px;">In the same week that Jensen Huang declared AGI "already achieved" on Lex Fridman's podcast, ARC-AGI-3 dropped — and every frontier model scored below 1%. The benchmark arrives at a moment when the gap between AGI claims and demonstrable capability has never been wider. Labs are racing to declare victory while the simplest test of genuine adaptability exposes how far there is to go.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">100%</div>
+      <div class="stat-label">Human solve rate (no instructions)</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">&lt;1%</div>
+      <div class="stat-label">Every frontier model tested</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$2M</div>
+      <div class="stat-label">Total prize pool (ARC Prize 2026)</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">1,200+</div>
+      <div class="stat-label">Human players in preview testing</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>But isn't this just moving the goalposts?</h4>
+    <p style="font-size:14px; margin-top:8px;">Fair question. ARC-AGI-1 was released in 2019 and took five years to approach saturation. ARC-AGI-2 saw scores jump from 3% to 84.6% in under a year. These weren't goalpost shifts — they were benchmarks doing their job: tracking real capability gains, then getting replaced when they lost signal. ARC-AGI-3 is the next iteration, designed around the specific gap that remains: interactive, adaptive reasoning in truly novel environments. It measures the thing nobody has cracked yet.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Four pillars of <span class="accent">agentic intelligence.</span></h2>
+  <p style="margin-bottom:40px;">ARC-AGI-3 tests four capabilities that the technical paper identifies as necessary for general intelligence. These aren't arbitrary — they map directly to what humans do naturally when encountering something unfamiliar.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 01</h3>
+      <h4>Modelling</h4>
+      <p style="font-size:14px;">Turning raw observations into a generalisable world model that can predict future states and outcomes. Inherited from ARC-AGI-1 and 2, but now applied dynamically — the model must update as the environment reveals new mechanics across levels.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 02</h3>
+      <h4>Goal-Setting</h4>
+      <p style="font-size:14px;">Identifying desirable future states without explicit instructions. There are no win conditions displayed. The agent must independently determine what to target based on environmental cues and its own evolving understanding of the game.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 03</h3>
+      <h4>Planning & Execution</h4>
+      <p style="font-size:14px;">Mapping an action path from the current state to the identified goal, with the ability to course-correct based on environmental feedback. This requires both initial strategic accuracy and the agility to adapt when things don't go as expected.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 04</h3>
+      <h4>Efficiency (RHAE Scoring)</h4>
+      <p style="font-size:14px;">Intelligence is measured as <strong style="color:var(--text-heading)">action efficiency</strong>, not just task completion. The formula: <code>(human actions / AI actions)²</code>. An AI taking 10× as many steps as a human scores just 1%. This squared penalty makes brute-force approaches mathematically unviable and directly measures learning speed for the first time.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Why square the ratio?</h4>
+    <p style="font-size:14px; margin-top:8px;">The squared penalty is deliberate. If a human solves a game in 10 steps and an AI takes 100, a linear metric would give the AI 10%. The squared formula gives it 1%. At 200 steps: 0.25%. At 500 steps: 0.04%. This design choice forces systems to actually learn the environment's logic rather than systematically trying every possible action. Being faster than the human earns no bonus — the per-level score caps at 1.0. Later levels carry more weight because they require deeper understanding.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · THE SCORECARD ═══════ -->
+<section id="scores" class="fade-up">
+  <div class="section-label">04 · The Scorecard</div>
+  <h2>Frontier models vs. humans: <span class="accent">the numbers.</span></h2>
+  <p style="margin-bottom:40px;">The official leaderboard tests models via API with an identical system prompt — no task-specific scaffolding, no custom tooling. This is deliberate. If you need human-engineered workarounds for every new task, that's not general intelligence.</p>
+
+  <div class="card" style="padding:32px;">
+    <h3>OFFICIAL BENCHMARK SCORES — MARCH 2026</h3>
+    <div style="margin-top:20px;">
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">Humans (no instructions)</span>
+          <span class="model-score">100%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:100%; background:var(--success);"></div></div>
+      </div>
+      <div style="height:20px;"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">StochasticGoose — CNN + RL (preview winner)</span>
+          <span class="model-score">12.58%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:12.58%;"></div></div>
+      </div>
+      <div style="height:16px;"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">Gemini 3.1 Pro Preview</span>
+          <span class="model-score">0.37%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:2.5%;"></div></div>
+      </div>
+      <div style="height:12px;"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">GPT-5.4 High</span>
+          <span class="model-score">0.26%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:1.8%;"></div></div>
+      </div>
+      <div style="height:12px;"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">Claude Opus 4.6</span>
+          <span class="model-score">0.25%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:1.7%;"></div></div>
+      </div>
+      <div style="height:12px;"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span class="model-name">Grok-4.20</span>
+          <span class="model-score">0.00%</span>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:0%;"></div></div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:20px;">Frontier LLM scores are from official API evaluation with identical system prompts. Preview winner used CNN + reinforcement learning, not an LLM. Score bars for sub-1% models are exaggerated for visibility.</p>
+  </div>
+
+  <div class="grid-2" style="margin-top:32px;">
+    <div class="callout">
+      <h4>The scaffolding problem</h4>
+      <p style="font-size:14px; margin-top:8px;">Duke University built a custom harness that pushed Opus 4.6 to 97.1% on one known environment (TR87). On an unfamiliar environment (BP35): 0%. The intelligence lived in the human-built scaffolding, not the model. Chollet's argument: if the model needs task-specific human engineering to function, you're measuring the human's intelligence, not the AI's.</p>
+    </div>
+    <div class="callout">
+      <h4>Non-LLM approaches win</h4>
+      <p style="font-size:14px; margin-top:8px;">The top three preview entries were all non-LLM solutions — CNN-based, rule-based state graph exploration, and frame graph search without any training. A simple CNN agent outperformed GPT-5.4 by more than 12 percentage points. This suggests the path to ARC-AGI-3 runs through novel algorithmic ideas, not bigger language models.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 05 · THE DEBATE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · The Debate</div>
+  <h2>What people are actually <span class="accent">arguing about.</span></h2>
+  <p style="margin-bottom:40px;">ARC-AGI-3 has landed in a highly polarised discourse. Here are the core fault lines — and where both sides have a point.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Methodology</h3>
+      <h4>"The scoring is designed to produce low numbers"</h4>
+      <p style="font-size:14px;">Critics point out the squared efficiency penalty, the human baseline calibration, and the exclusion of extended-thinking models. The counter: if you need 10× more actions than a human who has never seen the task, efficiency isn't an unfair metric — it's the entire point.</p>
+    </div>
+    <div class="card">
+      <h3>Scaffolding</h3>
+      <h4>"Models just need better prompts and tools"</h4>
+      <p style="font-size:14px;">The 97.1% → 0% scaffolding result is the strongest evidence against this. Task-specific engineering works on known tasks but fails completely on novel ones. Chollet's position: if the 'G' in AGI means anything, the system shouldn't need a human hand-holding it through every new problem.</p>
+    </div>
+    <div class="card">
+      <h3>Architecture</h3>
+      <h4>"Can transformers ever do this?"</h4>
+      <p style="font-size:14px;">NYU professor Saining Xie argues LLMs are inherently limited because they learn entirely from human-generated text rather than from raw experience. The models that crack ARC-AGI-3 may need to be a fundamentally different kind of system — one that learns by doing, not by reading.</p>
+    </div>
+    <div class="card">
+      <h3>Human Baseline</h3>
+      <h4>"100% is misleading"</h4>
+      <p style="font-size:14px;">Sceptics note the baseline uses the second-best of ten first-time players — near the top of the distribution, not the average person. If the baseline were set to the median, the gap would still be large, but the headline framing would be more honest. The ARC team chose a strong baseline deliberately.</p>
+    </div>
+    <div class="card">
+      <h3>Data Contamination</h3>
+      <h4>"Old benchmarks were polluted"</h4>
+      <p style="font-size:14px;">Evidence from Gemini 3's reasoning chain — correctly referencing ARC's integer-to-colour mapping without being told — suggests models have been implicitly trained on ARC data. ARC-AGI-3's interactive format makes contamination structurally harder. You can't pre-train on an environment you explore in real time.</p>
+    </div>
+    <div class="card">
+      <h3>Pace of Progress</h3>
+      <h4>"Give it six months"</h4>
+      <p style="font-size:14px;">Labs pushed ARC-AGI-2 from 3% to 84.6% in under a year. The counterargument: those gains were largely from scaffolding and scale, which ARC-AGI-3 is specifically designed to neutralise. Whether frontier labs can climb this ladder the same way is genuinely open.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From grid puzzles to <span class="accent">interactive worlds.</span></h2>
+  <p style="margin-bottom:16px;">ARC has tracked — and accurately predicted — every major shift in AI reasoning capability since 2019. Here's the trajectory.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2019</div>
+      <h4>ARC-AGI-1 launches</h4>
+      <p>Chollet releases the original Abstraction and Reasoning Corpus alongside "On the Measure of Intelligence." Static grid puzzles, image-in/image-out. Early AI systems score near 0%. The first Kaggle competition (2020) draws 913 teams; the winner hits ~20% using brute-force program search.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2024</div>
+      <h4>ARC Prize 2024 & the reasoning breakthrough</h4>
+      <p>ARC Prize Foundation launches with $1M+ in prizes and 1,430 teams. Test-time training reaches 53.5% on ARC-AGI-1. OpenAI's o3 demonstrates that large reasoning models can exhibit genuine fluid intelligence on the benchmark — not just pattern matching.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2025</div>
+      <h4>ARC-AGI-2 and rapid saturation</h4>
+      <p>Version 2 launches with harder compositional puzzles. NVIDIA's NVARC team wins first place at 24%. But scaffolding and scale push scores to 84.6% within months. Evidence of data contamination emerges. The benchmark begins losing scientific signal.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2026</div>
+      <h4>ARC-AGI-3 resets the scoreboard</h4>
+      <p>First fully interactive benchmark. 135 handcrafted environments, 1,000+ levels. In-house game studio. $2M prize pool across two tracks. Launched at Y Combinator with a fireside between Chollet and Sam Altman. Every frontier model scores under 1%. A CNN-based agent leads at 12.58%.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Should you care about <span class="accent">ARC-AGI-3?</span></h2>
+  <p style="margin-bottom:32px;">ARC-AGI-3 isn't relevant to every AI project. Here's an honest breakdown of who should be paying attention — and who can safely ignore it.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Pay attention if</h4>
+      <p style="font-size:14px; margin-top:12px;">You're building autonomous agents that need to handle genuinely novel situations without human handholding — warehouse robotics, adaptive game AI, exploration systems.<br><br>You're evaluating AI vendor claims about "AGI" capabilities and need a grounded reference point for what's actually been demonstrated.<br><br>You're doing research in reinforcement learning, world models, or program synthesis — ARC-AGI-3's format maps directly to open problems in your field.<br><br>You care about the architectural question: whether transformers/LRMs can achieve genuine adaptability or whether fundamentally new approaches are needed.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Safely ignore if</h4>
+      <p style="font-size:14px; margin-top:12px;">You're shipping products that use AI for well-defined tasks — coding assistants, summarisation, content generation. LLMs are excellent at these. ARC-AGI-3 doesn't change that.<br><br>You're using AI as a tool within human-designed workflows. The scaffolding critique doesn't invalidate productive human–AI collaboration — it clarifies what counts as autonomy vs. automation.<br><br>Your timeline is this quarter, not this decade. ARC-AGI-3 is about long-term capability trajectories. Current AI is already delivering massive value in narrow, well-defined domains.<br><br>You're conflating "useful" with "intelligent." AI doesn't need to be AGI to transform your business. Most of the value comes from applied intelligence, not general intelligence.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · PRACTICAL GUIDANCE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Practical Guidance</div>
+  <h2>How it fits. <span class="accent">What to consider.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Key considerations</h4>
+    <p style="font-size:14px; margin-top:8px;">ARC-AGI-3 is the most important AI benchmark of 2026 — not because it humbles frontier models, but because it clarifies the conversation. The era of arguing whether AI is smart is over. The question is what kind of smart, and whether current architectures can get to genuine adaptability. For businesses, the practical takeaway is simpler: AI is extraordinarily capable within structured workflows. Don't wait for AGI to capture that value. But also don't confuse product-market fit with scientific progress. They're different races.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>Pressure-test vendor claims</h4>
+      <p style="font-size:14px;">When a vendor says "AGI-level," ask what they score on ARC-AGI-3. Not because sub-1% means their product is useless — it almost certainly isn't — but because it tells you whether you're buying narrow capability dressed up as general intelligence. That distinction matters for long-term architecture decisions.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Design for the scaffolding reality</h4>
+      <p style="font-size:14px;">The 97.1% → 0% scaffolding result is a direct lesson for product teams. Good scaffolding ships useful systems today — that's not the problem. The problem is assuming it will generalise. Build for graceful degradation when the model hits something genuinely novel.</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Play the games yourself</h4>
+      <p style="font-size:14px;">Seriously. The fastest way to understand what AI can and can't do right now is to <a href="https://arcprize.org/arc-agi/3" target="_blank" rel="noopener">play the public ARC-AGI-3 environments</a> ↗ and then watch the replay of a frontier model attempting the same thing. The gap becomes visceral in a way no benchmark number can convey.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Play the games.</span></h2>
+
+  <div class="card" style="margin-top:24px;">
+    <h3>Official</h3>
+    <h4>ARC-AGI-3 Resources</h4>
+    <p style="font-size:14px; margin-top:8px;">
+      <a href="https://arcprize.org/arc-agi/3" target="_blank" rel="noopener">ARC-AGI-3 — Play the games yourself</a> ↗<br>
+      <a href="https://arcprize.org/blog/arc-agi-3-launch" target="_blank" rel="noopener">Launch announcement — Official blog post</a> ↗<br>
+      <a href="https://arxiv.org/html/2603.24621v1" target="_blank" rel="noopener">Technical paper — Full methodology and results</a> ↗<br>
+      <a href="https://docs.arcprize.org/methodology" target="_blank" rel="noopener">RHAE scoring docs — How scores are calculated</a> ↗<br>
+      <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">Leaderboard — Live scores and cost analysis</a> ↗<br>
+      <a href="https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3" target="_blank" rel="noopener">Kaggle competition — $2M prize pool</a> ↗<br>
+      <a href="https://arcprize.org/blog/arc-prize-2025-results-analysis" target="_blank" rel="noopener">ARC Prize 2025 results — Context for v3</a> ↗
+    </p>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://arcprize.org/blog/arc-agi-3-launch" target="_blank" rel="noopener">ARC Prize Foundation — Launch Blog</a> ·
+      <a href="https://arxiv.org/html/2603.24621v1" target="_blank" rel="noopener">ARC-AGI-3 Technical Report</a> ·
+      <a href="https://docs.arcprize.org/methodology" target="_blank" rel="noopener">RHAE Scoring Methodology</a> ·
+      <a href="https://arcprize.org/blog/arc-prize-2025-results-analysis" target="_blank" rel="noopener">ARC Prize 2025 Results</a> ·
+      <a href="https://the-decoder.com/arc-agi-3-offers-2m-to-any-ai-that-matches-untrained-humans-yet-every-frontier-model-scores-below-1/" target="_blank" rel="noopener">The Decoder — ARC-AGI-3 Analysis</a> ·
+      <a href="https://www.fastcompany.com/91515360/arc-prize-foundation-new-ai-benchmark" target="_blank" rel="noopener">Fast Company — ARC-AGI-3 Coverage</a> ·
+      <a href="https://decrypt.co/362496/is-agi-here-not-even-close-ai-benchmark" target="_blank" rel="noopener">Decrypt — Benchmark Analysis</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. ARC-AGI is a project of the ARC Prize Foundation, co-founded by François Chollet and Mike Knoop. This is an independent educational explainer by <a href="https://imbila.ai" target="_blank" rel="noopener">Imbila.AI</a>.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <img src="https://www.imbila.ai/content/images/2025/11/New_Honey_200.png" alt="Imbila.AI" style="width:36px; height:36px; margin:0 auto 16px; display:block;">
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://know.imbila.ai" target="_blank" rel="noopener">Knowledge Base</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
