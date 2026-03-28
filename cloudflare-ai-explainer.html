@@ -986,6 +986,7 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
   const authed = await ImbilaAuth.isAuthenticated();
   if (!authed) ImbilaAuth.showReadingGate('.page', 3);
   ImbilaAuth.injectAuthUI('nav');
+  ImbilaAuth.trackPageView();
 })();
 </script>
 </body>

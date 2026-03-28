@@ -567,7 +567,10 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 <script src="https://platform.imbila.ai/auth-widget.js"></script>
 <script>
 (async function() {
-  if (window.ImbilaAuth) ImbilaAuth.injectAuthUI('nav .nav-right');
+  if (window.ImbilaAuth) {
+    ImbilaAuth.injectAuthUI('nav .nav-right');
+    ImbilaAuth.trackPageView();
+  }
 })();
 </script>
 </body>
