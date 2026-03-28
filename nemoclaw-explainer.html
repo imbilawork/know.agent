@@ -906,5 +906,14 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 </script>
 
+<script src="https://platform.imbila.ai/auth-widget.js"></script>
+<script>
+(async function() {
+  if (!window.ImbilaAuth) return;
+  const authed = await ImbilaAuth.isAuthenticated();
+  if (!authed) ImbilaAuth.showReadingGate('.page', 3);
+  ImbilaAuth.injectAuthUI('nav');
+})();
+</script>
 </body>
 </html>
