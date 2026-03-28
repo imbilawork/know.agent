@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloudflare AI Explained — An Imbila.AI Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </div>
+  <div class="nav-links">
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <!-- Cloudflare-inspired shield icon -->
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 4L8 12v12c0 10.5 6.8 17.3 16 20 9.2-2.7 16-9.5 16-20V12L24 4z" stroke="var(--text-muted)" stroke-width="2" fill="none"/>
+      <circle cx="24" cy="24" r="6" fill="#EDAF42"/>
+      <path d="M20 24l3 3 5-6" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>Cloudflare AI<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">Serverless AI inference, agents, and RAG — running on the network that powers 20% of the internet</p>
+  <div class="hero-meta">
+    <span>89+ Models Available</span>
+    <span>200+ GPU Cities</span>
+    <span>$0.011 / 1K Neurons</span>
+    <span>10K Free Neurons/Day</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS CLOUDFLARE AI ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is Cloudflare AI</div>
+  <h2>AI inference at the edge. <span class="accent">No GPU clusters required.</span></h2>
+  <p style="margin-bottom:24px;">Cloudflare AI is a suite of products within Cloudflare's Developer Platform that lets you run open-source AI models — LLMs, image generators, embedding models, speech-to-text, and more — on serverless GPUs distributed across Cloudflare's global network. You write a few lines of code, call an API, and Cloudflare handles provisioning, scaling, and routing requests to the nearest available GPU.</p>
+  <p>Think of it like this: the same company that already sits between your users and your servers for CDN, DNS, and DDoS protection has strapped NVIDIA H100 GPUs to that network and is selling inference by the request. Your AI workload runs physically close to your users, which means lower latency and fewer hops. No ML engineering team required. No GPU reservation contracts. No idle hardware bills.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>GPU Clusters Are Expensive and Idle</h4>
+      <p style="font-size:14px;">Average GPU utilisation sits between 20–40% for most organisations. You reserve capacity, pay for it, and watch it sit empty between spikes. Scaling across regions means duplicating infrastructure.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Serverless Inference at the Edge</h4>
+      <p style="font-size:14px;">Workers AI runs models on Cloudflare's network. You pay per request via "Neurons" — a unit representing actual GPU compute consumed. No provisioning, no idle cost, no region selection.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Single-Platform AI Development</h4>
+      <p style="font-size:14px;">Developers call a single API, get low-latency inference in 200+ cities, and combine it with Vectorize, AI Gateway, and R2 for full-stack AI applications — all within one platform.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">💻</div>
+      <div class="flow-label">Your Code</div>
+      <div class="flow-desc">Worker, Page, or REST</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🛡️</div>
+      <div class="flow-label">AI Gateway</div>
+      <div class="flow-desc">Cache, rate limit, log</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🧠</div>
+      <div class="flow-label">Workers AI</div>
+      <div class="flow-desc">GPU inference at edge</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📤</div>
+      <div class="flow-label">Response</div>
+      <div class="flow-desc">Text, image, audio</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>Edge inference at scale. <span class="accent">Why it's different.</span></h2>
+  <p style="margin-bottom:40px;">Most AI inference today runs in a handful of centralised data centres. Cloudflare's approach is to run inference at the edge — on the same global network that already handles CDN, DNS, and security traffic. When every interaction with an AI model adds network latency on top of compute latency, physical proximity to users reduces total response time.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">330+</div>
+      <div class="stat-label">Cities in Cloudflare's network</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">89+</div>
+      <div class="stat-label">Open-source models available</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">82%</div>
+      <div class="stat-label">Less CPU overhead vs vLLM (Infire engine)</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">77%</div>
+      <div class="stat-label">Cost reduction on internal agent workloads</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use OpenAI / Anthropic / Google APIs directly?</h4>
+    <p style="font-size:14px; margin-top:8px;">AI Gateway proxies requests to third-party providers (OpenAI, Anthropic, etc.) as well as Workers AI, adding caching, rate limiting, and fallback across any model. This means you can route open-source models for cost-sensitive workloads and proprietary APIs for others through a single control plane. Cloudflare has reported that switching an internal agent workload from a mid-tier proprietary model to Kimi K2.5 on Workers AI reduced costs by 77%.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Six products. <span class="accent">One AI stack.</span></h2>
+  <p style="margin-bottom:40px;">Cloudflare's AI platform isn't a single product — it's a set of integrated building blocks. Each one does a specific job, and they're designed to work together without glue code.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Product 01</h3>
+      <h4>Workers AI</h4>
+      <p style="font-size:14px;">The inference engine. Call 89+ open-source models (LLMs, image gen, embeddings, TTS, ASR) via a binding in your Worker or a REST API from anywhere. Models run on NVIDIA H100 GPUs across Cloudflare's network. Pricing is per-Neuron (GPU compute unit), with 10,000 free per day.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs">// Call Llama from a Worker</span>
+<span class="ck">const</span> <span class="cv">response</span> = <span class="ck">await</span> env.AI.run(
+  <span class="cv">"@cf/meta/llama-4-scout-17b-16e-instruct"</span>,
+  { messages: [{ role: <span class="cv">"user"</span>, content: prompt }] }
+);</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Product 02</h3>
+      <h4>AI Gateway</h4>
+      <p style="font-size:14px;">A proxy layer that sits in front of any AI provider — Workers AI, OpenAI, Anthropic, etc. One line of config gives you request logging, analytics, caching (including semantic caching), rate limiting, model fallback, and cost tracking. Works with the OpenAI SDK. Free on all plans.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Product 03</h3>
+      <h4>Vectorize</h4>
+      <p style="font-size:14px;">A globally distributed vector database for storing embeddings. Supports metadata filtering (string, number, boolean), integrates natively with Workers AI embedding models, and enables RAG, semantic search, and recommendation workflows. Data stays close to users.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Product 04</h3>
+      <h4>AI Search</h4>
+      <p style="font-size:14px;">Formerly called AutoRAG. A fully managed RAG pipeline — connect an R2 bucket or website, and Cloudflare handles chunking, embedding, indexing, and querying automatically. Supports continuous re-crawling, multitenancy via folder-based filters, and streaming responses. Currently in open beta.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Product 05</h3>
+      <h4>Agents SDK</h4>
+      <p style="font-size:14px;">A TypeScript SDK for building persistent, stateful AI agents on Durable Objects. Agents maintain state over long sessions, support WebSocket hibernation (zero cost when idle), MCP client/server support, scheduled tasks, and "Code Mode" — where the LLM writes code against a typed SDK instead of individual tool calls, reducing token usage by up to 87.5%.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Engine</h3>
+      <h4>Infire</h4>
+      <p style="font-size:14px;">Cloudflare's custom LLM inference engine, written in Rust. Replaces Python-based stacks like vLLM. Uses granular CUDA graphs, JIT kernel compilation, and paged KV caching. Benchmarks show 7% faster inference than vLLM 0.10.0 on H100s, with 82% lower CPU overhead. Powers all Workers AI model serving.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Stack</div>
+  <h2>Where Cloudflare AI fits <span class="accent">alongside everything else.</span></h2>
+  <p style="margin-bottom:40px;">Cloudflare's AI products don't exist in isolation. They plug into the broader Developer Platform — Workers for compute, R2 for storage, D1 for SQL, Durable Objects for state, Pages for frontends. The AI layer is designed to be consumed alongside these, not as a standalone service.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Compute</span>
+      <h4 style="margin-top:12px;">Workers + Durable Objects</h4>
+      <p style="font-size:14px;">Serverless functions (V8 isolates) and persistent stateful objects. The execution environment for all AI application logic. Durable Objects give agents identity, state, and long-lived connections.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Storage</span>
+      <h4 style="margin-top:12px;">R2 + D1 + KV</h4>
+      <p style="font-size:14px;">R2 provides S3-compatible object storage with zero egress fees — ideal for training data, model weights, and document stores. D1 is serverless SQL. KV is global key-value storage.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Protocol</span>
+      <h4 style="margin-top:12px;">MCP Servers</h4>
+      <p style="font-size:14px;">Cloudflare provides managed remote MCP servers for its own API (2,500+ endpoints via just two tools) and partners with Anthropic, Stripe, Asana, and others to host their MCP servers on the platform.</p>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Run an LLM or image model</td>
+        <td><span class="tag">Workers AI</span></td>
+        <td>Serverless, pay-per-request, 89+ open-source models at the edge</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Monitor & control AI costs</td>
+        <td><span class="tag">AI Gateway</span></td>
+        <td>Caching, fallback, logging across any provider — including third-party APIs</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Build semantic search / RAG</td>
+        <td><span class="tag">Vectorize + AI Search</span></td>
+        <td>Vector DB for custom RAG; AI Search for zero-config managed RAG pipelines</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Build a persistent AI agent</td>
+        <td><span class="tag">Agents SDK</span></td>
+        <td>Stateful execution on Durable Objects with MCP, scheduling, and Code Mode</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Store documents / training data</td>
+        <td><span class="tag">R2</span></td>
+        <td>Zero egress fees, S3-compatible, feeds directly into AI Search pipelines</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What people actually <span class="accent">build with it.</span></h2>
+  <p style="margin-bottom:40px;">Cloudflare's AI stack is broad enough to support most common AI application patterns. Here's where teams are getting value.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Support</h3>
+      <h4>AI-Powered Customer Support</h4>
+      <p style="font-size:14px;">RAG pipelines that ground LLM responses in your knowledge base. AI Search handles ingestion and indexing; Workers AI generates responses. The agent runs on Durable Objects for session continuity.</p>
+    </div>
+    <div class="card">
+      <h3>Search</h3>
+      <h4>Semantic Search & Recommendations</h4>
+      <p style="font-size:14px;">Generate embeddings with Workers AI, store them in Vectorize, and query by meaning rather than keywords. Works for product search, content discovery, and anomaly detection.</p>
+    </div>
+    <div class="card">
+      <h3>Content</h3>
+      <h4>Image Generation & Media Processing</h4>
+      <p style="font-size:14px;">FLUX.2, Stable Diffusion, and Leonardo.Ai models for text-to-image. Deepgram and Whisper for speech-to-text. MeloTTS for voice synthesis. All serverless, all at the edge.</p>
+    </div>
+    <div class="card">
+      <h3>Agentic</h3>
+      <h4>Autonomous AI Agents</h4>
+      <p style="font-size:14px;">Long-running agents built with the Agents SDK that plan, reason, and act. MCP integration for tool use. Code Mode for token-efficient multi-tool orchestration. WebSocket hibernation for cost control.</p>
+    </div>
+    <div class="card">
+      <h3>Security</h3>
+      <h4>AI-Enhanced App Security</h4>
+      <p style="font-size:14px;">Cloudflare uses Workers AI internally for DLP false-positive reduction, email threat analysis, and automated code review. Their "Bonk" agent reviews PRs using Kimi K2.5 and processed over 7B tokens daily.</p>
+    </div>
+    <div class="card">
+      <h3>Developer Tools</h3>
+      <h4>AI-Powered DevEx</h4>
+      <p style="font-size:14px;">MCP servers that expose your entire API to AI agents. Markdown for Agents auto-converts HTML to markdown. Cloudflare's own MCP server covers 2,500+ API endpoints with just two tools and ~1,000 tokens.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From CDN to AI platform. <span class="accent">A fast pivot.</span></h2>
+  <p style="margin-bottom:16px;">Cloudflare's AI journey has been remarkably compressed. In under three years, they've gone from announcing GPU availability to offering a full-stack AI developer platform with custom inference engines and frontier model support.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">SEP 2023</div>
+      <h4>Workers AI Launch</h4>
+      <p>Initial launch with a small set of open-source models. GPU deployment begins in 100+ cities. Partnership with Hugging Face announced. Vectorize vector database launches alongside.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">APR 2024</div>
+      <h4>Workers AI Goes GA</h4>
+      <p>General availability with Neuron-based pricing ($0.011/1K). Support for LoRA fine-tuned models and one-click Hugging Face deploys. Python support added to Workers. AI Playground launched.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">SEP 2024</div>
+      <h4>GPU Upgrade & Larger Models</h4>
+      <p>H100 NVL GPUs deployed. Support for Llama 3.1 70B and Llama 3.2 family. GPUs in 180+ cities. Vectorize upgraded with metadata filtering. Infire inference engine revealed.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2025</div>
+      <h4>Agents SDK & MCP</h4>
+      <p>Agents SDK launches for building persistent, stateful AI agents on Durable Objects. Remote MCP server support added. Partnerships with Anthropic, Stripe, Asana, and others for hosted MCP servers.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">SEP 2025</div>
+      <h4>AI Week — Infire Deep Dive</h4>
+      <p>Full technical reveal of Infire (Rust-based LLM engine). MCP Server Portals for enterprise security. AI Search (AutoRAG) enters open beta. NLWeb integration for conversational search. Firewall for AI announced.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">DEC 2025</div>
+      <h4>Replicate Acquisition</h4>
+      <p>Cloudflare acquires Replicate, the popular model hosting platform. Strengthens the inference platform's model catalogue and developer reach.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2026</div>
+      <h4>Frontier Models & Code Mode</h4>
+      <p>Kimi K2.5 (256K context, multi-turn tool calling) launches on Workers AI — the first frontier-scale open-source model on the platform. Code Mode reduces MCP token usage by 87.5%. Unified Cloudflare MCP server covers 2,500+ endpoints via two tools. NVIDIA Nemotron 3 and OpenAI GPT-OSS models added.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Is Cloudflare AI right <span class="accent">for your project?</span></h2>
+  <p style="margin-bottom:32px;">Cloudflare's AI platform fits certain use cases well and is less suited to others. Here's a factual breakdown.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use Cloudflare AI when</h4>
+      <p style="font-size:14px; margin-top:12px;">You want serverless, pay-per-use inference with no GPU reservation — particularly for variable or spiky workloads.<br><br>Latency matters and your users are geographically distributed. Edge inference is available in 200+ cities globally.<br><br>You're already on Cloudflare for Workers, Pages, R2, or DNS. The AI products integrate natively with the existing developer platform.<br><br>You want to run open-source models (Llama, FLUX, Whisper, etc.) without managing GPU infrastructure, model optimisation, or scaling.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip Cloudflare AI when</h4>
+      <p style="font-size:14px; margin-top:12px;">You need proprietary frontier models (GPT-4o, Claude, Gemini) as your primary — Workers AI only runs open-source models. You can still proxy via AI Gateway, but you're not saving on compute.<br><br>You need fine-tuning or custom model training. Cloudflare supports LoRAs but doesn't offer training infrastructure. Dedicated GPU providers or hyperscalers are better here.<br><br>You need guaranteed GPU capacity for sustained high-throughput workloads. Serverless means shared resources and potential cold starts for infrequently used models.<br><br>You need models Cloudflare doesn't carry. The catalogue is curated, not open-ended. Custom model hosting requires enterprise plans.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · PRICING & LIMITS ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Pricing & Limits</div>
+  <h2>What it costs. <span class="accent">What you get.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Neuron-based billing</h4>
+    <p style="font-size:14px; margin-top:8px;">Cloudflare measures AI compute in "Neurons" — a unit representing the GPU resources consumed by a request. Pricing is presented per-model in familiar token-based units, but the backend billing converts everything to Neurons. All limits reset daily at 00:00 UTC.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Free Tier</h3>
+      <h4>10,000 Neurons / Day</h4>
+      <p style="font-size:14px;">Available to all Cloudflare accounts, including the Workers Free plan. Access to the full model catalogue. Hard rate limit at 10,000 Neurons — requests fail after that. No credit card required.</p>
+    </div>
+    <div class="card">
+      <h3>Workers Paid</h3>
+      <h4>$0.011 / 1,000 Neurons</h4>
+      <p style="font-size:14px;">Requires the Workers Paid plan ($5/month base). Same 10,000 free Neurons per day, then pay-as-you-go above that. Per-model token pricing varies — for example, Llama 3.1 8B runs at $0.045/M input tokens, $0.384/M output tokens. Llama 3.3 70B is $0.293/M input, $2.253/M output.</p>
+    </div>
+    <div class="card">
+      <h3>AI Gateway</h3>
+      <h4>Free on All Plans</h4>
+      <p style="font-size:14px;">Core features (caching, rate limiting, analytics, model fallback) are free. Workers Free tier includes 100K gateway logs/month. Workers Paid includes 1M logs/month. Logpush (streaming to external storage) is paid only. No per-request gateway fee.</p>
+    </div>
+  </div>
+
+  <table class="comp-table" style="margin-top:32px;">
+    <thead>
+      <tr><th>Product</th><th>Free Tier</th><th>Paid Pricing</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Workers AI</td>
+        <td>10K Neurons/day</td>
+        <td>$0.011 / 1K Neurons above free</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">AI Gateway</td>
+        <td>100K logs/month</td>
+        <td>1M logs on Workers Paid; Logpush extra</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Vectorize</td>
+        <td>Included in Workers plans</td>
+        <td>Usage-based (request units + storage)</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">AI Search</td>
+        <td>Open beta (free during beta)</td>
+        <td>TBD — currently free</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Agents SDK</td>
+        <td>Durable Objects free tier</td>
+        <td>Durable Objects usage-based pricing</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Documentation <span class="accent">& references.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>Cloudflare AI Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://developers.cloudflare.com/workers-ai/" target="_blank" rel="noopener">Workers AI Docs</a> — Full developer documentation ↗<br>
+        <a href="https://developers.cloudflare.com/ai-gateway/" target="_blank" rel="noopener">AI Gateway Docs</a> — Observability and control layer ↗<br>
+        <a href="https://developers.cloudflare.com/vectorize/" target="_blank" rel="noopener">Vectorize Docs</a> — Vector database documentation ↗<br>
+        <a href="https://developers.cloudflare.com/ai-search/" target="_blank" rel="noopener">AI Search Docs</a> — Managed RAG pipelines ↗<br>
+        <a href="https://developers.cloudflare.com/agents/" target="_blank" rel="noopener">Agents SDK Docs</a> — Build persistent AI agents ↗<br>
+        <a href="https://github.com/cloudflare/agents" target="_blank" rel="noopener">Agents SDK GitHub</a> — SDK source and examples ↗<br>
+        <a href="https://workers.cloudflare.com/solutions/ai" target="_blank" rel="noopener">Cloudflare AI Cloud</a> — Product overview and architecture ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Community</h3>
+      <h4>Developer Channels</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://discord.cloudflare.com" target="_blank" rel="noopener">Cloudflare Developer Discord</a> — #workers-ai and #vectorize channels ↗<br>
+        <a href="https://community.cloudflare.com" target="_blank" rel="noopener">Cloudflare Community Forum</a> — Support and discussion ↗<br>
+        <a href="https://developers.cloudflare.com/workers-ai/models/" target="_blank" rel="noopener">Model Catalogue</a> — Browse all 89+ available models ↗<br>
+        <a href="https://developers.cloudflare.com/workers-ai/platform/pricing/" target="_blank" rel="noopener">Pricing Reference</a> — Per-model Neuron and token costs ↗
+      </p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://developers.cloudflare.com/workers-ai/" target="_blank" rel="noopener">Cloudflare Workers AI Docs</a> ·
+      <a href="https://blog.cloudflare.com/workers-ai-large-models/" target="_blank" rel="noopener">Powering the Agents: Workers AI Large Models (Mar 2026)</a> ·
+      <a href="https://blog.cloudflare.com/cloudflares-most-efficient-ai-inference-engine/" target="_blank" rel="noopener">Infire Inference Engine Blog</a> ·
+      <a href="https://blog.cloudflare.com/code-mode-mcp/" target="_blank" rel="noopener">Code Mode: MCP in ~1,000 Tokens</a> ·
+      <a href="https://developers.cloudflare.com/workers-ai/platform/pricing/" target="_blank" rel="noopener">Workers AI Pricing</a> ·
+      <a href="https://www.marktechpost.com/2026/02/17/cloudflare-releases-agents-sdk-v0-5-0-with-rewritten-cloudflare-ai-chat-and-new-rust-powered-infire-engine-for-optimized-edge-inference-performance/" target="_blank" rel="noopener">Agents SDK v0.5.0 (MarkTechPost)</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. Cloudflare, Workers AI, Vectorize, and AI Gateway are trademarks of Cloudflare, Inc. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
