@@ -1,0 +1,154 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "teams-agent-channel",
+    "title": "Microsoft Teams as an AI Agent Channel",
+    "subtitle": "How to build a production-grade AI agent inside Microsoft Teams — architecture, auth, Adaptive Cards, and the gotchas nobody warns you about",
+    "topic": "Microsoft Teams Agent Integration",
+    "category": "integration-guide",
+    "tags": ["microsoft-teams", "bot-framework", "adaptive-cards", "ai-agents", "enterprise", "azure", "mcp"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/teams-agent-channel-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "A framework-neutral guide to building AI agent channels in Microsoft Teams using the Azure Bot Framework. Covers bot registration, webhook architecture, Adaptive Cards, auth (Azure AD + RSC), file handling via SharePoint, and the real gotchas — thread vs post mode, multi-tenant deprecation, permission scoping. Works with any LLM (Claude, GPT, Gemini, Ollama) and any framework (Bot Framework SDK, OpenClaw, Botpress, or custom).",
+  "key_stats": [
+    { "value": "320M+", "label": "Monthly Teams Users" },
+    { "value": "v1.5", "label": "Adaptive Card Schema" },
+    { "value": "$0", "label": "Bot Framework Registration" },
+    { "value": "Jul 2025", "label": "Multi-Tenant Deprecated" }
+  ],
+  "products": [
+    {
+      "name": "Azure Bot Registration",
+      "role": "Identity layer",
+      "description": "Registers your agent as a bot in Azure AD. Provides App ID, App Password, and Tenant ID. Single-tenant required since July 2025. Free tier sufficient for most use cases.",
+      "pricing": { "free": "Standard channels free", "paid": "Premium channels usage-based" }
+    },
+    {
+      "name": "Bot Framework Activity Protocol",
+      "role": "Transport layer",
+      "description": "The wire protocol for Teams bot communication. Messages arrive as Activity JSON payloads via HTTPS webhook (typically port 3978 at /api/messages). JWT validation on inbound, REST API for outbound replies.",
+      "pricing": null
+    },
+    {
+      "name": "Adaptive Cards",
+      "role": "UI layer",
+      "description": "Rich interactive cards rendered natively in Teams. Text blocks, images, action buttons, input fields, polls, and data tables — defined in JSON schema v1.5. Cards collect user input via postback events for multi-step workflows.",
+      "pricing": null
+    },
+    {
+      "name": "Resource-Specific Consent (RSC)",
+      "role": "Permission model",
+      "description": "Granular permissions that let bots read channel messages and send replies without broad admin scopes. Covers real-time events only — historical access needs Graph API with admin consent.",
+      "pricing": null
+    },
+    {
+      "name": "Microsoft Graph API (Teams)",
+      "role": "Advanced data access",
+      "description": "Programmatic access to Teams data — message history, file handling via SharePoint, meeting scheduling, team management. Required for features beyond basic messaging. All permissions need M365 admin consent.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "first-party": {
+      "product": "Microsoft Bot Framework SDK",
+      "description": "Node.js, Python, C#, Java. First-party SDK with full API coverage and best documentation. Best for Teams-first bots and enterprise compliance."
+    },
+    "multi-channel": {
+      "product": "OpenClaw",
+      "description": "23-channel agent framework with Teams plugin. Model-agnostic. Best for agents that need to work across Teams, WhatsApp, Slack, and others from one codebase."
+    },
+    "visual": {
+      "product": "Botpress",
+      "description": "Visual flow builder with built-in NLU and cloud hosting. Best for non-developer teams and rapid prototyping."
+    },
+    "tooling": {
+      "product": "MCP Servers (Composio, etc.)",
+      "description": "Model Context Protocol servers for Teams operations — scheduling meetings, managing memberships, archiving channels — via natural language."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "Your workforce already lives in Teams and you want AI embedded in existing workflows, not bolted on as a separate app.",
+      "You need control over model choice, prompts, data residency, and cost — not locked into Copilot's pricing or model.",
+      "You want a multi-channel agent that works across Teams, Slack, WhatsApp, and others from the same codebase.",
+      "You have (or can get) Azure AD admin consent for bot registration and someone who can maintain the gateway."
+    ],
+    "skip_when": [
+      "Your org blocks third-party bots in Teams or has a strict no-custom-app policy.",
+      "You don't have access to Azure Portal to create a Bot registration — this is a hard requirement.",
+      "You need full message history search. RSC only covers live events; Graph API with admin consent is needed for historical access.",
+      "You want zero maintenance. This requires a running gateway on a publicly accessible HTTPS endpoint."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "DevOps",
+      "title": "Deployment Notifications",
+      "description": "Adaptive Cards with build status, rollback buttons, and log links posted to a #deployments channel. One-click rollback from inside Teams."
+    },
+    {
+      "category": "IT Support",
+      "title": "Helpdesk Triage",
+      "description": "Employees DM the bot with issues. The agent classifies, routes to the right queue, and auto-creates tickets — without a separate helpdesk portal."
+    },
+    {
+      "category": "HR",
+      "title": "Onboarding Assistant",
+      "description": "New hires get a personal DM bot for policy docs, benefits enrolment, and team introductions — answering questions in natural language."
+    },
+    {
+      "category": "Sales",
+      "title": "CRM Query Bot",
+      "description": "Via MCP connectors, sales reps ask the bot for deal status, contact history, or pipeline numbers directly in Teams — no tab-switching to Salesforce."
+    },
+    {
+      "category": "Engineering",
+      "title": "Daily Standup Polls",
+      "description": "Automated Adaptive Card polls at 9am. Responses collected automatically. Summary posted at end-of-day. No meeting required."
+    },
+    {
+      "category": "Compliance",
+      "title": "Policy Q&A",
+      "description": "RAG-powered agent trained on internal policy documents. Source-attributed answers to compliance questions — audit-friendly."
+    }
+  ],
+  "timeline": [
+    { "date": "2020-01", "title": "Bot Framework v4 GA", "detail": "Microsoft stabilises the Activity protocol and SDK for Teams bots. Adaptive Cards v1.2." },
+    { "date": "2023-01", "title": "Teams Toolkit & AI Library", "detail": "Microsoft releases Teams AI Library for LLM-powered bots. Simplified scaffolding and prompt management." },
+    { "date": "2025-07", "title": "Multi-Tenant Deprecation", "detail": "Microsoft deprecates new multi-tenant bot registrations. Single-tenant required for all new bots." },
+    { "date": "2025-10", "title": "MCP Adoption", "detail": "MCP servers for Teams operations (Composio, others) enable natural-language admin actions from agents." },
+    { "date": "2026-01", "title": "Adaptive Cards v1.5 + RSC Expansion", "detail": "Rich card interactions, expanded private channel bot support rolling out across tenants." }
+  ],
+  "code_examples": [
+    {
+      "title": "Minimal webhook handler (Node.js)",
+      "language": "javascript",
+      "code": "const { BotFrameworkAdapter } = require('botbuilder');\n\nconst adapter = new BotFrameworkAdapter({\n  appId: process.env.MICROSOFT_APP_ID,\n  appPassword: process.env.MICROSOFT_APP_PASSWORD\n});\n\napp.post('/api/messages', (req, res) => {\n  adapter.processActivity(req, res, async (context) => {\n    if (context.activity.type === 'message') {\n      const reply = await callYourAgent(context.activity.text);\n      await context.sendActivity(reply);\n    }\n  });\n});"
+    },
+    {
+      "title": "Sending an Adaptive Card",
+      "language": "javascript",
+      "code": "const card = {\n  type: 'AdaptiveCard', version: '1.5',\n  body: [\n    { type: 'TextBlock', text: 'Deployment Status', weight: 'Bolder', size: 'Medium' },\n    { type: 'FactSet', facts: [\n      { title: 'Status', value: 'Success' },\n      { title: 'Duration', value: '2m 34s' }\n    ]}\n  ],\n  actions: [\n    { type: 'Action.OpenUrl', title: 'View Logs', url: 'https://...' },\n    { type: 'Action.Submit', title: 'Rollback', data: { action: 'rollback' } }\n  ]\n};\n\nawait context.sendActivity({\n  attachments: [{ contentType: 'application/vnd.microsoft.card.adaptive', content: card }]\n});"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "Microsoft Teams Platform Docs", "url": "https://learn.microsoft.com/en-us/microsoftteams/platform/" },
+      { "title": "Bot Framework SDK (GitHub)", "url": "https://github.com/microsoft/botframework-sdk" },
+      { "title": "Teams AI Library", "url": "https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/teams-conversational-ai/teams-conversation-ai-overview" },
+      { "title": "Adaptive Cards Designer", "url": "https://adaptivecards.io/designer/" },
+      { "title": "Adaptive Cards Schema Explorer", "url": "https://adaptivecards.io/explorer/" },
+      { "title": "Microsoft Graph — Teams API", "url": "https://learn.microsoft.com/en-us/graph/teams-concept-overview" }
+    ],
+    "sources": [
+      { "title": "Microsoft Teams Platform Documentation", "url": "https://learn.microsoft.com/en-us/microsoftteams/platform/" },
+      { "title": "Bot Framework Activity Protocol", "url": "https://learn.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-activity" },
+      { "title": "Adaptive Cards Documentation", "url": "https://adaptivecards.io/" },
+      { "title": "Microsoft Graph — Teams API", "url": "https://learn.microsoft.com/en-us/graph/teams-concept-overview" }
+    ]
+  }
+}

@@ -21,7 +21,7 @@ know.agent/
 │   ├── liteparse.md
 │   ├── llama-cpp.md
 │   ├── nemoclaw.md
-│   └── openclaw-teams.md
+│   └── teams-agent-channel.md
 ├── data/                 # Structured JSON (programmatic access)
 │   ├── arc-agi-3.json
 │   ├── agents2026.json
@@ -32,7 +32,7 @@ know.agent/
 │   ├── liteparse.json
 │   ├── llama-cpp.json
 │   ├── nemoclaw.json
-│   └── openclaw-teams.json
+│   └── teams-agent-channel.json
 └── schema/               # JSON schema definitions
     └── explainer-v1.json
 ```
@@ -69,7 +69,7 @@ The JSON files are designed to be returned directly as tool responses. Each file
 | `liteparse` | LiteParse Explained | Local document parsing for agents |
 | `llama-cpp` | llama.cpp Explained | Local LLM inference engine |
 | `nemoclaw` | NVIDIA NemoClaw Explained | Sandboxed agent infrastructure |
-| `openclaw-teams` | OpenClaw Teams Explained | Open-source AI agents for Microsoft Teams |
+| `teams-agent-channel` | Microsoft Teams as an AI Agent Channel | Building AI agents in Teams |
 
 ## Adding new explainers
 

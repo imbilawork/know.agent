@@ -37,7 +37,7 @@ https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.
 
 - [NVIDIA NemoClaw Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/nemoclaw.md): Secure, sandboxed infrastructure for always-on AI agents. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/nemoclaw.json)
 
-- [OpenClaw Teams Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/openclaw-teams.md): Open-source AI agents for Microsoft Teams. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/openclaw-teams.json)
+- [Microsoft Teams as an AI Agent Channel](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/teams-agent-channel.md): How to build a production-grade AI agent inside Teams — architecture, auth, Adaptive Cards, and gotchas. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/teams-agent-channel.json)
 
 ## JSON schema
 
