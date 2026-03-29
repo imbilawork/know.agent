@@ -1,0 +1,186 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "agents2026",
+    "title": "Top Agent Frameworks Q2 2026 — Two Views",
+    "subtitle": "The top 10 autonomous agent frameworks ranked by OpenAI and Gemini — compared side by side",
+    "topic": "AI Agent Frameworks",
+    "category": "framework",
+    "tags": ["ai-agents", "langchain", "langgraph", "crewai", "smolagents", "openclaw", "ollama", "multi-agent", "orchestration", "mcp"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/agents2026",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "Two major AI labs — OpenAI (via o3) and Google (via Gemini Deep Research) — each independently produced a top-10 ranking of autonomous agent frameworks on 26 March 2026. They identified 14 unique frameworks total, with 6 appearing on both lists. LangGraph and OpenClaw rank #1 and #2 on both. The differences reflect methodological choices: OpenAI focused on production readiness and primary GitHub sources; Gemini cast a wider net including low-code platforms, TypeScript-first frameworks, and the Ollama runtime evolution.",
+  "key_stats": [
+    { "value": "14", "label": "Unique Frameworks" },
+    { "value": "6", "label": "Appear in Both Lists" },
+    { "value": "$52.6B", "label": "Projected Market by 2030" },
+    { "value": "57%", "label": "Orgs with Agents in Production" }
+  ],
+  "products": [
+    {
+      "name": "LangChain + LangGraph",
+      "role": "Enterprise state-machine orchestration",
+      "description": "Broadest agent engineering ecosystem with durable graphs, HITL, and vast integrations. Enterprise standard with directed cyclic graphs, checkpointing, and 34.5M monthly downloads. Klarna's LangGraph bot reportedly saves $60M handling two-thirds of inbound inquiries.",
+      "pricing": null
+    },
+    {
+      "name": "OpenClaw",
+      "role": "Full-stack personal agent platform",
+      "description": "On-device execution pioneer with multi-channel support (WhatsApp, Telegram, Slack, Discord), skills/plugins, daemon runtime, ReAct loop, heartbeat scheduling, and 100+ built-in capabilities. Originally named 'Clawd'. Grew to 337k GitHub stars faster than any prior project.",
+      "pricing": null
+    },
+    {
+      "name": "LlamaIndex",
+      "role": "Agentic data + workflows",
+      "description": "Strongest agentic data and workflows stack with massive integration catalogue. 48k GitHub stars. On OpenAI top 10 at #3; Gemini honourable mention.",
+      "pricing": null
+    },
+    {
+      "name": "CrewAI",
+      "role": "Role-based multi-agent teams",
+      "description": "Opinionated multi-agent 'teams + flows' with memory and guardrails in core. Sociological abstraction using role-playing crews. Raised $18M Series A. 47.3k GitHub stars.",
+      "pricing": null
+    },
+    {
+      "name": "Semantic Kernel",
+      "role": "Enterprise plugin SDK",
+      "description": "Model-agnostic enterprise SDK with mature plugin model supporting code, prompts, and MCP. 27.6k GitHub stars. MIT licence. OpenAI list only (#5, score 80).",
+      "pricing": null
+    },
+    {
+      "name": "AutoGen",
+      "role": "Multi-agent conversation patterns",
+      "description": "Proven multi-agent conversation patterns. Microsoft positions Agent Framework as successor. Mixed licence. 56.3k GitHub stars. OpenAI list only (#6, score 78).",
+      "pricing": null
+    },
+    {
+      "name": "Haystack",
+      "role": "Production RAG pipelines + agent workflows",
+      "description": "Production pipelines and agent workflows with explicit RAG control and routing. Apache-2.0 licence. 24.6k GitHub stars. OpenAI list only (#7, score 77).",
+      "pricing": null
+    },
+    {
+      "name": "AgentScope",
+      "role": "Sandboxed agent runtime",
+      "description": "Developer-centric agents with companion sandbox runtime for deployment. Apache-2.0 licence. 20.3k GitHub stars. OpenAI list only (#8, score 76).",
+      "pricing": null
+    },
+    {
+      "name": "Microsoft Agent Framework",
+      "role": "Unified enterprise toolkit",
+      "description": "AutoGen + Semantic Kernel successor with graph workflows, multi-provider support. Still RC. MIT licence. 8.2k GitHub stars. On OpenAI list (#9, score 74); Gemini honourable mention.",
+      "pricing": null
+    },
+    {
+      "name": "smolagents",
+      "role": "Code-generation agents",
+      "description": "Lightweight 'agents that think in code' with strong sandboxing and model-agnostic design. Agents write Python directly, bypassing JSON serialisation for raw efficiency. Apache-2.0 licence. 26.3k GitHub stars.",
+      "pricing": null
+    },
+    {
+      "name": "Ollama",
+      "role": "Local inference to agent runtime",
+      "description": "Evolved from inference engine to agent runtime with native tool execution in v0.14, including approval UI and deny-lists. Gemini list only (#3). OpenAI explicitly excluded it as a runtime rather than a framework.",
+      "pricing": null
+    },
+    {
+      "name": "Dify",
+      "role": "Visual low-code BaaS",
+      "description": "Visual drag-and-drop Backend-as-a-Service for AI agents. 1.4M machines deployed across 175 countries. $30M funding. 129.8k GitHub stars. Gemini list only (#5).",
+      "pricing": null
+    },
+    {
+      "name": "OpenAI Agents SDK",
+      "role": "Lightweight primitives",
+      "description": "Handoffs, guardrails, and tracing primitives. 10.3M monthly downloads. Provider-agnostic. 19k GitHub stars. Gemini list only (#6).",
+      "pricing": null
+    },
+    {
+      "name": "Pydantic AI",
+      "role": "Type-safe validation layer",
+      "description": "Strict output schema enforcement with auto-retry on validation failure. Not a full orchestrator — a validation layer to pair with LangGraph or similar. Gemini list only (#8).",
+      "pricing": null
+    },
+    {
+      "name": "Mastra",
+      "role": "TypeScript-first full-stack agents",
+      "description": "Full-stack TypeScript agents for Next.js — the missing layer between Vercel AI SDK and production. The only TS-first option with production-ready agent primitives for edge deployment. Gemini list only (#9).",
+      "pricing": null
+    },
+    {
+      "name": "n8n",
+      "role": "Workflow automation to AI orchestrator",
+      "description": "Pivoted from Zapier-like automation to AI-native multi-agent orchestrator with 422 integrations. 160k GitHub stars. Gemini list only (#10).",
+      "pricing": null
+    }
+  ],
+  "decision_guide": {
+    "use_when": [
+      "Enterprise state machines: LangGraph. Both reports rank it #1. Durable execution, checkpointing, HITL, Fortune 500 credibility.",
+      "Multi-agent teams: CrewAI. Ranked #4 on both lists. Role-based 'crew' abstraction is the fastest way to prototype collaborative agents.",
+      "Code-first lightweight agents: smolagents. On both lists. Write and execute code in sandboxed environments with minimal overhead.",
+      "On-device / local-first: OpenClaw. Both rank it #2. Broad system access demands disciplined security hardening.",
+      "TypeScript shop: Mastra (Gemini only). The only TS-first option with production-ready agent primitives for Next.js/edge.",
+      "Non-technical team: Dify or n8n (Gemini only). Visual, low-code builders that let product managers wire up agent workflows.",
+      "Type safety obsessed: Pydantic AI (Gemini only). A validation layer you pair with LangGraph or similar.",
+      "Microsoft enterprise stack: Semantic Kernel or MS Agent Framework (OpenAI list). Accept the RC risk on Agent Framework, or use the stable Semantic Kernel SDK.",
+      "Privacy-first, fully offline: Ollama (Gemini only). Legitimately agentic now with v0.14 native agent loops."
+    ],
+    "skip_when": [
+      "Framework choice is inseparable from your guardrails strategy, execution isolation, and state durability approach. The 'demo tuxedo' is real — what works in a controlled environment will fail differently in production.",
+      "Budget at least as much time for security, observability, and integration plumbing as you do for the agent logic itself.",
+      "OpenClaw's broad system access demands disciplined security hardening — the blast radius of a misconfigured full-stack agent is severe.",
+      "Ollama has legitimate agentic capabilities in v0.14 but limited orchestration abstractions compared to full frameworks."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Enterprise",
+      "title": "Enterprise Deployments",
+      "description": "LangGraph's durable state machines paired with Pydantic AI's validation layer. The graph handles orchestration, checkpointing, and human-in-the-loop approvals. Pydantic catches malformed outputs before they touch a production database. Haystack enters the mix when RAG pipelines need explicit, auditable retrieval control."
+    },
+    {
+      "category": "Prototyping",
+      "title": "Prototyping and Proof-of-Concepts",
+      "description": "CrewAI's role-based abstraction can get multi-agent demos running in hours rather than weeks. When agents need to write and run code (data transformation, analysis scripts), smolagents with E2B sandboxing is a natural complement."
+    },
+    {
+      "category": "Learning",
+      "title": "Learning Path: Visual to Multi-Agent to Production",
+      "description": "Start with n8n or Dify for visual intuition, graduate to CrewAI for multi-agent concepts, then LangGraph for production patterns."
+    }
+  ],
+  "timeline": [
+    { "date": "2022-01", "title": "The LLM Wrapper Era", "detail": "LangChain and LlamaIndex launch as thin abstraction layers over GPT-3/4 APIs. Agents are simple ReAct loops — impressive demos, fragile in production. AutoGen introduces multi-agent conversation patterns." },
+    { "date": "2024-01", "title": "Frameworks Get Serious", "detail": "CrewAI raises $18M Series A. LangGraph emerges as the state-machine layer. Smolagents launches with 'agents that think in code.' Haystack ships v2 with pipeline-first architecture." },
+    { "date": "2025-10", "title": "LangChain + LangGraph Hit 1.0 GA", "detail": "Both projects commit to API stability. Durable execution, checkpointing, and HITL become first-class primitives. Klarna's LangGraph bot reportedly saves $60M handling two-thirds of inbound inquiries." },
+    { "date": "2025-11", "title": "OpenClaw Is Born", "detail": "Originally 'Clawd' — launches as a full-stack personal agent running on your own devices. Multi-channel (WhatsApp, Telegram, Slack, Discord). Grows to 337k GitHub stars faster than any prior project." },
+    { "date": "2026-01", "title": "Convergence Begins", "detail": "Microsoft merges AutoGen + Semantic Kernel into the unified Agent Framework. Ollama ships v0.14 with native agent loops. Dify raises $30M and hits 130k stars. MCP becomes the interop standard everyone rallies around." },
+    { "date": "2026-03", "title": "The Q2 Snapshot", "detail": "Both OpenAI and Gemini produce independent top-10 rankings on 26 March 2026. The ecosystem has 14+ serious contenders. The 'plumbing problem' — integration, observability, schema drift — is now the primary blocker, not model intelligence." }
+  ],
+  "resources": {
+    "official": [
+      { "title": "LangGraph", "url": "https://github.com/langchain-ai/langgraph" },
+      { "title": "OpenClaw", "url": "https://github.com/openclaw/openclaw" },
+      { "title": "CrewAI", "url": "https://github.com/crewAIInc/crewAI" },
+      { "title": "smolagents", "url": "https://github.com/huggingface/smolagents" },
+      { "title": "LlamaIndex", "url": "https://github.com/run-llama/llama_index" },
+      { "title": "Pydantic AI", "url": "https://github.com/pydantic/pydantic-ai" },
+      { "title": "Semantic Kernel", "url": "https://github.com/microsoft/semantic-kernel" },
+      { "title": "Dify", "url": "https://dify.ai/" },
+      { "title": "n8n", "url": "https://n8n.io/" },
+      { "title": "Ollama", "url": "https://ollama.com/" },
+      { "title": "LangChain Docs", "url": "https://docs.langchain.com/" },
+      { "title": "CrewAI Docs", "url": "https://docs.crewai.com/" }
+    ],
+    "sources": [
+      { "title": "OpenAI o3 report: Top open-source AI-native agent frameworks for autonomous agents in Q2 2026 (26 Mar 2026)", "url": "https://know.imbila.ai/agents2026" },
+      { "title": "Gemini Deep Research report: The State of Agentic Execution (Q2 2026) (26 Mar 2026)", "url": "https://know.imbila.ai/agents2026" },
+      { "title": "Firecrawl Agent Frameworks 2026", "url": "https://www.firecrawl.dev/blog/best-open-source-agent-frameworks" }
+    ]
+  }
+}

@@ -9,5 +9,7 @@ old/
 Know Push/
 *.svg
 *.md
+!agentapi/**/*.md
+!agentapi/README.md
 *.skill
 node_modules/

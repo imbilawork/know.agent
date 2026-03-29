@@ -1,0 +1,159 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "llama-cpp",
+    "title": "llama.cpp Explained",
+    "subtitle": "The open-source C/C++ engine that made running LLMs on your own hardware possible",
+    "topic": "llama.cpp",
+    "category": "framework",
+    "tags": ["inference", "local-ai", "quantization", "gguf", "open-source", "cpp", "edge-computing", "privacy"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/llama-cpp-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "llama.cpp is an open-source C/C++ library with no external dependencies that runs large language models on consumer hardware — laptops, phones, Raspberry Pis — without requiring NVIDIA GPUs or cloud APIs. Created by Georgi Gerganov in March 2023, it uses the GGUF file format and aggressive quantization to shrink models by 75%+. It is the inference backbone behind Ollama, LM Studio, GPT4All, Jan.ai, KoboldCpp, and dozens more tools.",
+  "key_stats": [
+    { "value": "85,000+", "label": "GitHub Stars" },
+    { "value": "1,200+", "label": "Contributors Worldwide" },
+    { "value": "14,000+", "label": "Forks on GitHub" },
+    { "value": "3 yrs", "label": "Central to Local AI Since March 2023" }
+  ],
+  "products": [
+    {
+      "name": "GGML",
+      "role": "Tensor library",
+      "description": "Low-level C library that handles tensor algebra underneath llama.cpp. Created by Gerganov in late 2022, inspired by Fabrice Bellard's LibNC. Designed with strict memory management and multi-threading from day one. Replaces PyTorch as the entire computation layer.",
+      "pricing": null
+    },
+    {
+      "name": "GGUF",
+      "role": "Model file format",
+      "description": "Self-contained binary format (GPT-Generated Unified Format) that packages architecture metadata, tokenizer vocabulary, quantization parameters, and weight tensors in one file. Supports 40+ model architectures (LLaMA, Mistral, Qwen, Gemma, Phi, and more). Uses memory-mapping for near-instant loading.",
+      "pricing": null
+    },
+    {
+      "name": "Quantization (K-quants)",
+      "role": "Model compression",
+      "description": "Compresses model weights from 32-bit or 16-bit floats down to 4-bit integers or lower. Q4_K_M is the community sweet spot: 92% quality retention with 75% size reduction. The K-quant family (Q2_K through Q6_K) uses super-blocks with per-layer precision allocation. Importance matrix (imatrix) support for better quality at low bits.",
+      "pricing": null
+    },
+    {
+      "name": "Hardware Backends",
+      "role": "Multi-platform acceleration",
+      "description": "Backend modules for Apple Silicon (Metal + Accelerate), NVIDIA GPUs (CUDA), AMD GPUs (HIP/ROCm), Intel GPUs (SYCL + OpenVINO), Huawei Ascend (CANN), Vulkan (cross-platform GPU), and bare CPU with AVX/AVX2/AVX-512/AMX optimisations. Native Android and ChromeOS GPU acceleration since December 2025.",
+      "pricing": null
+    },
+    {
+      "name": "llama-server",
+      "role": "OpenAI-compatible API server",
+      "description": "Production-ready HTTP server providing OpenAI-compatible chat completions, embeddings, and tool calling. Includes built-in web UI, streaming, speculative decoding, and structured output via grammar constraints. Any OpenAI-API application can switch to local inference by changing one URL.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "wrappers": {
+      "product": "Ollama",
+      "description": "One-command model pulling and serving. Built-in HTTP API. Built on llama.cpp. The 'Docker for LLMs'."
+    },
+    "desktop": {
+      "product": "LM Studio + GPT4All + Jan.ai",
+      "description": "Desktop applications for browsing, downloading, and running GGUF models with graphical interfaces. LM Studio for model discovery, GPT4All for privacy-first RAG, Jan.ai for hybrid local+cloud."
+    },
+    "alternatives": {
+      "product": "vLLM + MLX + LocalAI",
+      "description": "vLLM for multi-GPU tensor-parallel production serving. MLX for Apple Silicon max performance (~230 tok/s on M2 Ultra). LocalAI for multi-backend OpenAI API drop-in replacement."
+    },
+    "distribution": {
+      "product": "Hugging Face Hub",
+      "description": "Thousands of community-quantized GGUF models. GGUF-my-repo tool converts any HF model to GGUF in-browser. ggml.ai joined Hugging Face in February 2026."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "Data cannot leave your network. Regulatory requirements (POPIA, GDPR, HIPAA), client confidentiality, or competitive IP concerns make cloud APIs a non-starter.",
+      "You need offline or air-gapped AI. Deployments without reliable internet — industrial sites, remote offices, mobile field teams, military contexts.",
+      "Volume economics make cloud expensive. When you're running thousands of inferences daily, the per-token cost of cloud APIs adds up. Local inference is free after hardware investment.",
+      "Your task fits small-to-mid models. Summarisation, classification, code completion, RAG over documents, embeddings, translation — 7-14B models handle these well locally."
+    ],
+    "skip_when": [
+      "You need frontier reasoning. For complex multi-step logic, nuanced creative writing, or tasks where GPT-4o/Claude Opus quality is the floor, local models aren't there yet.",
+      "Multi-GPU throughput is critical. llama.cpp splits layers sequentially across GPUs (for fitting, not speed). If you need tensor-parallel production serving, use vLLM or TensorRT-LLM.",
+      "Your team has zero appetite for CLI. While Ollama and LM Studio make it easier, the llama.cpp ecosystem still leans developer-first. Non-technical teams may struggle without support.",
+      "You're building for real-time voice/video. Current local models and inference speeds struggle with the latency requirements of real-time conversational AI. Cloud APIs still win here."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Personal Productivity",
+      "title": "Private AI Assistants",
+      "description": "Always-on, offline AI assistants running on Mac Minis, old laptops, or Raspberry Pis. Morning briefings, task automation, code reviews — all with zero data leakage and zero API cost. OpenClaw on NVIDIA Jetson is a popular reference implementation."
+    },
+    {
+      "category": "Software Development",
+      "title": "Local Code Completion",
+      "description": "IDE plugins (VS Code, Vim, Neovim) using llama-server for fill-in-the-middle completions. Qwen2.5-Coder 14B at Q4_K_M runs comfortably on a 24GB Mac Mini — fast enough for real-time autocomplete, private enough for proprietary code."
+    },
+    {
+      "category": "Enterprise Compliance",
+      "title": "On-Premises AI for Regulated Industries",
+      "description": "Healthcare, finance, legal, and government use cases where data cannot leave the building. llama.cpp runs inside air-gapped networks with zero external dependencies. POPIA, GDPR, HIPAA compliance by architecture."
+    },
+    {
+      "category": "Edge & IoT",
+      "title": "AI on Industrial Devices",
+      "description": "Running small models (1-3B) on ARM devices, edge gateways, and embedded systems. Manufacturing quality inspection, real-time sensor analysis, and smart-device interactions — all without cloud connectivity."
+    },
+    {
+      "category": "Education & Research",
+      "title": "Accessible LLM Experimentation",
+      "description": "Students and researchers running billion-parameter models on commodity hardware. Benchmark quantization quality, test fine-tuned models, explore architecture differences — all on a laptop."
+    },
+    {
+      "category": "Security & Surveillance",
+      "title": "AI-Powered Camera Systems",
+      "description": "Open-source AI camera platforms use llama.cpp with vision-language models (Qwen, LLaVA, SmolVLM) for local video analysis. Real-time scene understanding without sending footage to the cloud."
+    }
+  ],
+  "timeline": [
+    { "date": "2022-09", "title": "GGML Library Created", "detail": "Georgi Gerganov begins work on the GGML tensor library in C, inspired by Fabrice Bellard's LibNC. Designed for strict memory management and multi-threading from the start." },
+    { "date": "2023-03", "title": "llama.cpp Released", "detail": "Ten days after Meta releases LLaMA, Gerganov publishes llama.cpp — proving a 7B model can run on a MacBook CPU. GitHub stars grow faster than Stable Diffusion did. The local AI movement begins." },
+    { "date": "2023-08", "title": "GGUF Format Introduced", "detail": "GGUF replaces the older GGML format with a flexible key-value metadata system. One self-contained file with architecture, tokenizer, and weights. Becomes the standard for distributing quantized models." },
+    { "date": "2024-04", "title": "FlashAttention Added", "detail": "FlashAttention support lands, dramatically improving long-context performance and memory efficiency. Enables practical use of models with 128K+ context windows on consumer hardware." },
+    { "date": "2025-04", "title": "Multimodal Support via libmtmd", "detail": "The libmtmd library reinvigorates multimodal model support, enabling vision-language models (LLaVA, Qwen-VL) to run through the same llama.cpp pipeline. Images in, text out, fully local." },
+    { "date": "2025-12", "title": "Native Android & ChromeOS Acceleration", "detail": "Full GPU acceleration on Android and ChromeOS via a new GUI binding, moving beyond the previous adb shell workaround. Local LLMs now run natively on phones and tablets." },
+    { "date": "2026-02", "title": "ggml.ai Joins Hugging Face", "detail": "Gerganov and team formally join Hugging Face. Projects stay MIT-licensed. Roadmap targets single-click transformers integration and first-party GGUF quantizations on Hugging Face Hub." }
+  ],
+  "code_examples": [
+    {
+      "title": "Quantize a model to Q4_K_M",
+      "language": "bash",
+      "code": "# Quantize a model to Q4_K_M (the community default)\n./llama-quantize model-f16.gguf model-Q4_K_M.gguf Q4_K_M\n\n# With importance matrix for better quality at low bits\n./llama-imatrix -m model-f16.gguf -f calibration.txt -o imatrix.dat\n./llama-quantize --imatrix imatrix.dat model-f16.gguf model-Q4_K_M.gguf Q4_K_M"
+    },
+    {
+      "title": "Start an OpenAI-compatible local server",
+      "language": "bash",
+      "code": "# Start an OpenAI-compatible local server\nllama-server -m model.gguf --port 8080\n\n# Or download and serve directly from Hugging Face\nllama-server -hf ggml-org/gemma-3-1b-it-GGUF"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "GitHub Repository", "url": "https://github.com/ggml-org/llama.cpp" },
+      { "title": "Hugging Face Partnership", "url": "https://huggingface.co/blog/ggml-joins-hf" },
+      { "title": "Quantization Guide", "url": "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md" },
+      { "title": "GGUF-my-repo", "url": "https://huggingface.co/spaces/ggml-org/gguf-my-repo" },
+      { "title": "Ollama", "url": "https://ollama.com" }
+    ],
+    "sources": [
+      { "title": "Wikipedia: llama.cpp", "url": "https://en.wikipedia.org/wiki/Llama.cpp" },
+      { "title": "HF: GGML Joins HF", "url": "https://huggingface.co/blog/ggml-joins-hf" },
+      { "title": "ggml.ai + HF Discussion", "url": "https://github.com/ggml-org/llama.cpp/discussions/19759" },
+      { "title": "Simon Willison", "url": "https://simonwillison.net/2026/Feb/20/ggmlai-joins-hugging-face/" },
+      { "title": "Changelog Interview with Gerganov", "url": "https://changelog.com/podcast/532" },
+      { "title": "GGUF Quantization Study (2026)", "url": "https://arxiv.org/html/2601.14277v1" },
+      { "title": "History of Local LLMs", "url": "https://av.codes/blog/local-llms-history" },
+      { "title": "Local LLM Inference Guide 2026", "url": "https://blog.starmorph.com/blog/local-llm-inference-tools-guide" }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+# Imbila.AI Knowledge Base — Agent Access
+
+> Independent, fact-checked AI technology explainers for developers and businesses. Published by Imbila.AI, Johannesburg, South Africa.
+
+This repository provides agent-friendly versions of explainer pages published at [know.imbila.ai](https://know.imbila.ai). The HTML originals use Cloudflare, which may block automated access — use these files instead.
+
+## How to consume
+
+Each explainer is available in two formats:
+
+- **Markdown** (`/content/{id}.md`) — Full prose explainer. Best for context injection, summarisation, or when an agent needs the complete narrative.
+- **JSON** (`/data/{id}.json`) — Structured metadata, product details, decision guides, pricing, timelines, and source links. Best for programmatic lookups, tool responses, and comparison tasks.
+
+Raw GitHub URLs (never blocked):
+```
+https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/{id}.md
+https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.json
+```
+
+## Available explainers
+
+- [ARC-AGI-3 Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/arc-agi-3.md): The first interactive reasoning benchmark — and the hardest reality check for AGI claims. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/arc-agi-3.json)
+
+- [Top Agent Frameworks — Q2 2026](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agents2026.md): The top 10 autonomous agent frameworks ranked by OpenAI and Gemini — compared side by side. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/agents2026.json)
+
+- [Claude Code Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/claude-code-skills.md): Turn your AI coding agent into a specialist. On demand. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/claude-code-skills.json)
+
+- [Cloudflare AI Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/cloudflare-ai.md): Serverless AI inference, agents, and RAG on Cloudflare's edge network. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/cloudflare-ai.json)
+
+- [NVIDIA DLSS 5 Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/dlss5.md): Neural rendering for visual fidelity — and the firestorm it ignited. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/dlss5.json)
+
+- [LangChain Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/langchain.md): The framework that makes AI agents buildable, debuggable, and deployable. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/langchain.json)
+
+- [LiteParse Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/liteparse.md): Fast, local document parsing for AI agents. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/liteparse.json)
+
+- [llama.cpp Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/llama-cpp.md): The open-source C/C++ engine that made running LLMs on your own hardware possible. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/llama-cpp.json)
+
+- [NVIDIA NemoClaw Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/nemoclaw.md): Secure, sandboxed infrastructure for always-on AI agents. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/nemoclaw.json)
+
+## JSON schema
+
+All JSON files follow the `explainer-v1` schema. Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `meta` | object | ID, title, tags, dates, canonical URL, license |
+| `summary` | string | 2-3 sentence overview of the topic |
+| `key_stats` | array | Headline numbers (value + label) |
+| `products` | array | Named components with role, description, pricing |
+| `decision_guide` | object | `use_when` and `skip_when` arrays |
+| `use_cases` | array | Category, title, description |
+| `timeline` | array | Date, title, detail |
+| `pricing` | array | Product, free tier, paid pricing |
+| `resources` | object | Official docs and source links |
+
+## License
+
+Content is licensed under [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/). Attribution: Imbila.AI.
+
+## Contact
+
+- Website: [imbila.ai](https://imbila.ai)
+- Knowledge base: [know.imbila.ai](https://know.imbila.ai)
+- LinkedIn: [Imbila.AI](https://www.linkedin.com/company/imbila-ai)

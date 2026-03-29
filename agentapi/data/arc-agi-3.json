@@ -1,0 +1,151 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "arc-agi-3",
+    "title": "ARC-AGI-3 Explained",
+    "subtitle": "The first interactive reasoning benchmark — and the hardest reality check for AGI claims",
+    "topic": "ARC-AGI-3",
+    "category": "benchmark",
+    "tags": ["benchmark", "agi", "reasoning", "interactive", "reinforcement-learning", "world-models", "arc-prize"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/arc-agi-3-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "ARC-AGI-3 is the third generation of the Abstraction and Reasoning Corpus, created by Francois Chollet and Mike Knoop's ARC Prize Foundation. It is the first fully interactive AI benchmark — AI agents are dropped into 135 handcrafted turn-based game environments with zero instructions or stated goals. Humans score 100%. Every frontier LLM scores under 1%. The best entry (a CNN + RL agent) scores 12.58%. Scoring uses RHAE: (human actions / AI actions) squared, making brute-force mathematically unviable.",
+  "key_stats": [
+    { "value": "100%", "label": "Human solve rate (no instructions)" },
+    { "value": "<1%", "label": "Every frontier model tested" },
+    { "value": "$2M", "label": "Total prize pool (ARC Prize 2026)" },
+    { "value": "1,200+", "label": "Human players in preview testing" }
+  ],
+  "products": [
+    {
+      "name": "ARC-AGI-3 Benchmark",
+      "role": "Interactive reasoning benchmark",
+      "description": "135 handcrafted turn-based game environments across 1,000+ levels. Each game has 8-10 levels that progressively introduce new mechanics. Agents observe a 64x64 grid with 16 colours, take actions, and must learn on the fly. No instructions, no stated goals, no description of rules."
+    },
+    {
+      "name": "RHAE Scoring",
+      "role": "Efficiency-based intelligence metric",
+      "description": "Relative Human Action Efficiency. Formula: (human actions / AI actions) squared. An AI taking 10x as many steps as a human scores just 1%. Per-level score caps at 1.0 (no bonus for being faster than humans). Later levels carry more weight. The squared penalty makes brute-force approaches mathematically unviable."
+    },
+    {
+      "name": "ARC Prize 2026",
+      "role": "Competition and prize programme",
+      "description": "$2M total prize pool across two tracks. Hosted on Kaggle. Launched at Y Combinator with a fireside between Chollet and Sam Altman. Open to all approaches — LLM, RL, CNN, hybrid, or novel architectures."
+    },
+    {
+      "name": "ARC-AGI-3 Game Studio",
+      "role": "Content creation pipeline",
+      "description": "In-house game studio that handcrafts the 135 novel environments. Each environment is designed to test specific combinations of the four pillars: modelling, goal-setting, planning/execution, and efficiency."
+    }
+  ],
+  "ecosystem": {
+    "predecessors": {
+      "product": "ARC-AGI-1 and ARC-AGI-2",
+      "description": "ARC-AGI-1 (2019): static grid puzzles, now essentially solved (Gemini 3.1 Pro at 98%). ARC-AGI-2 (2025): harder compositional puzzles, approaching saturation at 84.6%. Both used image-in/image-out format."
+    },
+    "evaluation": {
+      "product": "Official API Leaderboard",
+      "description": "Models tested via API with identical system prompts. No task-specific scaffolding or custom tooling permitted. Live scores and cost analysis available at arcprize.org/leaderboard."
+    },
+    "competition": {
+      "product": "Kaggle Competition",
+      "description": "$2M prize pool. Open to all approaches. Hosted at kaggle.com/competitions/arc-prize-2026-arc-agi-3."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You are building autonomous agents that need to handle genuinely novel situations without human handholding — warehouse robotics, adaptive game AI, exploration systems.",
+      "You are evaluating AI vendor claims about 'AGI' capabilities and need a grounded reference point for what has actually been demonstrated.",
+      "You are doing research in reinforcement learning, world models, or program synthesis — ARC-AGI-3's format maps directly to open problems in your field.",
+      "You care about the architectural question: whether transformers/LRMs can achieve genuine adaptability or whether fundamentally new approaches are needed."
+    ],
+    "skip_when": [
+      "You are shipping products that use AI for well-defined tasks — coding assistants, summarisation, content generation. LLMs are excellent at these. ARC-AGI-3 does not change that.",
+      "You are using AI as a tool within human-designed workflows. The scaffolding critique does not invalidate productive human-AI collaboration — it clarifies what counts as autonomy vs. automation.",
+      "Your timeline is this quarter, not this decade. ARC-AGI-3 is about long-term capability trajectories. Current AI is already delivering massive value in narrow, well-defined domains.",
+      "You are conflating 'useful' with 'intelligent.' AI does not need to be AGI to transform your business. Most of the value comes from applied intelligence, not general intelligence."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Research",
+      "title": "Measuring Adaptive Reasoning",
+      "description": "Direct, quantitative comparison of human vs. AI learning efficiency on novel tasks. Measures actual adaptive reasoning across time, not memorisation or pattern matching."
+    },
+    {
+      "category": "Evaluation",
+      "title": "Pressure-Testing AGI Claims",
+      "description": "When a vendor says 'AGI-level,' ARC-AGI-3 provides a grounded reference point. Sub-1% scores across all frontier models clarify the gap between marketing and demonstrated capability."
+    },
+    {
+      "category": "Architecture Research",
+      "title": "Beyond Transformers",
+      "description": "Non-LLM approaches (CNN + RL, rule-based state graph exploration, frame graph search) outperform frontier LLMs by over 12 percentage points, suggesting the path forward may require fundamentally different architectures."
+    },
+    {
+      "category": "Product Design",
+      "title": "Scaffolding Reality Check",
+      "description": "The 97.1% to 0% scaffolding result (Duke University) demonstrates that task-specific engineering works on known tasks but fails completely on novel ones. Informs product teams to design for graceful degradation."
+    },
+    {
+      "category": "Benchmark Design",
+      "title": "Contamination-Resistant Evaluation",
+      "description": "Interactive format makes data contamination structurally harder than static benchmarks. You cannot pre-train on an environment you explore in real time."
+    },
+    {
+      "category": "Education",
+      "title": "Experiential Understanding",
+      "description": "Playing the public ARC-AGI-3 environments yourself and watching frontier model replays makes the human-AI capability gap visceral in a way no benchmark number can convey."
+    }
+  ],
+  "timeline": [
+    { "date": "2019", "title": "ARC-AGI-1 Launches", "detail": "Chollet releases the original Abstraction and Reasoning Corpus alongside 'On the Measure of Intelligence.' Static grid puzzles, image-in/image-out. Early AI systems score near 0%. First Kaggle competition (2020) draws 913 teams; winner hits ~20% via brute-force program search." },
+    { "date": "2024", "title": "ARC Prize 2024 & Reasoning Breakthrough", "detail": "ARC Prize Foundation launches with $1M+ in prizes and 1,430 teams. Test-time training reaches 53.5% on ARC-AGI-1. OpenAI's o3 demonstrates genuine fluid intelligence on the benchmark." },
+    { "date": "2025", "title": "ARC-AGI-2 & Rapid Saturation", "detail": "Version 2 launches with harder compositional puzzles. NVIDIA's NVARC team wins first place at 24%. Scaffolding and scale push scores to 84.6% within months. Evidence of data contamination emerges." },
+    { "date": "2026-03", "title": "ARC-AGI-3 Resets the Scoreboard", "detail": "First fully interactive benchmark. 135 handcrafted environments, 1,000+ levels. In-house game studio. $2M prize pool across two tracks. Launched at Y Combinator with Chollet and Sam Altman fireside. Every frontier model scores under 1%. CNN-based agent leads at 12.58%." }
+  ],
+  "pricing": [
+    { "product": "ARC-AGI-3 Benchmark", "free": "Public environments available to play free", "paid": "N/A" },
+    { "product": "ARC Prize 2026", "free": "Free to enter via Kaggle", "paid": "$2M total prize pool awarded to winners" }
+  ],
+  "scores": [
+    { "model": "Humans (no instructions)", "score": "100%", "method": "Second-best of 10 first-time players" },
+    { "model": "StochasticGoose — CNN + RL", "score": "12.58%", "method": "Preview winner, non-LLM" },
+    { "model": "Gemini 3.1 Pro Preview", "score": "0.37%", "method": "Official API evaluation" },
+    { "model": "GPT-5.4 High", "score": "0.26%", "method": "Official API evaluation" },
+    { "model": "Claude Opus 4.6", "score": "0.25%", "method": "Official API evaluation" },
+    { "model": "Grok-4.20", "score": "0.00%", "method": "Official API evaluation" }
+  ],
+  "debate_points": [
+    { "topic": "Methodology", "claim": "The scoring is designed to produce low numbers", "counter": "If you need 10x more actions than a human who has never seen the task, efficiency is not an unfair metric — it is the entire point." },
+    { "topic": "Scaffolding", "claim": "Models just need better prompts and tools", "counter": "The 97.1% to 0% scaffolding result (Duke University, Opus 4.6) is the strongest evidence against this. Task-specific engineering works on known tasks but fails completely on novel ones." },
+    { "topic": "Architecture", "claim": "Can transformers ever do this?", "counter": "NYU professor Saining Xie argues LLMs are inherently limited because they learn from text, not raw experience. The models that crack ARC-AGI-3 may need to be fundamentally different." },
+    { "topic": "Human Baseline", "claim": "100% is misleading", "counter": "The baseline uses the second-best of ten first-time players — near the top of the distribution. The ARC team chose a strong baseline deliberately." },
+    { "topic": "Data Contamination", "claim": "Old benchmarks were polluted", "counter": "Evidence from Gemini 3's reasoning chain suggests implicit training on ARC data. ARC-AGI-3's interactive format makes contamination structurally harder." },
+    { "topic": "Pace of Progress", "claim": "Give it six months", "counter": "ARC-AGI-2 went from 3% to 84.6% in under a year, but those gains were from scaffolding and scale, which ARC-AGI-3 is specifically designed to neutralise." }
+  ],
+  "resources": {
+    "official": [
+      { "title": "ARC-AGI-3 — Play the games", "url": "https://arcprize.org/arc-agi/3" },
+      { "title": "Launch Announcement", "url": "https://arcprize.org/blog/arc-agi-3-launch" },
+      { "title": "Technical Paper", "url": "https://arxiv.org/html/2603.24621v1" },
+      { "title": "RHAE Scoring Docs", "url": "https://docs.arcprize.org/methodology" },
+      { "title": "Leaderboard", "url": "https://arcprize.org/leaderboard" },
+      { "title": "Kaggle Competition", "url": "https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3" },
+      { "title": "ARC Prize 2025 Results", "url": "https://arcprize.org/blog/arc-prize-2025-results-analysis" }
+    ],
+    "sources": [
+      { "title": "ARC Prize Foundation — Launch Blog", "url": "https://arcprize.org/blog/arc-agi-3-launch" },
+      { "title": "ARC-AGI-3 Technical Report", "url": "https://arxiv.org/html/2603.24621v1" },
+      { "title": "RHAE Scoring Methodology", "url": "https://docs.arcprize.org/methodology" },
+      { "title": "ARC Prize 2025 Results", "url": "https://arcprize.org/blog/arc-prize-2025-results-analysis" },
+      { "title": "The Decoder — ARC-AGI-3 Analysis", "url": "https://the-decoder.com/arc-agi-3-offers-2m-to-any-ai-that-matches-untrained-humans-yet-every-frontier-model-scores-below-1/" },
+      { "title": "Fast Company — ARC-AGI-3 Coverage", "url": "https://www.fastcompany.com/91515360/arc-prize-foundation-new-ai-benchmark" },
+      { "title": "Decrypt — Benchmark Analysis", "url": "https://decrypt.co/362496/is-agi-here-not-even-close-ai-benchmark" }
+    ]
+  }
+}

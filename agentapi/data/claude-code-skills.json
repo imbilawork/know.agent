@@ -1,0 +1,146 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "claude-code-skills",
+    "title": "Claude Code Skills Explained",
+    "subtitle": "Turn your AI coding agent into a specialist. On demand.",
+    "topic": "Claude Code Skills",
+    "category": "framework",
+    "tags": ["claude-code", "skills", "ai-agents", "developer-tools", "skill-md", "context-loading", "mcp", "codex-cli"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/claude-code-skills-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "Claude Code Skills are modular Markdown instruction files (SKILL.md) that inject domain-specific knowledge into Anthropic's Claude Code agent on demand. Instead of overloading a single CLAUDE.md with every instruction, skills load specialist context only when relevant — keeping the base agent lean while enabling expert-level output for specific tasks. The pattern has grown into a full ecosystem with 87K+ skills on SkillsMP, viral community adoption, and cross-agent compatibility with Codex CLI and Gemini.",
+  "key_stats": [
+    { "value": "87K+", "label": "Skills on SkillsMP marketplace" },
+    { "value": "10K+", "label": "GitHub stars on /last30days" },
+    { "value": "17.3K", "label": "Likes on Remotion skill launch" },
+    { "value": "9", "label": "Signal sources in /last30days v2.9" }
+  ],
+  "products": [
+    {
+      "name": "SKILL.md — The Instruction File",
+      "role": "Core skill definition",
+      "description": "A Markdown file containing instructions, constraints, workflow steps, and output templates. This is what gets injected into the agent's context when the skill is triggered. The best skills are specific about format, order of operations, and anti-patterns to avoid.",
+      "pricing": null
+    },
+    {
+      "name": "Trigger Description",
+      "role": "Skill routing mechanism",
+      "description": "A description that tells the agent when to activate the skill. Contains keywords and intent patterns that cause the skill to load. Good descriptions are specific; bad ones cause false triggers or missed activations.",
+      "pricing": null
+    },
+    {
+      "name": "Scripts & Executables",
+      "role": "Supporting code and pipelines",
+      "description": "Many skills include actual code. The /last30days skill ships with a full Python pipeline: API clients for Reddit, X, YouTube, and more, plus scoring, deduplication, and rendering modules. The SKILL.md tells the agent how to orchestrate these scripts.",
+      "pricing": null
+    },
+    {
+      "name": "Fixtures & Tests",
+      "role": "Quality assurance layer",
+      "description": "Production-grade skills include mock data for offline testing and evaluation scripts to measure output quality. This matters for business use — consistent, reliable results before deploying across a team.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "marketplace": {
+      "product": "SkillsMP",
+      "description": "The largest directory of community skills. Browse, install, and publish skills. Covers everything from document creation to security auditing to video production. 87K+ skills available."
+    },
+    "curation": {
+      "product": "awesome-claude-skills",
+      "description": "Community-maintained GitHub repos that curate the best skills by category. Multiple lists compete for comprehensiveness — quality over quantity."
+    },
+    "frameworks": {
+      "product": "Superpowers & SuperClaude",
+      "description": "Meta-frameworks that bundle multiple skills into coherent capability sets. Superpowers alone has 27K+ GitHub stars. Bootstrap a fully-loaded agent in one install."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "Your team repeats the same complex workflow (document generation, code review, research) and wants consistent, high-quality output every time.",
+      "You need domain-specific knowledge that changes frequently — current community best practices, up-to-date API patterns, or evolving industry standards.",
+      "You're building AI agents that need to operate autonomously with reliable, repeatable behaviour.",
+      "You want to encode institutional knowledge — coding standards, proposal formats, client communication styles — into shareable, version-controlled files."
+    ],
+    "skip_when": [
+      "The task is genuinely simple and one-off. Writing a skill for something you'll do once is over-engineering.",
+      "Your team doesn't use Claude Code (or a compatible agent). Skills are agent-specific — they don't help with ChatGPT or browser-based assistants.",
+      "You need real-time data but don't have API keys. Research skills like /last30days require API access to function.",
+      "You're looking for a no-code solution. Skills involve Markdown files, terminal commands, and sometimes Python scripts. They're developer-friendly, not beginner-friendly."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Research",
+      "title": "Real-Time Multi-Platform Research (/last30days)",
+      "description": "Scans Reddit, X, Bluesky, YouTube, TikTok, Instagram, Hacker News, Polymarket, and the web for the last 30 days of discussion on any topic. Scores results by recency, relevance, and engagement. 10K+ GitHub stars, 9 signal sources."
+    },
+    {
+      "category": "Video Production",
+      "title": "Remotion Skill",
+      "description": "Generate animated launch videos, explainers, and marketing content from Claude Code. The viral skill post gathered 17.3K likes on X — proof that skills can automate expensive creative workflows."
+    },
+    {
+      "category": "Security",
+      "title": "Trail of Bits Skills (CodeQL & Semgrep)",
+      "description": "Professional security skills that turn Claude Code into a security auditor. Run static analysis, identify vulnerabilities, and generate fix suggestions from the terminal."
+    },
+    {
+      "category": "Document Creation",
+      "title": "docx / pptx / xlsx Skills",
+      "description": "Create polished Word documents, presentations, and spreadsheets with proper formatting, tables of contents, and brand styling. Output that usually requires manual work."
+    },
+    {
+      "category": "Image Generation",
+      "title": "Nano Banana Pro Skills",
+      "description": "Research current community techniques for AI image generation, then produce optimised prompts in the right format. The skill adapts its output based on what's actually working this month."
+    },
+    {
+      "category": "Developer Workflow",
+      "title": "Review Loop (Codex + Claude)",
+      "description": "Wire Claude Code and Codex together via MCP. Claude implements, Codex reviews, Claude fixes. An automated code review loop that catches bugs without human context-switching."
+    },
+    {
+      "category": "Task Automation",
+      "title": "Claude Command Suite",
+      "description": "148+ commands and 54 agents bundled into a single skill set. Covers everything from Git workflows to test-driven development to systematic debugging patterns."
+    },
+    {
+      "category": "Enterprise",
+      "title": "Custom Workflow Skills",
+      "description": "Skills encoding team processes — from proposal generation to compliance checking to competitive intelligence. Version-controlled, testable, and auditable. The AI agent works the way the business works."
+    }
+  ],
+  "timeline": [
+    { "date": "2024-06", "title": "Claude Code Launches", "detail": "Anthropic releases Claude Code as a command-line coding agent. Users start experimenting with CLAUDE.md files to customise behaviour — hand-written system prompts for the terminal." },
+    { "date": "2024-10", "title": "The CLAUDE.md Problem", "detail": "Power users hit context window limits. A single CLAUDE.md file containing every instruction degrades performance. The community starts splitting instructions into separate files — the seed of the skills pattern." },
+    { "date": "2025-01", "title": "Skills Formalise", "detail": "The SKILL.md convention stabilises. Skills get description frontmatter for trigger routing. GitHub repos for individual skills start appearing. /last30days launches and gains rapid adoption." },
+    { "date": "2025-06", "title": "Ecosystem Explosion", "detail": "SkillsMP launches as a marketplace with 87K+ skills. Remotion skill goes viral. Superpowers bundles skills into meta-packages. The pattern spreads to Codex CLI and Gemini extensions." },
+    { "date": "2026-01", "title": "Multi-Source, Multi-Agent", "detail": "/last30days reaches v2.9+ with nine signal sources. Skills now orchestrate multi-agent workflows — Claude implements while Codex reviews. The agent-as-platform paradigm solidifies." }
+  ],
+  "code_examples": [
+    {
+      "title": "SKILL.md example (/last30days)",
+      "language": "markdown",
+      "code": "# ~/.claude/skills/last30days/SKILL.md\n\nResearch ANY topic across Reddit, X,\nBluesky, YouTube, TikTok, HN, Polymarket.\n\nParse the user's input for:\n  TOPIC: What they want to learn about\n  TARGET TOOL: Where they'll use prompts"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "/last30days on GitHub", "url": "https://github.com/mvanhorn/last30days-skill" },
+      { "title": "Claude Code Documentation", "url": "https://docs.claude.com" },
+      { "title": "Matt Van Horn (GitHub)", "url": "https://github.com/mvanhorn" }
+    ],
+    "sources": [
+      { "title": "/last30days GitHub Repository", "url": "https://github.com/mvanhorn/last30days-skill" },
+      { "title": "/last30days SKILL.md", "url": "https://github.com/mvanhorn/last30days-skill/blob/main/SKILL.md" },
+      { "title": "/last30days SPEC.md", "url": "https://github.com/mvanhorn/last30days-skill/blob/main/SPEC.md" },
+      { "title": "Anthropic Claude Code Docs", "url": "https://docs.claude.com" }
+    ]
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "dlss5",
+    "title": "NVIDIA DLSS 5 Explained",
+    "subtitle": "Neural rendering for visual fidelity — and the firestorm it ignited",
+    "topic": "NVIDIA DLSS 5",
+    "category": "graphics-technology",
+    "tags": ["neural-rendering", "dlss", "nvidia", "rtx", "upscaling", "ai-graphics", "real-time-rendering", "game-development"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/dlss5-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "DLSS 5 is NVIDIA's neural rendering technology announced at GTC 2026. Unlike previous DLSS versions which focused on performance (upscaling, frame generation), DLSS 5 targets visual fidelity — using an AI model trained on real-world light and material behaviour to enhance a game's rendered frame with more convincing lighting, skin, hair, fabric, and environmental detail. It ships Fall 2026 for RTX GPUs and has sparked intense controversy over artistic control, AI trust, and what 'better graphics' means.",
+  "key_stats": [
+    { "value": "750+", "label": "Games with DLSS integration" },
+    { "value": "23/24", "label": "Pixels AI-drawn by DLSS 4.5" },
+    { "value": "375,000x", "label": "GPU compute increase since GeForce 3" },
+    { "value": "84%", "label": "Dislike ratio on DLSS 5 reveal video" }
+  ],
+  "products": [
+    {
+      "name": "DLSS 5 — Neural Rendering for Fidelity",
+      "role": "AI-powered visual fidelity enhancement",
+      "description": "Takes the colour buffer and motion vectors from a game's rendered frame, feeds them through an AI model trained on how light and materials behave in the real world, and outputs an enhanced image with more convincing lighting, skin, hair, fabric, and environmental detail. The geometry and textures stay the same. Announced March 2026, ships Fall 2026.",
+      "pricing": null
+    },
+    {
+      "name": "DLSS 4.0 / 4.5 — Transformer Architecture",
+      "role": "AI upscaling and multi-frame generation",
+      "description": "Launched with RTX 5000 (Blackwell). Replaced the CNN model with a vision transformer. Introduced multi-frame generation (up to 3 AI frames per rendered frame). By DLSS 4.5, AI draws 23 of every 24 pixels on screen. Won blind image quality tests against FSR and native rendering.",
+      "pricing": null
+    },
+    {
+      "name": "DLSS 3.5 — Ray Reconstruction",
+      "role": "AI-powered ray tracing denoiser",
+      "description": "Replaced multiple hand-tuned denoising algorithms with a single AI model for ray-traced content. Available on all RTX GPUs. Significantly improved path-traced image quality in titles like Cyberpunk 2077 and Alan Wake 2.",
+      "pricing": null
+    },
+    {
+      "name": "DLSS 3.0 — AI Frame Generation",
+      "role": "AI-generated intermediate frames",
+      "description": "Introduced with RTX 4000 series. Generates entire frames between rendered frames using motion vectors and optical flow. Multiplies perceived frame rates but adds latency. RTX 40/50 series required.",
+      "pricing": null
+    },
+    {
+      "name": "NVIDIA Streamline SDK",
+      "role": "Integration framework",
+      "description": "The integration framework used by developers to implement DLSS and Reflex. DLSS 5 uses the same Streamline pipeline as existing versions, providing intensity sliders, colour grading adjustments (contrast, saturation, gamma), and per-object masking.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "nvidia": {
+      "product": "DLSS (1.0 - 5)",
+      "description": "AI-driven suite using dedicated Tensor Cores on RTX GPUs. Includes super resolution (upscaling), frame generation, ray reconstruction, and neural rendering for fidelity. RTX-exclusive. The most mature and highest-quality upscaling available."
+    },
+    "amd": {
+      "product": "FSR (1.0 - 4 Redstone)",
+      "description": "AMD's FidelityFX Super Resolution. Originally spatial-only (no AI), FSR 4 now uses AI accelerators on RDNA 4 hardware. Older versions remain available on any GPU. Focuses on performance gains. No neural rendering equivalent planned."
+    },
+    "intel": {
+      "product": "XeSS (1.0 - 3)",
+      "description": "Intel's Xe Super Sampling uses XMX AI cores on Arc GPUs, with a DP4a fallback for other hardware. Added frame generation and latency reduction in XeSS 2. Competitive image quality, smallest game library. No fidelity-focused features."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You play graphically demanding titles on RTX hardware and prioritise visual realism over artistic purity — DLSS 5's environmental lighting and material improvements are genuinely impressive.",
+      "You're a developer building photorealistic games and want to close the gap to offline rendering quality without waiting for next-gen hardware.",
+      "You work in virtual production, architectural visualisation, or interactive experiences where real-time photoreal lighting has direct commercial value.",
+      "You've followed DLSS long enough to know that v1.0 criticism didn't predict v2.0 quality. Early demos don't always represent the shipping product."
+    ],
+    "skip_when": [
+      "You value artistic intent above photorealism. If you believe the final image should reflect only what game artists designed, DLSS 5's modifications represent a philosophical line crossing.",
+      "Your game has a strong stylised aesthetic. Cel-shaded, painterly, retro, or otherwise non-photorealistic games gain nothing from DLSS 5 and risk having their style homogenised.",
+      "You can't afford bleeding-edge hardware. Early demos required dual RTX 5090s. Even with optimisation, this will be a high-end feature for some time.",
+      "You're concerned about AI training transparency. NVIDIA hasn't disclosed training data sources. If that matters to your studio's ethics policy, wait for clarity."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Enterprise",
+      "title": "Real-Time Visual Computing",
+      "description": "For property developers, retailers, and manufacturers evaluating real-time 3D visualisation: neural rendering could collapse the cost and time of creating photoreal product imagery, architectural walkthroughs, and digital twins."
+    },
+    {
+      "category": "Studio",
+      "title": "AI Rendering Pipeline Evaluation",
+      "description": "Teams building interactive experiences, training simulations, or visual content should evaluate how neural rendering fits their pipeline. The key question is whether AI-enhanced rendering solves a real bottleneck or introduces problems you don't have."
+    },
+    {
+      "category": "Education",
+      "title": "Understanding Neural Rendering",
+      "description": "The DLSS 5 debate is a useful case study in AI adoption friction: what happens when AI capabilities collide with professional craft, artistic identity, and community trust. Similar tensions will appear in every creative industry AI enters."
+    },
+    {
+      "category": "Gaming",
+      "title": "Photorealistic Game Enhancement",
+      "description": "Graphically demanding titles on RTX hardware benefit from DLSS 5's enhanced lighting, skin, hair, fabric, and environmental detail. The technology targets visual realism beyond what conventional rendering achieves at real-time frame rates."
+    },
+    {
+      "category": "VFX / Virtual Production",
+      "title": "Real-Time Photoreal Lighting",
+      "description": "Virtual production and architectural visualisation workflows where real-time photoreal lighting has direct commercial value. Neural rendering bridges the gap between 16ms game frames and hours-long VFX renders."
+    }
+  ],
+  "timeline": [
+    { "date": "2018", "title": "DLSS 1.0 — Per-Game Upscaling", "detail": "Launched with RTX 2000 series. Required per-game model training. Results frequently blurry with visible artefacts. Called 'fake pixels' by sceptics." },
+    { "date": "2020", "title": "DLSS 2.0 — Generalised Temporal Model", "detail": "Replaced per-game training with a single generalised model using temporal data from previous frames. Massive quality improvement. The version that made DLSS mainstream." },
+    { "date": "2022", "title": "DLSS 3.0 — AI Frame Generation", "detail": "Introduced with RTX 4000 series. Generated entire frames between rendered frames using motion vectors and optical flow. Multiplied perceived frame rates but added latency." },
+    { "date": "2023", "title": "DLSS 3.5 — Ray Reconstruction", "detail": "Replaced multiple hand-tuned denoising algorithms with a single AI model for ray-traced content. Available on all RTX GPUs. Improved path-traced quality in Cyberpunk 2077 and Alan Wake 2." },
+    { "date": "2025-01", "title": "DLSS 4.0 / 4.5 — Transformer Architecture", "detail": "Launched with RTX 5000 (Blackwell). CNN swapped for vision transformer. Multi-frame generation (up to 3 AI frames per rendered). By DLSS 4.5, AI draws 23 of every 24 pixels. Won blind image quality tests." },
+    { "date": "2026-03", "title": "DLSS 5 — Neural Rendering for Fidelity", "detail": "Announced at GTC 2026 on 16 March. First DLSS version targeting visual quality rather than performance. Uses generalised neural model for lighting and material enhancement. Ships Fall 2026. 84% dislike ratio on reveal video." }
+  ],
+  "pricing": [],
+  "code_examples": [],
+  "resources": {
+    "official": [
+      { "title": "NVIDIA DLSS Technology Page", "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/" },
+      { "title": "DLSS 5 Announcement", "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/" },
+      { "title": "NVIDIA Newsroom — DLSS 5 Press Release", "url": "https://nvidianews.nvidia.com/news/nvidia-dlss-5-delivers-ai-powered-breakthrough-in-visual-fidelity-for-games" },
+      { "title": "NVIDIA Streamline SDK", "url": "https://developer.nvidia.com/rtx/streamline" }
+    ],
+    "sources": [
+      { "title": "Tom's Hardware — First Look at DLSS 5 at GTC", "url": "https://www.tomshardware.com/pc-components/gpus/we-got-a-first-look-at-nvidias-dlss-5-and-the-future-of-neural-rendering-at-gtc-the-results-can-be-impressive-but-theres-work-to-do" },
+      { "title": "fxguide — VFX Industry Perspective on Neural Rendering", "url": "https://www.fxguide.com/quicktakes/nvidias-new-real-time-neural-rendering-with-dlss-5/" },
+      { "title": "RedShark News — Backlash and Competitive Landscape", "url": "https://www.redsharknews.com/nvidia-dlss-5-neural-rendering-backlash" },
+      { "title": "Wikipedia — Deep Learning Super Sampling", "url": "https://en.wikipedia.org/wiki/Deep_Learning_Super_Sampling" },
+      { "title": "PC Gamer — Developer Reactions to DLSS 5", "url": "https://www.pcgamer.com/software/ai/bad-ending-now-every-game-is-slop-game-developers-share-mixed-reactions-to-dlss-5/" },
+      { "title": "Kotaku — Developer Interviews on DLSS 5", "url": "https://kotaku.com/we-spoke-to-game-devs-and-all-of-them-hate-dlss-5-what-the-f-nvidia-2000680059" },
+      { "title": "MindStudio — DLSS 5 Neural Rendering Explained", "url": "https://www.mindstudio.ai/blog/what-is-dlss-5-nvidia-neural-rendering-explained" },
+      { "title": "WinBuzzer — NVIDIA CEO Backtracks on DLSS 5 Criticism", "url": "https://winbuzzer.com/2026/03/24/nvidia-ceo-backtracks-dlss-5-criticism-ai-slop-xcxwbn/" },
+      { "title": "XDA Developers — Rasterisation's Days Are Numbered", "url": "https://www.xda-developers.com/dlss-5-is-further-proof-that-rasterizations-days-are-numbered/" }
+    ]
+  }
+}

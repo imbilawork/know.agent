@@ -1,0 +1,165 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "langchain",
+    "title": "LangChain Explained",
+    "subtitle": "The framework that makes AI agents buildable, debuggable, and deployable",
+    "topic": "LangChain",
+    "category": "framework",
+    "tags": ["ai-agents", "llm-framework", "rag", "orchestration", "open-source", "python", "typescript"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/langchain-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "LangChain is an open-source framework for building applications powered by large language models. It provides composable building blocks — chains, RAG, tools, memory, and agents — that snap together through a consistent API. The ecosystem includes LangChain (high-level framework), LangGraph (graph-based orchestration), and LangSmith (observability, evals, deployment). v1.0 stable since November 2025.",
+  "key_stats": [
+    { "value": "50k+", "label": "GitHub Stars" },
+    { "value": "1,300+", "label": "Professionals Surveyed (State of Agent Eng. 2026)" },
+    { "value": "20+", "label": "LLM Providers Supported" },
+    { "value": "v1.0", "label": "Stable Release (November 2025)" }
+  ],
+  "products": [
+    {
+      "name": "LangChain",
+      "role": "High-level AI application framework",
+      "description": "Composable chains, prompts, tools, memory, and output parsers. Supports 20+ LLM providers. Great for straightforward agent builds and prototyping. Available in Python and TypeScript, v1.0 stable.",
+      "pricing": null
+    },
+    {
+      "name": "LangGraph",
+      "role": "Low-level agent orchestration",
+      "description": "Stateful, graph-based workflows for complex multi-step agents, human-in-the-loop flows, and branching logic. The engine under LangChain's agent layer. Supports cycles, persistence, and controllability.",
+      "pricing": null
+    },
+    {
+      "name": "LangSmith",
+      "role": "Observability, evaluation, and deployment platform",
+      "description": "Tracing, experiment comparison, automated evals, and production monitoring. The DevOps layer for AI agents. Includes Fleet for no-code agent building and enterprise deployment.",
+      "pricing": null
+    },
+    {
+      "name": "Deep Agents",
+      "role": "Production-grade coding and research agents",
+      "description": "Async subagents, multi-modal file support, and sandboxed execution. LangChain's production-grade coding and research agents introduced in 2026.",
+      "pricing": null
+    },
+    {
+      "name": "Fleet",
+      "role": "Enterprise agent management hub",
+      "description": "Formerly Agent Builder. Enterprise hub for building, using, and managing agents with natural language. No-code agent building — describe what you want, it builds the agent.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "framework": {
+      "product": "LangChain",
+      "description": "High-level framework with composable chains, prompts, tools, memory, output parsers. 20+ LLM providers. Python and TypeScript."
+    },
+    "orchestration": {
+      "product": "LangGraph",
+      "description": "Graph-based orchestration for stateful multi-step agents. Cycles, persistence, human-in-the-loop, branching logic."
+    },
+    "platform": {
+      "product": "LangSmith",
+      "description": "Observe, evaluate, and deploy. Tracing, experiment comparison, automated evals, production monitoring. Includes Fleet for no-code agent building."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You're building agents with tools and reasoning loops.",
+      "You need RAG over your own documents.",
+      "You want to swap models without rewriting code.",
+      "You need observability and evaluation from day one.",
+      "You're orchestrating multi-step workflows with LangGraph.",
+      "Your team wants a standard, well-documented framework."
+    ],
+    "skip_when": [
+      "A single API call solves your problem.",
+      "You're building a simple chatbot with no tools.",
+      "You need maximum control over every HTTP request.",
+      "Your use case is pure text generation with no orchestration.",
+      "You're deeply invested in another framework (CrewAI, AutoGen, etc.).",
+      "The abstraction layer adds complexity you don't need."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Knowledge",
+      "title": "Document Q&A",
+      "description": "Internal docs, manuals, legal contracts — employees ask questions in natural language instead of hunting through PDFs. RAG-powered, always grounded in your data."
+    },
+    {
+      "category": "Customer",
+      "title": "Support Agents",
+      "description": "Agents that resolve tickets, look up order status, escalate complex issues, and learn from past resolutions. Tool-using agents, not keyword bots."
+    },
+    {
+      "category": "Research",
+      "title": "Data Analysis",
+      "description": "Agents that read spreadsheets, query databases, run calculations, and produce reports. Particularly powerful with code execution tools and Deep Agents."
+    },
+    {
+      "category": "Engineering",
+      "title": "Coding Assistants",
+      "description": "Code review, bug detection, documentation generation, and automated testing. Open SWE provides the architecture for internal coding agents."
+    },
+    {
+      "category": "Workflow",
+      "title": "Process Automation",
+      "description": "Agents that monitor inboxes, classify documents, update CRMs, and trigger downstream actions. Multi-agent systems where each agent owns a step."
+    },
+    {
+      "category": "Content",
+      "title": "Generation Pipelines",
+      "description": "Marketing teams using chains to generate, review, and refine content — with brand guidelines baked into the prompt template and structured output enforced."
+    }
+  ],
+  "timeline": [
+    { "date": "2022-10", "title": "LangChain Launches", "detail": "Harrison Chase releases the initial Python library. Chains and prompt templates for LLM apps." },
+    { "date": "2023-01", "title": "Explosive Growth", "detail": "TypeScript support, 700+ integrations, LangSmith beta. Becomes the most-starred AI framework on GitHub." },
+    { "date": "2024-01", "title": "LangGraph Introduced", "detail": "Low-level graph-based orchestration for stateful, multi-step agents. Cycles, persistence, human-in-the-loop." },
+    { "date": "2025-11", "title": "v1.0 — Stable Release", "detail": "LangChain and LangGraph hit v1.0 together. create_agent becomes the canonical entry point. Model profiles, middleware, structured output." },
+    { "date": "2026-01", "title": "Deep Agents, Fleet & Beyond", "detail": "Deep Agents (async subagents, multi-modal), Fleet (enterprise agent management), LangSmith self-hosted expansion. The agent engineering platform emerges." }
+  ],
+  "pricing": [],
+  "code_examples": [
+    {
+      "title": "Basic Chain (LCEL)",
+      "language": "python",
+      "code": "from langchain_core.prompts import ChatPromptTemplate\nfrom langchain_openai import ChatOpenAI\n\nchain = prompt | model | parser\nresult = chain.invoke({\"topic\": \"AI agents\"})"
+    },
+    {
+      "title": "RAG Pipeline",
+      "language": "python",
+      "code": "# Load -> Split -> Embed -> Store -> Retrieve\ndocs = loader.load()\nsplits = splitter.split_documents(docs)\nvectorstore.add_documents(splits)\nretriever = vectorstore.as_retriever()"
+    },
+    {
+      "title": "Tool-Using Agent",
+      "language": "python",
+      "code": "@tool\ndef search(query: str) -> str:\n    \"\"\"Search the web for information.\"\"\"\n    return tavily.search(query)\n\nagent = create_agent(model, tools=[search])"
+    },
+    {
+      "title": "Create Agent (v1.0+)",
+      "language": "python",
+      "code": "from langchain.agents import create_agent\n\nagent = create_agent(\n    \"anthropic:claude-sonnet-4-20250514\",\n    tools=[search, calculator, code_exec],\n    system_prompt=\"You are a research assistant...\"\n)"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "langchain.com — Official Site & Platform", "url": "https://www.langchain.com" },
+      { "title": "docs.langchain.com — Documentation & Changelog", "url": "https://docs.langchain.com" },
+      { "title": "GitHub — Source Code", "url": "https://github.com/langchain-ai/langchain" },
+      { "title": "changelog.langchain.com — Product Updates", "url": "https://changelog.langchain.com/" },
+      { "title": "LangChain Academy — Free Courses", "url": "https://academy.langchain.com" }
+    ],
+    "sources": [
+      { "title": "langchain.com", "url": "https://www.langchain.com" },
+      { "title": "LangChain Python Changelog", "url": "https://docs.langchain.com/oss/python/releases/changelog" },
+      { "title": "LangChain Blog", "url": "https://blog.langchain.com/" },
+      { "title": "GitHub Releases", "url": "https://github.com/langchain-ai/langchain/releases" },
+      { "title": "State of Agent Engineering 2026", "url": "https://www.langchain.com/state-of-agent-engineering" }
+    ]
+  }
+}

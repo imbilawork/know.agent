@@ -1,0 +1,157 @@
+{
+  "$id": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Imbila.AI Explainer",
+  "description": "Structured representation of an Imbila.AI technology explainer page for agent consumption.",
+  "type": "object",
+  "required": ["meta", "summary", "products", "decision_guide", "resources"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["id", "title", "topic", "published", "validated", "canonical_url"],
+      "properties": {
+        "id": { "type": "string", "description": "URL-safe identifier, e.g. 'cloudflare-ai'" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "topic": { "type": "string", "description": "The technology or concept being explained" },
+        "category": { "type": "string", "description": "Broad category: cloud-platform, framework, model, benchmark, etc." },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "published": { "type": "string", "description": "YYYY-MM format" },
+        "validated": { "type": "string", "description": "YYYY-MM when content was last fact-checked" },
+        "author": { "type": "string" },
+        "canonical_url": { "type": "string", "format": "uri" },
+        "license": { "type": "string" }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "2-3 sentence factual overview of the topic"
+    },
+    "key_stats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["value", "label"],
+        "properties": {
+          "value": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "products": {
+      "type": "array",
+      "description": "Core components or products in the technology stack",
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string", "description": "One-line role description" },
+          "description": { "type": "string" },
+          "models_include": { "type": "array", "items": { "type": "string" } },
+          "pricing": {
+            "type": ["object", "null"],
+            "properties": {
+              "free": { "type": "string" },
+              "paid": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "ecosystem": {
+      "type": "object",
+      "description": "Related platform components grouped by layer",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "product": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "decision_guide": {
+      "type": "object",
+      "required": ["use_when", "skip_when"],
+      "properties": {
+        "use_when": { "type": "array", "items": { "type": "string" } },
+        "skip_when": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "use_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "title", "description"],
+        "properties": {
+          "category": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "title"],
+        "properties": {
+          "date": { "type": "string", "description": "YYYY-MM format" },
+          "title": { "type": "string" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "pricing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["product"],
+        "properties": {
+          "product": { "type": "string" },
+          "free": { "type": "string" },
+          "paid": { "type": "string" }
+        }
+      }
+    },
+    "code_examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "language", "code"],
+        "properties": {
+          "title": { "type": "string" },
+          "language": { "type": "string" },
+          "code": { "type": "string" }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "official": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "url"],
+            "properties": {
+              "title": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "url"],
+            "properties": {
+              "title": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

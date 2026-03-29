@@ -1,0 +1,138 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "nemoclaw",
+    "title": "NVIDIA NemoClaw Explained",
+    "subtitle": "Secure, sandboxed infrastructure for always-on AI agents",
+    "topic": "NVIDIA NemoClaw",
+    "category": "agent-security",
+    "tags": ["ai-agents", "sandboxing", "security", "nvidia", "openclaw", "openshell", "nemotron", "containers", "privacy"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/nemoclaw-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "NVIDIA NemoClaw is an open-source reference stack that wraps OpenClaw — the viral autonomous AI agent platform — inside a secure, sandboxed runtime. It bundles the NVIDIA OpenShell runtime, Nemotron open-source models, and a single-command installer so you can deploy always-on AI agents with policy-based privacy and security controls baked in. OpenShell sandboxes every agent in its own container with kernel-level filesystem, network, and process constraints, while a privacy router directs inference to local Nemotron models or cloud providers based on declarative YAML policies.",
+  "key_stats": [
+    { "value": "250K+", "label": "GitHub stars for OpenClaw in under 4 months" },
+    { "value": "100+", "label": "Built-in skills accessing your system" },
+    { "value": "1 cmd", "label": "NemoClaw install to sandboxed agent" },
+    { "value": "0", "label": "Code changes needed in your agent" }
+  ],
+  "products": [
+    {
+      "name": "OpenClaw",
+      "role": "Agent platform",
+      "description": "The open-source autonomous agent runtime. Connects LLMs to local tools via messaging platforms. 250K+ GitHub stars, 100+ skills, model-agnostic. Created by Peter Steinberger.",
+      "pricing": null
+    },
+    {
+      "name": "NVIDIA OpenShell",
+      "role": "Security runtime",
+      "description": "Agent-agnostic sandboxing runtime that works with OpenClaw, Claude Code, Codex, and others. Enforces policies at kernel level via containers, seccomp, and Landlock. Apache 2.0.",
+      "pricing": null
+    },
+    {
+      "name": "NemoClaw",
+      "role": "Reference stack",
+      "description": "Bundles OpenShell + Nemotron models + one-command installer specifically for OpenClaw. The opinionated 'batteries included' distribution for secure agent deployment. Currently in alpha/early preview.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "sandbox": {
+      "product": "OpenShell Sandbox",
+      "description": "Each agent runs inside its own isolated container with Landlock + seccomp + network namespace enforcement. Filesystem locked at creation, network blocked by default, API keys injected as runtime environment variables."
+    },
+    "policy": {
+      "product": "Declarative YAML Policies",
+      "description": "Security rules defined in human-readable YAML. Govern filesystem access, network egress, process execution, and inference routing. Live updates without sandbox restart."
+    },
+    "inference": {
+      "product": "Privacy Router",
+      "description": "Intercepts every inference call from the agent and routes to configured provider — local Nemotron models for privacy-sensitive work, or cloud frontier models (Claude, GPT) when policy allows."
+    },
+    "architecture": {
+      "product": "Blueprint + Plugin Architecture",
+      "description": "Versioned Python blueprints orchestrate sandbox creation, policy application, and inference configuration. Immutable and digest-verified. TypeScript plugin handles user interaction inside the sandbox."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You're running OpenClaw agents and want sandboxed security without building your own isolation layer.",
+      "You need a privacy router to keep sensitive inference on-device with Nemotron models while still accessing cloud models when appropriate.",
+      "You want declarative, version-controlled security policies that sit outside the agent's reach.",
+      "You're experimenting with always-on agents and want a safety net during development."
+    ],
+    "skip_when": [
+      "You need production-ready, multi-tenant deployment today. NemoClaw is alpha software — NVIDIA's own docs say 'single-player mode' and 'expect rough edges.'",
+      "Your hardware can't handle it. The sandbox image is ~2.4 GB compressed, and machines with less than 8 GB RAM may hit OOM issues. Local Nemotron models need 25-70 GB of memory.",
+      "You're not using OpenClaw. OpenShell (standalone) is the better choice for sandboxing Claude Code, Codex, or other agents.",
+      "Your team doesn't have someone comfortable with Docker, YAML, and container networking."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Developer Tools",
+      "title": "Sandboxed Coding Agents",
+      "description": "Let an always-on agent run tests, debug code, and deploy updates — while policy ensures it can't access production secrets or push to unauthorized repos."
+    },
+    {
+      "category": "Enterprise IT",
+      "title": "Secure Internal Assistants",
+      "description": "Deploy agents that triage support tickets, query knowledge bases, and manage workflows — with network egress locked to approved domains and inference routed locally."
+    },
+    {
+      "category": "Security Operations",
+      "title": "Vulnerability Response Agents",
+      "description": "Cisco has already demo'd an agent inside OpenShell that reads security advisories, maps them against device state, and plans remediation — all within auditable constraints."
+    },
+    {
+      "category": "Privacy-Sensitive Work",
+      "title": "Local Inference for Regulated Data",
+      "description": "Route inference through on-device Nemotron models so no patient records, legal documents, or financial data ever leave your machine. The privacy router enforces this at the infrastructure level."
+    },
+    {
+      "category": "Personal Productivity",
+      "title": "Always-On Personal Assistant",
+      "description": "Run a 24/7 agent that manages email, calendar, and messaging — on your DGX Spark or RTX PC — with policies that prevent it from oversharing your data with external services."
+    },
+    {
+      "category": "Research & Experimentation",
+      "title": "Safe Agent Development",
+      "description": "Test new skills and multi-agent configurations in a sandboxed environment. If the agent breaks something, it breaks the sandbox — not your host system."
+    }
+  ],
+  "timeline": [
+    { "date": "2025-11", "title": "Clawdbot Launched", "detail": "Peter Steinberger releases a personal AI assistant originally named Clawdbot (derived from 'Claude'). It connects LLMs to local tools via messaging apps." },
+    { "date": "2026-01", "title": "Moltbot to OpenClaw", "detail": "Trademark complaints from Anthropic force a rename to Moltbot, then quickly to OpenClaw. The lobster mascot sticks. Moltbook — an agent social network — launches alongside." },
+    { "date": "2026-02", "title": "Viral Explosion", "detail": "OpenClaw surpasses 100K GitHub stars. Goes from 9K to 60K stars in 72 hours. Security researchers raise alarms. Steinberger joins OpenAI; project moves to an open-source foundation." },
+    { "date": "2026-03", "title": "GTC: NemoClaw + OpenShell Announced", "detail": "NVIDIA announces NemoClaw and OpenShell at GTC 2026. Jensen Huang calls OpenClaw 'the operating system for personal AI.' NemoClaw enters alpha/early preview on March 16. China restricts state use of OpenClaw agents, citing security concerns." }
+  ],
+  "code_examples": [
+    {
+      "title": "Create a sandboxed agent",
+      "language": "bash",
+      "code": "# Create your first sandboxed agent\ncurl -fsSL https://www.nvidia.com/nemoclaw.sh | bash\nnemoclaw onboard"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "NVIDIA NemoClaw", "url": "https://www.nvidia.com/en-us/ai/nemoclaw/" },
+      { "title": "NemoClaw Developer Guide", "url": "https://docs.nvidia.com/nemoclaw/latest/index.html" },
+      { "title": "NemoClaw GitHub", "url": "https://github.com/NVIDIA/NemoClaw" },
+      { "title": "OpenShell GitHub", "url": "https://github.com/NVIDIA/OpenShell" },
+      { "title": "OpenClaw GitHub", "url": "https://github.com/openclaw/openclaw" }
+    ],
+    "sources": [
+      { "title": "NVIDIA Technical Blog — OpenShell Architecture", "url": "https://developer.nvidia.com/blog/run-autonomous-self-evolving-agents-more-safely-with-nvidia-openshell/" },
+      { "title": "Cisco Blog — Enterprise Integration with AI Defense", "url": "https://blogs.cisco.com/ai/securing-enterprise-agents-with-nvidia-and-cisco-ai-defense" },
+      { "title": "The Next Platform — GTC Keynote Analysis", "url": "https://www.nextplatform.com/ai/2026/03/17/nvidia-says-openclaw-is-to-agentic-ai-what-gpt-was-to-chattybots/5209428" },
+      { "title": "TechCrunch — NemoClaw Launch Coverage", "url": "https://techcrunch.com/2026/03/16/nvidias-version-of-openclaw-could-solve-its-biggest-problem-security/" },
+      { "title": "NVIDIA Newsroom", "url": "https://nvidianews.nvidia.com/news/nvidia-announces-nemoclaw" },
+      { "title": "NVIDIA Blog — Secure Autonomous AI Agents", "url": "https://blogs.nvidia.com/blog/secure-autonomous-ai-agents-openshell/" },
+      { "title": "Wikipedia — OpenClaw", "url": "https://en.wikipedia.org/wiki/OpenClaw" }
+    ]
+  }
+}

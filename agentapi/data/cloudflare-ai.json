@@ -1,0 +1,162 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "cloudflare-ai",
+    "title": "Cloudflare AI Explained",
+    "subtitle": "Serverless AI inference, agents, and RAG — running on the network that powers 20% of the internet",
+    "topic": "Cloudflare AI",
+    "category": "cloud-platform",
+    "tags": ["inference", "edge-computing", "serverless", "ai-agents", "rag", "vector-database", "mcp"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/cloudflare-ai-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "Cloudflare AI is a suite of products within Cloudflare's Developer Platform that runs open-source AI models on serverless GPUs distributed across Cloudflare's global network. It includes Workers AI (inference), AI Gateway (proxy/observability), Vectorize (vector DB), AI Search (managed RAG), and the Agents SDK (stateful agents on Durable Objects). Powered by the Infire inference engine written in Rust.",
+  "key_stats": [
+    { "value": "89+", "label": "Models Available" },
+    { "value": "200+", "label": "GPU Cities" },
+    { "value": "$0.011", "label": "Per 1K Neurons" },
+    { "value": "10,000", "label": "Free Neurons/Day" }
+  ],
+  "products": [
+    {
+      "name": "Workers AI",
+      "role": "Inference engine",
+      "description": "Call 89+ open-source models (LLMs, image gen, embeddings, TTS, ASR) via a Worker binding or REST API. Runs on NVIDIA H100 GPUs. Pricing is per-Neuron with 10,000 free per day.",
+      "models_include": ["Llama 4 Scout 17B", "Kimi K2.5", "FLUX.2", "Whisper", "MeloTTS", "Nemotron 3"],
+      "pricing": { "free": "10K Neurons/day", "paid": "$0.011 / 1K Neurons" }
+    },
+    {
+      "name": "AI Gateway",
+      "role": "Proxy and observability layer",
+      "description": "Sits in front of any AI provider — Workers AI, OpenAI, Anthropic. Provides request logging, analytics, caching (including semantic), rate limiting, model fallback, and cost tracking.",
+      "pricing": { "free": "100K logs/month", "paid": "1M logs on Workers Paid; Logpush extra" }
+    },
+    {
+      "name": "Vectorize",
+      "role": "Vector database",
+      "description": "Globally distributed vector database for embeddings. Supports metadata filtering, integrates with Workers AI embedding models. Enables RAG, semantic search, recommendations.",
+      "pricing": { "free": "Included in Workers plans", "paid": "Usage-based (request units + storage)" }
+    },
+    {
+      "name": "AI Search",
+      "role": "Managed RAG pipeline",
+      "description": "Formerly AutoRAG. Connect an R2 bucket or website; Cloudflare handles chunking, embedding, indexing, querying. Supports continuous re-crawling, multitenancy, streaming responses.",
+      "pricing": { "free": "Open beta (free during beta)", "paid": "TBD" }
+    },
+    {
+      "name": "Agents SDK",
+      "role": "Stateful AI agents",
+      "description": "TypeScript SDK for building persistent, stateful AI agents on Durable Objects. MCP client/server support, scheduled tasks, Code Mode (reduces token usage by up to 87.5%), WebSocket hibernation.",
+      "pricing": { "free": "Durable Objects free tier", "paid": "Durable Objects usage-based" }
+    },
+    {
+      "name": "Infire",
+      "role": "Inference engine (internal)",
+      "description": "Custom LLM inference engine written in Rust. Uses granular CUDA graphs, JIT kernel compilation, paged KV caching. 7% faster than vLLM 0.10.0 on H100s, 82% lower CPU overhead.",
+      "pricing": null
+    }
+  ],
+  "ecosystem": {
+    "compute": {
+      "product": "Workers + Durable Objects",
+      "description": "Serverless functions (V8 isolates) and persistent stateful objects. Execution environment for all AI application logic."
+    },
+    "storage": {
+      "product": "R2 + D1 + KV",
+      "description": "R2: S3-compatible object storage, zero egress fees. D1: serverless SQL. KV: global key-value."
+    },
+    "protocol": {
+      "product": "MCP Servers",
+      "description": "Managed remote MCP servers for Cloudflare API (2,500+ endpoints via two tools) and partners (Anthropic, Stripe, Asana)."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You want serverless, pay-per-use inference with no GPU reservation — particularly for variable or spiky workloads.",
+      "Latency matters and your users are geographically distributed. Edge inference in 200+ cities.",
+      "You're already on Cloudflare for Workers, Pages, R2, or DNS. Native integration.",
+      "You want to run open-source models (Llama, FLUX, Whisper) without managing GPU infrastructure."
+    ],
+    "skip_when": [
+      "You need proprietary frontier models (GPT-4o, Claude, Gemini) as your primary. Workers AI only runs open-source models.",
+      "You need fine-tuning or custom model training. Cloudflare supports LoRAs but doesn't offer training infrastructure.",
+      "You need guaranteed GPU capacity for sustained high-throughput workloads. Serverless means shared resources and potential cold starts.",
+      "You need models Cloudflare doesn't carry. Catalogue is curated, not open-ended. Custom hosting requires enterprise."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Support",
+      "title": "AI-Powered Customer Support",
+      "description": "RAG pipelines grounding LLM responses in knowledge bases. AI Search for ingestion, Workers AI for generation, Durable Objects for session continuity."
+    },
+    {
+      "category": "Search",
+      "title": "Semantic Search & Recommendations",
+      "description": "Embeddings via Workers AI, stored in Vectorize, queried by meaning. Product search, content discovery, anomaly detection."
+    },
+    {
+      "category": "Content",
+      "title": "Image Generation & Media Processing",
+      "description": "FLUX.2, Stable Diffusion for text-to-image. Deepgram and Whisper for speech-to-text. MeloTTS for voice synthesis. All serverless at the edge."
+    },
+    {
+      "category": "Agentic",
+      "title": "Autonomous AI Agents",
+      "description": "Long-running agents on Agents SDK. MCP integration for tool use. Code Mode for token-efficient orchestration. WebSocket hibernation for cost control."
+    },
+    {
+      "category": "Security",
+      "title": "AI-Enhanced App Security",
+      "description": "DLP false-positive reduction, email threat analysis, automated code review. Internal Bonk agent processed 7B+ tokens daily using Kimi K2.5."
+    },
+    {
+      "category": "Developer Tools",
+      "title": "AI-Powered DevEx",
+      "description": "MCP servers exposing APIs to agents. Markdown for Agents auto-converts HTML. Cloudflare MCP server covers 2,500+ endpoints with two tools."
+    }
+  ],
+  "timeline": [
+    { "date": "2023-09", "title": "Workers AI Launch", "detail": "Initial launch with open-source models. GPU deployment in 100+ cities. Hugging Face partnership. Vectorize launches." },
+    { "date": "2024-04", "title": "Workers AI Goes GA", "detail": "Neuron-based pricing ($0.011/1K). LoRA fine-tuned models. One-click Hugging Face deploys. Python Workers support." },
+    { "date": "2024-09", "title": "GPU Upgrade & Larger Models", "detail": "H100 NVL GPUs. Llama 3.1 70B and 3.2 family. 180+ GPU cities. Vectorize metadata filtering. Infire engine revealed." },
+    { "date": "2025-03", "title": "Agents SDK & MCP", "detail": "Agents SDK for persistent stateful agents. Remote MCP server support. Partnerships with Anthropic, Stripe, Asana." },
+    { "date": "2025-09", "title": "AI Week — Infire Deep Dive", "detail": "Full Infire technical reveal (Rust). MCP Server Portals. AI Search open beta. NLWeb integration. Firewall for AI." },
+    { "date": "2025-12", "title": "Replicate Acquisition", "detail": "Cloudflare acquires Replicate. Strengthens model catalogue and developer reach." },
+    { "date": "2026-03", "title": "Frontier Models & Code Mode", "detail": "Kimi K2.5 (256K context). Code Mode reduces MCP tokens by 87.5%. Unified MCP server (2,500+ endpoints). Nemotron 3 and GPT-OSS added." }
+  ],
+  "pricing": [
+    { "product": "Workers AI", "free": "10K Neurons/day", "paid": "$0.011 / 1K Neurons above free" },
+    { "product": "AI Gateway", "free": "100K logs/month", "paid": "1M logs on Workers Paid; Logpush extra" },
+    { "product": "Vectorize", "free": "Included in Workers plans", "paid": "Usage-based (request units + storage)" },
+    { "product": "AI Search", "free": "Open beta (free during beta)", "paid": "TBD" },
+    { "product": "Agents SDK", "free": "Durable Objects free tier", "paid": "Durable Objects usage-based pricing" }
+  ],
+  "code_examples": [
+    {
+      "title": "Call Llama from a Worker",
+      "language": "javascript",
+      "code": "const response = await env.AI.run(\n  \"@cf/meta/llama-4-scout-17b-16e-instruct\",\n  { messages: [{ role: \"user\", content: prompt }] }\n);"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "Workers AI Docs", "url": "https://developers.cloudflare.com/workers-ai/" },
+      { "title": "AI Gateway Docs", "url": "https://developers.cloudflare.com/ai-gateway/" },
+      { "title": "Vectorize Docs", "url": "https://developers.cloudflare.com/vectorize/" },
+      { "title": "AI Search Docs", "url": "https://developers.cloudflare.com/ai-search/" },
+      { "title": "Agents SDK Docs", "url": "https://developers.cloudflare.com/agents/" },
+      { "title": "Agents SDK GitHub", "url": "https://github.com/cloudflare/agents" },
+      { "title": "Model Catalogue", "url": "https://developers.cloudflare.com/workers-ai/models/" },
+      { "title": "Pricing Reference", "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/" }
+    ],
+    "sources": [
+      { "title": "Workers AI Large Models Blog (Mar 2026)", "url": "https://blog.cloudflare.com/workers-ai-large-models/" },
+      { "title": "Infire Inference Engine Blog", "url": "https://blog.cloudflare.com/cloudflares-most-efficient-ai-inference-engine/" },
+      { "title": "Code Mode: MCP in ~1,000 Tokens", "url": "https://blog.cloudflare.com/code-mode-mcp/" }
+    ]
+  }
+}
