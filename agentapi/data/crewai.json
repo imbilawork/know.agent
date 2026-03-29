@@ -1,0 +1,156 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "crewai",
+    "title": "CrewAI Explained",
+    "subtitle": "The open-source framework for orchestrating multi-agent AI teams",
+    "topic": "CrewAI",
+    "category": "framework",
+    "tags": ["multi-agent", "ai-agents", "orchestration", "python", "open-source", "role-based", "llm-agnostic"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/crewai-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "CrewAI is an open-source Python framework for orchestrating teams of AI agents, each with a specific role, goal, and toolset. Built from scratch (independent of LangChain), it provides six core abstractions — Agents, Tasks, Crews, Tools, Flows, and Memory — to choreograph multi-agent collaboration. The commercial Agent Management Platform (AMP) adds visual studio, tracing, and enterprise deployment.",
+  "key_stats": [
+    { "value": "45.7k", "label": "GitHub Stars" },
+    { "value": "1.4B+", "label": "Agentic Automations Run" },
+    { "value": "100k+", "label": "Certified Developers" },
+    { "value": "$18M", "label": "Total Funding Raised" }
+  ],
+  "products": [
+    {
+      "name": "Agents",
+      "role": "Role-based AI workers",
+      "description": "Each agent has a role, goal, and backstory that shape its behaviour. Optionally assign an LLM, enable reasoning mode, grant delegation rights, and toggle memory. LLM-agnostic — works with OpenAI, Anthropic, Gemini, Ollama, or any provider."
+    },
+    {
+      "name": "Tasks",
+      "role": "Units of work",
+      "description": "A Task defines a unit of work with a clear description, expected output format, and the agent assigned to it. Tasks can depend on other tasks for automatic context passing. Supports structured outputs via Pydantic models."
+    },
+    {
+      "name": "Crews",
+      "role": "Agent team orchestration",
+      "description": "A Crew brings agents and tasks together under a process model. Sequential process runs tasks in order. Hierarchical process assigns a manager agent that delegates dynamically. Supports planning mode, shared memory, and a manager LLM."
+    },
+    {
+      "name": "Tools",
+      "role": "External interaction layer",
+      "description": "Agents use tools to interact with the outside world — web search, file operations, API calls, database queries, code execution. Ships with 100+ built-in tools and supports custom tools via a simple Python decorator pattern."
+    },
+    {
+      "name": "Flows",
+      "role": "Production orchestration layer",
+      "description": "Event-driven, deterministic orchestration above Crews — conditional branching, state management, parallel execution, and error handling. A Flow is the project plan; Crews are the teams executing it. Uses @start() and @listen() decorators."
+    },
+    {
+      "name": "Memory",
+      "role": "Agent knowledge persistence",
+      "description": "Four memory types: short-term (within a run), long-term (across runs), entity memory (about specific subjects), and contextual memory (shared between agents). Lets agents recall past decisions and build on prior work."
+    }
+  ],
+  "ecosystem": {
+    "open_source": {
+      "product": "CrewAI OSS",
+      "description": "The core Python framework — MIT-licensed, standalone, and free to self-host. Includes agents, tasks, crews, flows, tools, and memory."
+    },
+    "platform": {
+      "product": "CrewAI AMP",
+      "description": "The commercial Agent Management Platform. Adds CrewAI Studio (visual no-code editor), real-time tracing, agent training, RBAC, serverless deployment, and enterprise integrations. Cloud or on-prem."
+    },
+    "education": {
+      "product": "CrewAI Learn",
+      "description": "Free courses at learn.crewai.com, including a collaboration with Andrew Ng on multi-agent systems. Over 100,000 developers have completed certification."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "Your workflow has natural role separation — research, analysis, writing, QA — and would benefit from specialised agents handling each phase.",
+      "You need multi-step pipelines where output from one agent feeds into the next, with dependencies and handoffs between stages.",
+      "You want LLM-agnostic orchestration — assigning different models to different agents based on cost, latency, or capability requirements.",
+      "Your team works in Python and wants opinionated abstractions over building orchestration from scratch with raw API calls."
+    ],
+    "skip_when": [
+      "A single agent with good tools can handle your entire task. Adding multi-agent overhead to a simple Q&A bot or document summariser will cost more and deliver no quality improvement.",
+      "You need maximum control over state transitions and execution paths — LangGraph's explicit graph model gives you more precision at the cost of more boilerplate.",
+      "Budget is tight and every LLM call counts. Multi-agent systems multiply token usage. A four-agent crew might make 8-12x the API calls of a single agent.",
+      "You need real-time latency under 2 seconds. Agent delegation, tool use, and inter-agent communication add latency that makes sub-second responses impractical."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Sales & GTM",
+      "title": "Lead Enrichment & Outreach",
+      "description": "DocuSign uses CrewAI agents to extract, consolidate, and evaluate lead data from multiple internal systems — cutting research time from hours to minutes and improving email conversion rates."
+    },
+    {
+      "category": "Professional Services",
+      "title": "Code Generation & Audit",
+      "description": "PwC deployed CrewAI agentic workflows and improved code-generation accuracy from 10% to 70%, significantly reducing turnaround time on software deliverables."
+    },
+    {
+      "category": "Education",
+      "title": "Curriculum Design",
+      "description": "General Assembly automated lesson content and instructor guide generation with agent crews, streamlining and scaling their curriculum design process."
+    },
+    {
+      "category": "Manufacturing",
+      "title": "Lead Scoring & Prioritisation",
+      "description": "Gelato uses agents to enrich leads with data on company size, printer infrastructure, and revenue — improving quality and prioritisation in their sales pipeline."
+    },
+    {
+      "category": "Enterprise IT",
+      "title": "Legacy System Integration",
+      "description": "IBM combined CrewAI with WatsonX.AI to coordinate legacy and modern systems, using the agentic framework to bridge between IBM's foundation models and existing infrastructure."
+    },
+    {
+      "category": "Customer Support",
+      "title": "Ticket Resolution",
+      "description": "Piracanjuba replaced legacy RPA tooling with CrewAI agent crews, improving both response time and accuracy for customer support ticket resolution."
+    }
+  ],
+  "timeline": [
+    { "date": "2023-10", "title": "Open-Source Launch", "detail": "Joao Moura, then Director of AI Engineering at Clearbit (acquired by HubSpot), releases CrewAI on GitHub. Trends to #1 on GitHub trending, hitting 4,000+ stars rapidly." },
+    { "date": "2024-01", "title": "Company Founded", "detail": "CrewAI officially launches as a company with Moura as CEO and Rob Bailey as COO. Enterprise customers including Oracle start calling." },
+    { "date": "2024-06", "title": "150 Enterprise Customers", "detail": "Within six months of incorporating, CrewAI attracts 150 enterprise customers. Andrew Ng collaborates on a course about multi-agent systems." },
+    { "date": "2024-10", "title": "$18M Funding & Enterprise Launch", "detail": "Series A led by Insight Partners. Angel investors include Andrew Ng and Dharmesh Shah (HubSpot CTO). CrewAI Enterprise launches with studio, tracing, and managed deployment. Framework surpasses 10M+ agents/month." },
+    { "date": "2025-01", "title": "Flows & AMP Platform", "detail": "CrewAI introduces Flows — event-driven state machines that complement Crews. Agent Management Platform launches with visual builder, on-prem deployment, and swarm handoff patterns. Stars pass 40k." },
+    { "date": "2026-01", "title": "1.4B+ Automations", "detail": "Over 1.4 billion agentic automations processed. Adoption reaches approximately 60% of Fortune 500 companies. Framework stabilises around Crews + Flows dual architecture." }
+  ],
+  "pricing": [
+    { "product": "CrewAI OSS", "free": "MIT-licensed, fully free and self-hosted", "paid": "N/A" },
+    { "product": "CrewAI AMP", "free": "N/A", "paid": "Commercial licensing — includes Studio, tracing, RBAC, serverless deployment" }
+  ],
+  "code_examples": [
+    {
+      "title": "Define an Agent",
+      "language": "python",
+      "code": "Agent(\n  role=\"Market Researcher\",\n  goal=\"Find competitor pricing data\",\n  backstory=\"Senior analyst at a strategy consultancy\",\n  tools=[search_tool, scrape_tool],\n  reasoning=True\n)"
+    },
+    {
+      "title": "Define a Task",
+      "language": "python",
+      "code": "Task(\n  description=\"Analyse top 5 competitors' pricing...\",\n  expected_output=\"Comparison table as JSON\",\n  agent=researcher_agent\n)"
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "CrewAI Homepage", "url": "https://crewai.com" },
+      { "title": "Documentation", "url": "https://docs.crewai.com" },
+      { "title": "GitHub Repository", "url": "https://github.com/crewAIInc/crewAI" },
+      { "title": "CrewAI Learn", "url": "https://learn.crewai.com" },
+      { "title": "CrewAI Blog", "url": "https://blog.crewai.com" },
+      { "title": "CrewAI on PyPI", "url": "https://pypi.org/project/crewai/" }
+    ],
+    "sources": [
+      { "title": "CrewAI Agents Documentation", "url": "https://docs.crewai.com/en/concepts/agents" },
+      { "title": "CrewAI Flows Documentation", "url": "https://docs.crewai.com/en/concepts/flows" },
+      { "title": "CrewAI Funding Announcement (Oct 2024)", "url": "https://www.globenewswire.com/news-release/2024/10/22/2966872/0/en/CrewAI-Launches-Multi-Agentic-Platform-to-Deliver-on-the-Promise-of-Generative-AI-for-Enterprise.html" },
+      { "title": "Insight Partners — CrewAI Profile", "url": "https://www.insightpartners.com/ideas/crewai-scaleup-ai-story/" },
+      { "title": "CrewAI Blog — Agentic Systems Architecture", "url": "https://blog.crewai.com/agentic-systems-with-crewai/" }
+    ]
+  }
+}

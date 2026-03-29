@@ -25,6 +25,8 @@ https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.
 
 - [Claude Code Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/claude-code-skills.md): Turn your AI coding agent into a specialist. On demand. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/claude-code-skills.json)
 
+- [CrewAI Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/crewai.md): Open-source multi-agent framework for orchestrating role-based, collaborative AI agent teams. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/crewai.json)
+
 - [Cloudflare AI Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/cloudflare-ai.md): Serverless AI inference, agents, and RAG on Cloudflare's edge network. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/cloudflare-ai.json)
 
 - [NVIDIA DLSS 5 Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/dlss5.md): Neural rendering for visual fidelity — and the firestorm it ignited. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/dlss5.json)

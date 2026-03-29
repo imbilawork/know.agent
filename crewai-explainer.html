@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-agent-id="crewai">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrewAI Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="A fact-based explainer on CrewAI — the open-source multi-agent AI framework for orchestrating role-based, collaborative AI agent teams.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── AGENT COPY ─── */
+.agent-copy { margin-top:48px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; }
+.agent-copy-label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--honey-dark); margin-bottom:8px; }
+[data-theme="dark"] .agent-copy-label { color:var(--honey); }
+.agent-copy p { font-size:14px; color:var(--text-secondary); margin:0 auto 16px; line-height:1.5; }
+.btn-agent { background:var(--honey-10); color:var(--honey-dark); border:1px solid var(--honey-25); }
+.btn-agent:hover { background:var(--honey-15); border-color:var(--honey); transform:translateY(-1px); }
+[data-theme="dark"] .btn-agent { color:var(--honey); }
+.btn-agent.copied { background:var(--success); color:#fff; border-color:var(--success); }
+.agent-url { display:block; font-family:monospace; font-size:13px; color:var(--text-secondary); background:var(--bg-code); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 16px; margin:0 auto 16px; max-width:640px; word-break:break-all; user-select:all; cursor:text; }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="24" r="5" fill="var(--text-muted)" opacity="0.4"/>
+      <circle cx="32" cy="14" r="5" fill="var(--text-muted)" opacity="0.4"/>
+      <circle cx="32" cy="34" r="5" fill="var(--text-muted)" opacity="0.4"/>
+      <circle cx="24" cy="24" r="7" fill="#EDAF42"/>
+      <line x1="20" y1="24" x2="16" y2="24" stroke="var(--border-strong)" stroke-width="1.5"/>
+      <line x1="29" y1="20" x2="32" y2="16" stroke="var(--border-strong)" stroke-width="1.5"/>
+      <line x1="29" y1="28" x2="32" y2="32" stroke="var(--border-strong)" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <h1>CrewAI<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The open-source framework for orchestrating multi-agent AI teams</p>
+  <div class="hero-meta">
+    <span>Python Framework</span>
+    <span>MIT License</span>
+    <span>45k+ GitHub Stars</span>
+    <span>Founded 2023</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS CREWAI ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is CrewAI</div>
+  <h2>Multi-agent orchestration <span class="accent">without the spaghetti code.</span></h2>
+  <p style="margin-bottom:24px;">CrewAI is an open-source Python framework that lets you define teams of AI agents — each with a specific role, goal, and toolset — and then choreographs how they collaborate across tasks. Instead of one monolithic prompt doing everything, you split the work: a Researcher agent gathers data, an Analyst evaluates it, a Writer drafts the output, and a Reviewer checks the work before delivery.</p>
+  <p>Think of it as a production line for cognition. The framework was built from scratch — fully independent of LangChain or any other agent library — to stay lean, fast, and opinionated about how multi-agent collaboration should work. You describe <em>what</em> agents need to do. CrewAI handles the <em>how</em>: context passing, delegation, task dependencies, and handoffs.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Single-Agent Ceiling</h4>
+      <p style="font-size:14px;">One agent handling research, analysis, writing, and QA produces mediocre results. Prompt engineering hits a wall when tasks require genuine specialisation.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Role-Based Agent Teams</h4>
+      <p style="font-size:14px;">Define agents with explicit roles, goals, and backstories. Assign tasks with clear descriptions and expected outputs. CrewAI orchestrates delegation and context flow between them.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Structured Collaboration</h4>
+      <p style="font-size:14px;">Tasks complete in sequence or in parallel, with agents handing off context like a real team. Output quality improves because each agent focuses on what it does best.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">🎭</div>
+      <div class="flow-label">Define Agents</div>
+      <div class="flow-desc">Role, goal, tools</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📋</div>
+      <div class="flow-label">Assign Tasks</div>
+      <div class="flow-desc">Description, output</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">⚙️</div>
+      <div class="flow-label">Assemble Crew</div>
+      <div class="flow-desc">Process, memory</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🚀</div>
+      <div class="flow-label">Kickoff</div>
+      <div class="flow-desc">Execute &amp; collect</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The agent framework that <span class="accent">enterprises actually shipped.</span></h2>
+  <p style="margin-bottom:40px;">CrewAI went from a side project to powering production workloads at scale in under two years. The numbers reflect a framework that hit a genuine pain point — coordinating multiple AI agents was possible before CrewAI, but it was tedious, brittle, and required hand-rolling orchestration code from scratch.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">45.7k</div>
+      <div class="stat-label">GitHub Stars</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">1.4B+</div>
+      <div class="stat-label">Agentic Automations Run</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">100k+</div>
+      <div class="stat-label">Certified Developers</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$18M</div>
+      <div class="stat-label">Total Funding Raised</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use a single agent with more tools?</h4>
+    <p style="font-size:14px; margin-top:8px;">You can — and for simple, well-scoped tasks, you should. A single agent is cheaper, faster to debug, and easier to maintain. Multi-agent systems earn their keep when tasks require genuinely different perspectives or when the workflow has natural division of labour: research → analysis → execution → QA. CrewAI is overkill for a chatbot; it shines in pipelines where role specialisation improves output quality.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Six core abstractions. <span class="accent">That's the whole model.</span></h2>
+  <p style="margin-bottom:40px;">CrewAI keeps the mental model tight. Everything you build uses six concepts: Agents, Tasks, Crews, Tools, Flows, and Memory. Here's what each one does and how they connect.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>Agents</h4>
+      <p style="font-size:14px;">Each agent has a <code>role</code>, <code>goal</code>, and <code>backstory</code> that shape its behaviour. You can optionally assign an LLM, enable reasoning mode, grant delegation rights, and toggle memory. Agents are LLM-agnostic — swap between OpenAI, Anthropic, Gemini, Ollama, or any provider.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="ck">Agent</span>(
+  <span class="cv">role</span>=<span class="cs">"Market Researcher"</span>,
+  <span class="cv">goal</span>=<span class="cs">"Find competitor pricing data"</span>,
+  <span class="cv">backstory</span>=<span class="cs">"Senior analyst at a strategy consultancy"</span>,
+  <span class="cv">tools</span>=[search_tool, scrape_tool],
+  <span class="cv">reasoning</span>=<span class="ck">True</span>
+)</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>Tasks</h4>
+      <p style="font-size:14px;">A Task defines a unit of work with a clear description, expected output format, and the agent assigned to it. Tasks can depend on other tasks, enabling automatic context passing. CrewAI also supports structured outputs via Pydantic models for type-safe results.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="ck">Task</span>(
+  <span class="cv">description</span>=<span class="cs">"Analyse top 5 competitors' pricing..."</span>,
+  <span class="cv">expected_output</span>=<span class="cs">"Comparison table as JSON"</span>,
+  <span class="cv">agent</span>=researcher_agent
+)</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Crews</h4>
+      <p style="font-size:14px;">A Crew brings agents and tasks together under a process model. Sequential process runs tasks in order. Hierarchical process assigns a manager agent that delegates dynamically. You can enable planning mode, shared memory, and a manager LLM for the crew as a whole.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>Tools</h4>
+      <p style="font-size:14px;">Agents use tools to interact with the outside world — web search, file operations, API calls, database queries, code execution, and more. CrewAI ships with 100+ built-in tools and supports custom tools via a simple Python decorator pattern. Any function can become a tool.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 05</h3>
+      <h4>Flows</h4>
+      <p style="font-size:14px;">Flows are the production architecture layer. They provide event-driven, deterministic orchestration above Crews — conditional branching, state management, parallel execution, and error handling. A Flow is the project plan; Crews are the teams executing it. Use <code>@start()</code> and <code>@listen()</code> decorators to wire steps together.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 06</h3>
+      <h4>Memory</h4>
+      <p style="font-size:14px;">CrewAI provides four memory types: short-term (within a run), long-term (across runs), entity memory (about specific subjects), and contextual memory (shared between agents). This lets agents recall past decisions and build on prior work rather than starting from scratch each time.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>Where CrewAI fits <span class="accent">in the agent landscape.</span></h2>
+  <p style="margin-bottom:40px;">CrewAI occupies a specific niche: opinionated, role-based multi-agent orchestration. It's not the only framework, and understanding where alternatives shine helps you make the right call.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Open Source</span>
+      <h4 style="margin-top:12px;">CrewAI OSS</h4>
+      <p style="font-size:14px;">The core Python framework — MIT-licensed, standalone, and free to self-host. Includes agents, tasks, crews, flows, tools, and memory. All the orchestration power, no licensing fees.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Platform</span>
+      <h4 style="margin-top:12px;">CrewAI AMP</h4>
+      <p style="font-size:14px;">The commercial Agent Management Platform. Adds CrewAI Studio (visual no-code editor), real-time tracing, agent training, RBAC, serverless deployment, and enterprise integrations. Cloud or on-prem.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Education</span>
+      <h4 style="margin-top:12px;">CrewAI Learn</h4>
+      <p style="font-size:14px;">Free courses at learn.crewai.com, including a collaboration with Andrew Ng on multi-agent systems. Over 100,000 developers have completed certification through the community programme.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Role-based multi-agent teams</td>
+        <td><span class="tag">CrewAI</span></td>
+        <td>Opinionated abstractions for agents with roles, goals, and structured handoffs. Fastest path to multi-agent coordination.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Graph-based agent control flow</td>
+        <td><span class="tag">LangGraph</span></td>
+        <td>Fine-grained state machines for agents. More boilerplate, but maximum control over execution paths.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Conversational multi-agent chat</td>
+        <td><span class="tag">AutoGen (AG2)</span></td>
+        <td>Best for open-ended agent conversations where agents negotiate solutions dynamically.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Type-safe single-agent outputs</td>
+        <td><span class="tag">PydanticAI</span></td>
+        <td>When you need guaranteed structured outputs from a single agent with strict validation.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Enterprise compliance &amp; guardrails</td>
+        <td><span class="tag">Semantic Kernel</span></td>
+        <td>Microsoft's framework for regulated environments with deep Azure integration.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What people actually <span class="accent">build with it.</span></h2>
+  <p style="margin-bottom:40px;">CrewAI's sweet spot is multi-step workflows where different agents bring different skills. Here are the patterns appearing in production, based on published case studies and community usage.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Sales &amp; GTM</h3>
+      <h4>Lead Enrichment &amp; Outreach</h4>
+      <p style="font-size:14px;">DocuSign uses CrewAI agents to extract, consolidate, and evaluate lead data from multiple internal systems — cutting research time from hours to minutes and improving email conversion rates.</p>
+    </div>
+    <div class="card">
+      <h3>Professional Services</h3>
+      <h4>Code Generation &amp; Audit</h4>
+      <p style="font-size:14px;">PwC deployed CrewAI agentic workflows and improved code-generation accuracy from 10% to 70%, significantly reducing turnaround time on software deliverables.</p>
+    </div>
+    <div class="card">
+      <h3>Education</h3>
+      <h4>Curriculum Design</h4>
+      <p style="font-size:14px;">General Assembly automated lesson content and instructor guide generation with agent crews, streamlining and scaling their curriculum design process.</p>
+    </div>
+    <div class="card">
+      <h3>Manufacturing</h3>
+      <h4>Lead Scoring &amp; Prioritisation</h4>
+      <p style="font-size:14px;">Gelato uses agents to enrich leads with data on company size, printer infrastructure, and revenue — improving quality and prioritisation in their sales pipeline.</p>
+    </div>
+    <div class="card">
+      <h3>Enterprise IT</h3>
+      <h4>Legacy System Integration</h4>
+      <p style="font-size:14px;">IBM combined CrewAI with WatsonX.AI to coordinate legacy and modern systems, using the agentic framework to bridge between IBM's foundation models and existing infrastructure.</p>
+    </div>
+    <div class="card">
+      <h3>Customer Support</h3>
+      <h4>Ticket Resolution</h4>
+      <p style="font-size:14px;">Piracanjuba replaced legacy RPA tooling with CrewAI agent crews, improving both response time and accuracy for customer support ticket resolution.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From LinkedIn side project <span class="accent">to Fortune 500 standard.</span></h2>
+  <p style="margin-bottom:16px;">CrewAI's arc is unusually compressed. What started as one developer's frustration with building agents became an enterprise platform in under 18 months.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">Late 2023</div>
+      <h4>Open-Source Launch</h4>
+      <p>João Moura, then Director of AI Engineering at Clearbit (acquired by HubSpot), releases CrewAI as an open-source project on GitHub. It trends to #1 on GitHub's trending list within weeks, hitting 4,000+ stars rapidly.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">Jan 2024</div>
+      <h4>Company Founded</h4>
+      <p>CrewAI officially launches as a company with Moura as CEO and Rob Bailey (former Kustomer, multiple startups) as COO. Enterprise customers — including Oracle — start calling, signalling commercial demand.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">Mid 2024</div>
+      <h4>150 Enterprise Customers</h4>
+      <p>Within six months of incorporating, CrewAI attracts 150 enterprise customers. Andrew Ng collaborates on a course about multi-agent systems, driving developer adoption.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">Oct 2024</div>
+      <h4>$18M Funding &amp; Enterprise Launch</h4>
+      <p>Series A led by Insight Partners. Angel investors include Andrew Ng and Dharmesh Shah (HubSpot CTO). CrewAI Enterprise launches with studio, tracing, and managed deployment. Framework surpasses 10M+ agents/month.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2025</div>
+      <h4>Flows &amp; AMP Platform</h4>
+      <p>CrewAI introduces Flows — event-driven state machines that complement Crews for production architectures. The Agent Management Platform (AMP) launches with visual builder, on-prem deployment, and swarm handoff patterns. Stars pass 40k.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2026</div>
+      <h4>1.4B+ Automations</h4>
+      <p>CrewAI reports over 1.4 billion agentic automations processed. Adoption reaches approximately 60% of Fortune 500 companies. The framework stabilises around the Crews + Flows dual architecture for production deployments.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Is CrewAI right <span class="accent">for your project?</span></h2>
+  <p style="margin-bottom:32px;">Multi-agent frameworks add overhead — more prompts, more LLM calls, more moving parts to debug. That trade-off is worth it in specific scenarios and wasteful in others. Be honest about which camp you're in.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use CrewAI when</h4>
+      <p style="font-size:14px; margin-top:12px;">Your workflow has natural role separation — research, analysis, writing, QA — and would benefit from specialised agents handling each phase.<br><br>You need multi-step pipelines where output from one agent feeds into the next, with dependencies and handoffs between stages.<br><br>You want LLM-agnostic orchestration — assigning different models to different agents based on cost, latency, or capability requirements.<br><br>Your team works in Python and wants opinionated abstractions over building orchestration from scratch with raw API calls.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip CrewAI when</h4>
+      <p style="font-size:14px; margin-top:12px;">A single agent with good tools can handle your entire task. Adding multi-agent overhead to a simple Q&amp;A bot or document summariser will cost more and deliver no quality improvement.<br><br>You need maximum control over state transitions and execution paths — LangGraph's explicit graph model gives you more precision at the cost of more boilerplate.<br><br>Budget is tight and every LLM call counts. Multi-agent systems multiply token usage. A four-agent crew might make 8–12× the API calls of a single agent.<br><br>You need real-time latency under 2 seconds. Agent delegation, tool use, and inter-agent communication add latency that makes sub-second responses impractical.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · IMBILA PERSPECTIVE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Imbila Perspective</div>
+  <h2>How we see it. <span class="accent">What we recommend.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Our take</h4>
+    <p style="font-size:14px; margin-top:8px;">CrewAI earned its position by solving a real problem — multi-agent orchestration was genuinely painful before it existed. The role-based abstraction maps cleanly onto how people already think about team coordination. But the hype-to-reality gap is wide in this space. Most teams would get more value from a well-designed single agent with good tools than from a multi-agent crew. The question isn't "should we use CrewAI?" — it's "does this workflow genuinely need multiple specialised agents, or are we adding complexity because multi-agent sounds impressive?" For the workflows that do need it — research pipelines, content operations, data enrichment — CrewAI is the fastest path to production. For South African teams, factor in that every agent call routes through US or European cloud APIs, so latency and cost compound quickly in multi-agent setups. Consider local model options via Ollama where quality constraints allow.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>Evaluate Before You Scale</h4>
+      <p style="font-size:14px;">Large organisations should prototype one high-value workflow as a crew before committing to CrewAI AMP. Identify a process with clear role separation — compliance review, RFP analysis, vendor evaluation — and measure cost per execution versus the existing manual process. The AMP platform adds value for observability and governance, but only if you've validated the multi-agent pattern works for your use case first.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Start With Flows, Not Just Crews</h4>
+      <p style="font-size:14px;">Mid-size teams building production systems should invest time understanding Flows early. The Crews-only pattern works for prototypes, but production deployments need the deterministic backbone that Flows provide — conditional branching, error recovery, and state persistence. Build your first project with a Flow that orchestrates one or two Crews, not a standalone Crew that you'll need to refactor later.</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Learn the Pattern, Not Just the Framework</h4>
+      <p style="font-size:14px;">The concepts behind CrewAI — role decomposition, task dependency graphs, context passing, process types — transfer to any multi-agent system. Start with the free courses at learn.crewai.com, build the standard tutorial crew, then try replacing agents with different LLMs to understand how model choice affects output. The skill is in designing the crew, not in the API calls.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>CrewAI Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://crewai.com" target="_blank" rel="noopener">CrewAI Homepage</a> — Platform overview and AMP details ↗<br>
+        <a href="https://docs.crewai.com" target="_blank" rel="noopener">Documentation</a> — Full API reference, concepts, and guides ↗<br>
+        <a href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">GitHub Repository</a> — Source code, issues, and releases ↗<br>
+        <a href="https://learn.crewai.com" target="_blank" rel="noopener">CrewAI Learn</a> — Free courses and certification ↗<br>
+        <a href="https://blog.crewai.com" target="_blank" rel="noopener">CrewAI Blog</a> — Architecture deep dives and case studies ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>Stay in the Loop</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        We publish twice-weekly AI briefings covering tools, frameworks, and developments that matter for South African businesses. No hype, no fluff — just what's useful and what's not.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-primary">Get in touch</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">Read the blog ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources &amp; References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">CrewAI GitHub Repository</a> ·
+      <a href="https://docs.crewai.com/en/concepts/agents" target="_blank" rel="noopener">CrewAI Agents Documentation</a> ·
+      <a href="https://docs.crewai.com/en/concepts/flows" target="_blank" rel="noopener">CrewAI Flows Documentation</a> ·
+      <a href="https://www.globenewswire.com/news-release/2024/10/22/2966872/0/en/CrewAI-Launches-Multi-Agentic-Platform-to-Deliver-on-the-Promise-of-Generative-AI-for-Enterprise.html" target="_blank" rel="noopener">CrewAI Funding Announcement (Oct 2024)</a> ·
+      <a href="https://www.insightpartners.com/ideas/crewai-scaleup-ai-story/" target="_blank" rel="noopener">Insight Partners — CrewAI Profile</a> ·
+      <a href="https://blog.crewai.com/agentic-systems-with-crewai/" target="_blank" rel="noopener">CrewAI Blog — Agentic Systems Architecture</a> ·
+      <a href="https://pypi.org/project/crewai/" target="_blank" rel="noopener">CrewAI on PyPI</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. CrewAI is a trademark of CrewAI Inc. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ AGENT COPY ═══════ -->
+<section class="agent-copy fade-up">
+  <div class="agent-copy-label">For AI Agents</div>
+  <p>Give this URL to any AI agent — it can fetch the full explainer as structured markdown, no Cloudflare blocking.</p>
+  <code class="agent-url" id="agentUrl"></code>
+  <button class="btn btn-agent" id="agentCopyBtn" onclick="copyForAgent()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg>
+    Copy URL
+  </button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Agent-friendly URL copy
+(function() {
+  const agentId = document.documentElement.dataset.agentId;
+  if (!agentId) return;
+  const mdUrl = 'https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/' + agentId + '.md';
+  const el = document.getElementById('agentUrl');
+  if (el) el.textContent = mdUrl;
+})();
+function copyForAgent() {
+  const btn = document.getElementById('agentCopyBtn');
+  const url = document.getElementById('agentUrl').textContent;
+  const originalHTML = btn.innerHTML;
+  navigator.clipboard.writeText(url).then(function() {
+    btn.classList.add('copied'); btn.textContent = 'Copied!';
+  }).catch(function() {
+    btn.textContent = 'Copy failed';
+  });
+  setTimeout(function() { btn.innerHTML = originalHTML; btn.classList.remove('copied'); }, 2000);
+}
+</script>
+
+</body>
+</html>

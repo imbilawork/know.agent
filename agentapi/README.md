@@ -16,6 +16,7 @@ know.agent/
 │   ├── agents2026.md
 │   ├── claude-code-skills.md
 │   ├── cloudflare-ai.md
+│   ├── crewai.md
 │   ├── dlss5.md
 │   ├── langchain.md
 │   ├── liteparse.md
@@ -27,6 +28,7 @@ know.agent/
 │   ├── agents2026.json
 │   ├── claude-code-skills.json
 │   ├── cloudflare-ai.json
+│   ├── crewai.json
 │   ├── dlss5.json
 │   ├── langchain.json
 │   ├── liteparse.json
@@ -63,6 +65,7 @@ The JSON files are designed to be returned directly as tool responses. Each file
 | `arc-agi-3` | ARC-AGI-3 Explained | Interactive reasoning benchmark for AGI |
 | `agents2026` | Top Agent Frameworks — Q2 2026 | Comparison of 10 agent frameworks |
 | `claude-code-skills` | Claude Code Skills Explained | Skill system for AI coding agents |
+| `crewai` | CrewAI Explained | Multi-agent orchestration framework |
 | `cloudflare-ai` | Cloudflare AI Explained | Serverless AI inference and agents |
 | `dlss5` | NVIDIA DLSS 5 Explained | Neural rendering technology |
 | `langchain` | LangChain Explained | AI agent framework |
