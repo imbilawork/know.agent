@@ -37,6 +37,8 @@ https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.
 
 - [NVIDIA NemoClaw Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/nemoclaw.md): Secure, sandboxed infrastructure for always-on AI agents. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/nemoclaw.json)
 
+- [OpenClaw Teams Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/openclaw-teams.md): Open-source AI agents for Microsoft Teams. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/openclaw-teams.json)
+
 ## JSON schema
 
 All JSON files follow the `explainer-v1` schema. Key fields:
