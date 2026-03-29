@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw × Microsoft Teams Explained — An Imbila.AI Explainer</title>
+<title>Microsoft Teams as an AI Agent Channel — An Imbila.AI Explainer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
@@ -700,7 +700,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
     <a href="#why">Why</a>
     <a href="#how">How</a>
     <a href="#mockup">Mockup</a>
-    <a href="#ecosystem">Ecosystem</a>
+    <a href="#ecosystem">Frameworks</a>
     <a href="#timeline">Timeline</a>
     <a href="#resources">Resources</a>
     <span class="nav-tag">Explainer</span>
@@ -723,13 +723,13 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
       <path d="M36 10l1.5 1.5L40 8.5" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
-  <h1>OpenClaw × Teams<br><span class="accent">Explained</span></h1>
-  <p class="hero-sub">Your AI agent inside Microsoft Teams — DMs, channels, and Adaptive Cards</p>
+  <h1>Teams Agent Channel<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">How to build a production-grade AI agent inside Microsoft Teams — architecture, auth, Adaptive Cards, and the gotchas nobody warns you about</p>
   <div class="hero-meta">
-    <span>Plugin Architecture</span>
+    <span>320M+ Monthly Users</span>
     <span>Azure Bot Framework</span>
     <span>Adaptive Cards v1.5</span>
-    <span>23 Channels Supported</span>
+    <span>Single-Tenant Required</span>
   </div>
 </div>
 
@@ -738,26 +738,27 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
 <!-- ═══════ 01 · WHAT IS IT ═══════ -->
 <section id="what" class="fade-up">
-  <div class="section-label">01 · What Is OpenClaw × Teams</div>
+  <div class="section-label">01 · What Is an Agent Channel in Teams</div>
   <h2>Your AI agent lives <span class="accent">where your team already works.</span></h2>
-  <p style="margin-bottom:24px;">The OpenClaw Microsoft Teams integration is a plugin that connects your self-hosted AI agent to Microsoft Teams via the Azure Bot Framework. It handles personal DMs, group chats, and channel conversations — routing messages through a webhook gateway on port 3978 and replying deterministically back to the exact conversation they came from.</p>
-  <p>As of January 2026, the Teams channel ships as a standalone plugin rather than a core dependency. This was a deliberate breaking change to keep the core install lightweight and let Teams-specific features (Adaptive Cards, SharePoint uploads, RSC permissions) update independently.</p>
+  <p style="margin-bottom:24px;">Microsoft Teams is where most enterprise workers already spend their day. An agent channel turns a Teams conversation — DM, group chat, or channel thread — into a direct interface to your AI agent. Users type natural language, the agent processes it through whatever LLM you choose, and replies appear in the same conversation thread.</p>
+  <p style="margin-bottom:24px;">The underlying technology is the Azure Bot Framework. Your agent registers as a bot in Azure, exposes an HTTPS webhook endpoint, and receives messages via Bot Framework's Activity protocol. Replies go back through the same protocol, landing in the exact conversation they came from. On top of this, Adaptive Cards give you rich interactive UI — buttons, forms, polls, images — inside the chat window.</p>
+  <p>This is not Microsoft Copilot. You control the model (Claude, GPT, Gemini, local Ollama), you control the prompts, you control the data. The tradeoff: you need to set up Azure Bot registration and maintain a publicly accessible HTTPS endpoint.</p>
 
   <div class="grid-3" style="margin-top:40px;">
     <div class="card">
       <h3>The Problem</h3>
       <h4>Agents isolated from workflows</h4>
-      <p style="font-size:14px;">AI assistants that live in terminal windows or standalone UIs never get adopted by non-technical teams. People forget they exist.</p>
+      <p style="font-size:14px;">AI assistants that live in terminal windows or standalone UIs never get adopted by non-technical teams. People forget they exist. Adoption friction kills the best agent.</p>
     </div>
     <div class="card">
       <h3>The Solution</h3>
       <h4>Bot Framework webhook bridge</h4>
-      <p style="font-size:14px;">OpenClaw registers as an Azure Bot, receives Teams webhooks, processes with any LLM, and responds via the Bot Framework REST API — all self-hosted.</p>
+      <p style="font-size:14px;">Your agent registers as an Azure Bot, receives Teams webhooks, processes with any LLM, and responds via the Bot Framework REST API — fully under your control.</p>
     </div>
     <div class="card">
       <h3>The Result</h3>
-      <h4>AI in every Teams channel</h4>
-      <p style="font-size:14px;">Team members @mention the agent in channels, DM it directly, or trigger workflows through Adaptive Card buttons — without leaving Teams.</p>
+      <h4>AI in every Teams conversation</h4>
+      <p style="font-size:14px;">Team members @mention the agent in channels, DM it directly, or trigger workflows through Adaptive Card buttons — without leaving Teams. Zero adoption friction.</p>
     </div>
   </div>
 
@@ -776,8 +777,8 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
     <span class="flow-arrow">→</span>
     <div class="flow-node">
       <div class="flow-icon">⚙️</div>
-      <div class="flow-label">OpenClaw Gateway</div>
-      <div class="flow-desc">Port 3978 · /api/messages</div>
+      <div class="flow-label">Your Webhook</div>
+      <div class="flow-desc">HTTPS · /api/messages</div>
     </div>
     <span class="flow-arrow">→</span>
     <div class="flow-node">
@@ -797,94 +798,116 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
 <!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
 <section id="why" class="fade-up">
-  <div class="section-label">02 · Why It Matters</div>
-  <h2>Teams has the eyeballs. <span class="accent">OpenClaw has the brain.</span></h2>
-  <p style="margin-bottom:40px;">Microsoft Teams is the default workspace for most enterprises. OpenClaw's plugin model means you can run any model (Claude, GPT, local Ollama) behind a familiar chat interface — without Microsoft Copilot's per-user pricing or vendor lock-in.</p>
+  <div class="section-label">02 · Why Teams for Agents</div>
+  <h2>Teams has the eyeballs. <span class="accent">Your agent has the brain.</span></h2>
+  <p style="margin-bottom:40px;">Teams is the default workplace for most enterprises. Building your agent here means zero adoption friction — users don't download a new app, learn a new interface, or switch contexts. They message the bot like they'd message a colleague.</p>
 
   <div class="grid-4">
     <div class="card" style="text-align:center;">
-      <div class="stat-figure">23</div>
-      <div class="stat-label">Supported channels total</div>
+      <div class="stat-figure">320M+</div>
+      <div class="stat-label">Monthly Teams users</div>
     </div>
     <div class="card" style="text-align:center;">
-      <div class="stat-figure">3978</div>
-      <div class="stat-label">Default webhook port</div>
+      <div class="stat-figure">$0</div>
+      <div class="stat-label">Bot Framework registration</div>
     </div>
     <div class="card" style="text-align:center;">
       <div class="stat-figure">v1.5</div>
       <div class="stat-label">Adaptive Card schema</div>
     </div>
     <div class="card" style="text-align:center;">
-      <div class="stat-figure">$0</div>
-      <div class="stat-label">OpenClaw license cost</div>
+      <div class="stat-figure">$6–50</div>
+      <div class="stat-label">Typical monthly API cost (small team)</div>
     </div>
   </div>
 
   <div class="callout" style="margin-top:40px;">
     <h4>Why not just use Microsoft Copilot?</h4>
-    <p style="font-size:14px; margin-top:8px;">Copilot costs $30/user/month, uses only Microsoft's models, and doesn't let you control prompts, data residency, or integrate with non-Microsoft tools. OpenClaw is self-hosted, model-agnostic, and free (you pay only for LLM API tokens). The tradeoff: you need to set up Azure Bot registration and maintain the gateway yourself.</p>
+    <p style="font-size:14px; margin-top:8px;">The alternative is Microsoft Copilot at $30/user/month, locked to Microsoft's models, with no control over prompts, data residency, or non-Microsoft integrations. A self-hosted agent on Bot Framework is free to register, model-agnostic, and fully under your control. You pay only for the LLM API tokens you consume.</p>
   </div>
 </section>
 
 
 <!-- ═══════ 03 · HOW IT WORKS ═══════ -->
 <section id="how" class="fade-up">
-  <div class="section-label">03 · How It Works</div>
-  <h2>Five concepts to understand <span class="accent">the integration.</span></h2>
-  <p style="margin-bottom:40px;">The Teams plugin is config-driven. You register an Azure Bot, install the plugin, set your credentials, and everything else is handled by OpenClaw's gateway layer.</p>
+  <div class="section-label">03 · How to Build It</div>
+  <h2>Six steps to a working <span class="accent">Teams agent.</span></h2>
+  <p style="margin-bottom:40px;">Register a bot in Azure, set up a webhook, handle conversation types, implement access control, add Adaptive Cards, and handle files. Here's how each step works.</p>
 
   <div class="grid-2">
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 01</h3>
-      <h4>Plugin Installation</h4>
-      <p style="font-size:14px;">Since the January 2026 breaking change, Teams ships as a separate plugin. Install it via the CLI and it connects to the core gateway.</p>
-      <div class="code-block" style="margin-top:16px;">
-<pre><span class="cs"># Install the Teams plugin</span>
-<span class="ck">openclaw plugins install</span> <span class="cv">@openclaw/msteams</span></pre>
-      </div>
+      <h3>Step 01</h3>
+      <h4>Register the Bot in Azure</h4>
+      <p style="font-size:14px;">Go to Azure Portal &rarr; Bot Services &rarr; Create. Choose single-tenant. You'll get an <strong>App ID</strong> (identifies your bot), an <strong>App Password</strong> (client secret for outbound API calls), and a <strong>Tenant ID</strong>. Configure the messaging endpoint to point at your webhook URL (e.g., <code>https://your-domain.com/api/messages</code>).</p>
     </div>
 
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 02</h3>
-      <h4>Azure Bot Registration</h4>
-      <p style="font-size:14px;">You need three credentials from Azure: App ID, App Password (client secret), and Tenant ID. Single-tenant bots are recommended — multi-tenant registration was deprecated after July 2025.</p>
+      <h3>Step 02</h3>
+      <h4>Set Up the Webhook</h4>
+      <p style="font-size:14px;">Your endpoint needs to: validate the JWT token on every inbound request, parse the Activity payload to extract the message, sender, and conversation reference, route the message to your agent logic, and send the reply back using the Bot Framework REST API or SDK.</p>
       <div class="code-block" style="margin-top:16px;">
-<pre><span class="cs">// openclaw.json</span>
-{
-  <span class="ck">"channels"</span>: {
-    <span class="ck">"msteams"</span>: {
-      <span class="cv">"enabled"</span>: true,
-      <span class="cv">"appId"</span>: "<span class="cs">APP_ID</span>",
-      <span class="cv">"appPassword"</span>: "<span class="cs">SECRET</span>",
-      <span class="cv">"tenantId"</span>: "<span class="cs">TENANT_ID</span>"
+<pre><span class="cs">// Minimal Node.js example using Bot Framework SDK</span>
+<span class="ck">const</span> { BotFrameworkAdapter } = <span class="ck">require</span>(<span class="cv">'botbuilder'</span>);
+
+<span class="ck">const</span> <span class="cv">adapter</span> = <span class="ck">new</span> BotFrameworkAdapter({
+  appId: process.env.<span class="cv">MICROSOFT_APP_ID</span>,
+  appPassword: process.env.<span class="cv">MICROSOFT_APP_PASSWORD</span>
+});
+
+<span class="cs">// POST /api/messages</span>
+app.post(<span class="cv">'/api/messages'</span>, (req, res) => {
+  adapter.processActivity(req, res, <span class="ck">async</span> (context) => {
+    <span class="ck">if</span> (context.activity.type === <span class="cv">'message'</span>) {
+      <span class="ck">const</span> userMessage = context.activity.text;
+      <span class="ck">const</span> reply = <span class="ck">await</span> callYourAgent(userMessage, context);
+      <span class="ck">await</span> context.sendActivity(reply);
     }
-  }
-}</pre>
+  });
+});</pre>
       </div>
     </div>
 
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 03</h3>
-      <h4>Access Control Policies</h4>
-      <p style="font-size:14px;">DMs default to a "pairing" model — unknown senders are ignored until explicitly approved. Group chats default to "allowlist" — blocked unless you add users to <code>groupAllowFrom</code>. This is security-first by design: no accidental exposure in shared channels.</p>
+      <h3>Step 03</h3>
+      <h4>Handle Conversation Types</h4>
+      <p style="font-size:14px;">Teams has three conversation types. <strong>Personal DMs:</strong> 1:1 with the bot, messages route directly — start here. <strong>Group Chats:</strong> Bot must be @mentioned to receive messages — filter for @mention in the activity. <strong>Channels:</strong> Bot must be @mentioned. Channels can be "Posts" or "Threads" mode — the API doesn't tell you which. Configure reply style manually or replies land in the wrong place.</p>
     </div>
 
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 04</h3>
-      <h4>Adaptive Cards</h4>
-      <p style="font-size:14px;">The plugin supports sending Adaptive Card v1.5 payloads — rich interactive cards with text blocks, images, action buttons, input fields, and polls. Cards are sent via CLI or agent tool actions and can collect user input through postback events.</p>
+      <h3>Step 04</h3>
+      <h4>Implement Access Control</h4>
+      <p style="font-size:14px;">Don't expose your agent to everyone by default. <strong>DMs:</strong> Use a pairing/allowlist model — unknown senders are ignored until explicitly approved. <strong>Group Chats:</strong> Allowlist by user or group, block by default. <strong>Channels:</strong> Restrict which channels the bot responds in using channel ID allowlists.</p>
     </div>
 
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 05</h3>
-      <h4>Reply Style Configuration</h4>
-      <p style="font-size:14px;">Teams channels can be set to either "Posts" or "Threads" mode, but the API doesn't tell you which is active. You configure <code>replyStyle</code> per channel — "thread" or "top-level" — to match the channel's actual UI mode. Get this wrong and replies appear in the wrong place.</p>
+      <h3>Step 05</h3>
+      <h4>Add Adaptive Cards</h4>
+      <p style="font-size:14px;">Adaptive Cards turn plain text replies into rich interactive UI. Use the <a href="https://adaptivecards.io/designer/" target="_blank" rel="noopener">Adaptive Cards Designer</a> to build cards visually, then send them as attachments. Cards support text blocks, images, action buttons, input fields, fact sets, and polls — all defined in a JSON schema (v1.5 current).</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs">// Sending an Adaptive Card</span>
+<span class="ck">const</span> <span class="cv">card</span> = {
+  type: <span class="cv">"AdaptiveCard"</span>,
+  version: <span class="cv">"1.5"</span>,
+  body: [
+    { type: <span class="cv">"TextBlock"</span>, text: <span class="cv">"Deployment Status"</span>, weight: <span class="cv">"Bolder"</span> },
+    { type: <span class="cv">"FactSet"</span>, facts: [
+      { title: <span class="cv">"Status"</span>, value: <span class="cv">"Success"</span> },
+      { title: <span class="cv">"Duration"</span>, value: <span class="cv">"2m 34s"</span> }
+    ]}
+  ],
+  actions: [
+    { type: <span class="cv">"Action.OpenUrl"</span>, title: <span class="cv">"View Logs"</span>, url: <span class="cv">"https://..."</span> },
+    { type: <span class="cv">"Action.Submit"</span>, title: <span class="cv">"Rollback"</span>,
+      data: { action: <span class="cv">"rollback"</span>, build: <span class="cv">"1234"</span> } }
+  ]
+};</pre>
+      </div>
     </div>
 
     <div class="card" style="border-left:3px solid var(--honey);">
-      <h3>Concept 06</h3>
-      <h4>File Handling via SharePoint</h4>
-      <p style="font-size:14px;">DM file attachments work natively. For channel/group file sharing, you need to configure a <code>sharePointSiteId</code> and grant <code>Sites.ReadWrite.All</code> Graph permissions. Files are stored in SharePoint's <code>/OpenClawShared/</code> folder.</p>
+      <h3>Step 06</h3>
+      <h4>File Handling</h4>
+      <p style="font-size:14px;"><strong>DM attachments:</strong> Work natively — files arrive as attachment URLs in the activity payload. <strong>Channel/group files:</strong> Require SharePoint integration. You need a <code>sharePointSiteId</code> and <code>Sites.ReadWrite.All</code> Graph permissions. <strong>Inbound images in channels:</strong> The webhook payload only includes an HTML stub, not the actual file bytes. You must use Graph API with additional permissions to retrieve the content.</p>
     </div>
   </div>
 </section>
@@ -894,7 +917,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 <section id="mockup" class="fade-up">
   <div class="section-label">04 · UI Mockup</div>
   <h2>What it looks like <span class="accent">inside Teams.</span></h2>
-  <p style="margin-bottom:16px;">This interactive mockup shows how OpenClaw appears when installed as a Teams bot — DM conversations with Adaptive Cards, polls, and standard message exchange.</p>
+  <p style="margin-bottom:16px;">This interactive mockup shows how a custom AI agent appears when installed as a Teams bot — DM conversations with Adaptive Cards, polls, and standard message exchange.</p>
 
   <div class="teams-mockup-wrap">
     <div class="teams-mockup">
@@ -925,9 +948,9 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
           <div class="teams-channel active">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
               <circle cx="7" cy="7" r="6" fill="#6264A7"/>
-              <text x="7" y="10" text-anchor="middle" fill="#FFF" font-size="8" font-weight="700">O</text>
+              <text x="7" y="10" text-anchor="middle" fill="#FFF" font-size="8" font-weight="700">A</text>
             </svg>
-            OpenClaw Bot
+            AI Agent Bot
           </div>
           <div class="teams-channel">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
@@ -954,7 +977,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
             <span class="teams-channel-hash">#</span> deployments
           </div>
           <div class="teams-channel">
-            <span class="teams-channel-hash">#</span> openclaw-alerts
+            <span class="teams-channel-hash">#</span> agent-alerts
           </div>
         </div>
       </div>
@@ -962,9 +985,9 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
       <!-- Chat Area -->
       <div class="teams-chat-area">
         <div class="teams-chat-header">
-          <div class="teams-bot-avatar">O</div>
+          <div class="teams-bot-avatar">A</div>
           <div>
-            OpenClaw Bot
+            AI Agent Bot
             <div class="teams-status">Active now</div>
           </div>
         </div>
@@ -975,15 +998,15 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
             <div class="teams-msg-avatar">CL</div>
             <div class="teams-msg-content">
               <div class="teams-msg-name">Craig Leppan <span class="teams-msg-time">10:32 AM</span></div>
-              @OpenClaw summarise the deployment logs from last night
+              @Agent summarise the deployment logs from last night
             </div>
           </div>
 
           <!-- Bot reply -->
           <div class="teams-msg bot">
-            <div class="teams-msg-avatar">O</div>
+            <div class="teams-msg-avatar">A</div>
             <div class="teams-msg-content">
-              <div class="teams-msg-name">OpenClaw Bot <span class="teams-msg-time">10:32 AM</span></div>
+              <div class="teams-msg-name">AI Agent Bot <span class="teams-msg-time">10:32 AM</span></div>
               Here's the deployment summary for last night:
 
               <div class="teams-adaptive-card">
@@ -1013,9 +1036,9 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
           <!-- Bot poll -->
           <div class="teams-msg bot">
-            <div class="teams-msg-avatar">O</div>
+            <div class="teams-msg-avatar">A</div>
             <div class="teams-msg-content">
-              <div class="teams-msg-name">OpenClaw Bot <span class="teams-msg-time">10:34 AM</span></div>
+              <div class="teams-msg-name">AI Agent Bot <span class="teams-msg-time">10:34 AM</span></div>
 
               <div class="teams-adaptive-card">
                 <h5>📊 Daily Standup — 29 Mar 2026</h5>
@@ -1051,7 +1074,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
         <!-- Input bar -->
         <div class="teams-input-bar">
-          <input class="teams-input" placeholder="Type a message to OpenClaw Bot..." readonly>
+          <input class="teams-input" placeholder="Type a message to AI Agent Bot..." readonly>
           <button class="teams-send-btn" title="Send">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 1l14 7-14 7V9l10-1L1 7V1z"/></svg>
           </button>
@@ -1060,67 +1083,76 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
     </div>
   </div>
-  <div class="mockup-label">Interactive UI Mockup · OpenClaw DM view in Microsoft Teams</div>
+  <div class="mockup-label">Interactive UI Mockup · AI Agent DM view in Microsoft Teams</div>
 
   <div class="callout" style="margin-top:32px;">
     <h4>What's happening under the hood</h4>
-    <p style="font-size:14px; margin-top:8px;">The bot avatar and messages flow through Azure Bot Framework webhooks to the OpenClaw gateway. Adaptive Cards (the deployment summary and poll above) are sent as JSON payloads conforming to the Adaptive Card v1.5 schema. Poll votes are stored locally in <code>~/.openclaw/msteams-polls.json</code> — the gateway must stay online to collect them.</p>
+    <p style="font-size:14px; margin-top:8px;">The bot avatar and messages flow through Azure Bot Framework webhooks to your agent's gateway. Adaptive Cards (the deployment summary and poll above) are sent as JSON payloads conforming to the Adaptive Card v1.5 schema. Card interactions (button clicks, poll votes) are received as postback events at your webhook — the gateway must stay online to collect them.</p>
   </div>
 </section>
 
 
 <!-- ═══════ 05 · ECOSYSTEM ═══════ -->
 <section id="ecosystem" class="fade-up">
-  <div class="section-label">05 · The Ecosystem</div>
-  <h2>Where Teams fits <span class="accent">in the OpenClaw stack.</span></h2>
-  <p style="margin-bottom:40px;">OpenClaw's channel architecture supports 23 messaging platforms. Teams is one entry point — the same agent, prompts, and skills work identically across WhatsApp, Slack, Discord, Telegram, and the rest.</p>
+  <div class="section-label">05 · Framework Options</div>
+  <h2>Choose your framework. <span class="accent">Or build from scratch.</span></h2>
+  <p style="margin-bottom:40px;">You don't need to build from scratch. Several frameworks handle the Bot Framework plumbing for you. Pick the one that fits your team's language, complexity needs, and multi-channel ambitions.</p>
 
   <div class="grid-3">
     <div class="card">
-      <span class="tag" style="margin-bottom:16px;">Channel Layer</span>
-      <h4 style="margin-top:12px;">Microsoft Teams Plugin</h4>
-      <p style="font-size:14px;">Handles Bot Framework webhooks, Adaptive Cards, file sharing via SharePoint, and per-channel configuration overrides.</p>
+      <span class="tag" style="margin-bottom:16px;">First-Party</span>
+      <h4 style="margin-top:12px;">Microsoft Bot Framework SDK</h4>
+      <p style="font-size:14px;">Node.js, Python, C#, Java. Full API coverage, best docs. The official SDK for Teams-first bots and enterprise compliance requirements.</p>
     </div>
     <div class="card">
-      <span class="tag" style="margin-bottom:16px;">MCP Integration</span>
-      <h4 style="margin-top:12px;">Composio Connector</h4>
-      <p style="font-size:14px;">Connects via the Composio MCP server to enable granular Teams actions — scheduling meetings, archiving teams, managing memberships — from natural language commands.</p>
+      <span class="tag" style="margin-bottom:16px;">Multi-Channel</span>
+      <h4 style="margin-top:12px;">OpenClaw</h4>
+      <p style="font-size:14px;">Node.js. 23-channel support, plugin architecture, model-agnostic. Best for multi-channel agents that need to work across Teams, WhatsApp, Slack, and others from the same codebase.</p>
     </div>
     <div class="card">
-      <span class="tag" style="margin-bottom:16px;">Auth Layer</span>
-      <h4 style="margin-top:12px;">Azure AD + RSC</h4>
-      <p style="font-size:14px;">JWT validation on inbound webhooks, App ID + Password for outbound calls. Resource-Specific Consent (RSC) for real-time channel listening without broad admin scopes.</p>
+      <span class="tag" style="margin-bottom:16px;">Low-Code</span>
+      <h4 style="margin-top:12px;">Botpress</h4>
+      <p style="font-size:14px;">TypeScript. Visual flow builder, built-in NLU, cloud hosting. Best for non-developer teams and rapid prototyping of Teams bots.</p>
     </div>
   </div>
 
-  <h3 style="margin-top:48px;">When to use what</h3>
+  <h3 style="margin-top:48px;">Framework comparison</h3>
   <table class="comp-table">
     <thead>
-      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+      <tr><th>Framework</th><th>Language</th><th>Strengths</th><th>Best For</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td style="color:var(--text-heading); font-weight:500;">Simple channel notifications</td>
-        <td><span class="tag">Incoming Webhooks</span></td>
-        <td>No auth setup, fire-and-forget JSON POST to a channel URL</td>
+        <td style="color:var(--text-heading); font-weight:500;">Bot Framework SDK</td>
+        <td>Node.js, Python, C#, Java</td>
+        <td>First-party, full API coverage, best docs</td>
+        <td>Teams-first bots, enterprise compliance</td>
       </tr>
       <tr>
-        <td style="color:var(--text-heading); font-weight:500;">Interactive bot conversations</td>
-        <td><span class="tag">OpenClaw Teams Plugin</span></td>
-        <td>Full bi-directional messaging, DMs, Adaptive Cards, file handling</td>
+        <td style="color:var(--text-heading); font-weight:500;">OpenClaw</td>
+        <td>Node.js</td>
+        <td>23-channel support, plugin architecture, model-agnostic</td>
+        <td>Multi-channel agents (Teams + WhatsApp + Slack)</td>
       </tr>
       <tr>
-        <td style="color:var(--text-heading); font-weight:500;">Meeting scheduling & admin</td>
-        <td><span class="tag">Composio MCP</span></td>
-        <td>Graph API operations via natural language — meetings, member management, team creation</td>
+        <td style="color:var(--text-heading); font-weight:500;">Botpress</td>
+        <td>TypeScript</td>
+        <td>Visual flow builder, built-in NLU, cloud hosting</td>
+        <td>Non-developer teams, rapid prototyping</td>
       </tr>
       <tr>
-        <td style="color:var(--text-heading); font-weight:500;">Message history & catch-up</td>
-        <td><span class="tag">Microsoft Graph API</span></td>
-        <td>RSC only handles live events — you need Graph with admin consent for historical access</td>
+        <td style="color:var(--text-heading); font-weight:500;">Custom (direct REST)</td>
+        <td>Any</td>
+        <td>Maximum control, no framework overhead</td>
+        <td>Unique integration requirements</td>
       </tr>
     </tbody>
   </table>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>MCP Integration</h4>
+    <p style="font-size:14px; margin-top:8px;">The Model Context Protocol (MCP) is emerging as the standard for giving agents tool access. For Teams-specific operations — scheduling meetings, managing team memberships, archiving channels — MCP servers like Composio provide pre-built toolkits that your agent can call via natural language.</p>
+  </div>
 </section>
 
 
@@ -1139,7 +1171,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
     <div class="card">
       <h3>IT Support</h3>
       <h4>Helpdesk Triage</h4>
-      <p style="font-size:14px;">Employees DM the bot with issues. OpenClaw classifies, routes to the right queue, and auto-creates tickets — without a separate helpdesk portal.</p>
+      <p style="font-size:14px;">Employees DM the bot with issues. The agent classifies, routes to the right queue, and auto-creates tickets — without a separate helpdesk portal.</p>
     </div>
     <div class="card">
       <h3>HR</h3>
@@ -1154,7 +1186,7 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
     <div class="card">
       <h3>Engineering</h3>
       <h4>Daily Standup Polls</h4>
-      <p style="font-size:14px;">Automated Adaptive Card polls at 9am. Votes collected automatically. Summary posted at end-of-day. No meeting required for status updates.</p>
+      <p style="font-size:14px;">Automated Adaptive Card polls at 9am. Responses collected automatically. Summary posted at end-of-day. No meeting required for status updates.</p>
     </div>
     <div class="card">
       <h3>Compliance</h3>
@@ -1167,30 +1199,35 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
 <!-- ═══════ 07 · EVOLUTION ═══════ -->
 <section id="timeline" class="fade-up">
-  <div class="section-label">07 · Evolution</div>
-  <h2>From core feature <span class="accent">to modular plugin.</span></h2>
-  <p style="margin-bottom:16px;">The Teams integration has evolved alongside OpenClaw's architecture.</p>
+  <div class="section-label">07 · Timeline</div>
+  <h2>How Teams bots <span class="accent">got here.</span></h2>
+  <p style="margin-bottom:16px;">Key milestones in the evolution of the Teams bot platform.</p>
 
   <div class="timeline">
     <div class="timeline-item">
-      <div class="timeline-year">2024</div>
-      <h4>Teams bundled in core</h4>
-      <p>Early versions included Microsoft Teams as a built-in channel alongside WhatsApp, Telegram, and Discord. Configuration was simpler but the core install was heavier.</p>
+      <div class="timeline-year">2020</div>
+      <h4>Bot Framework v4 GA</h4>
+      <p>Microsoft stabilises the Activity protocol and SDK for Teams bots. Adaptive Cards v1.2.</p>
     </div>
     <div class="timeline-item">
-      <div class="timeline-year">MID 2025</div>
+      <div class="timeline-year">2023</div>
+      <h4>Teams Toolkit &amp; AI Library</h4>
+      <p>Microsoft releases Teams AI Library for LLM-powered bots. Simplified bot scaffolding.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JUL 2025</div>
       <h4>Multi-tenant deprecation</h4>
-      <p>Microsoft deprecated new multi-tenant bot registrations (July 2025). OpenClaw recommended single-tenant bots for all new deployments.</p>
+      <p>Microsoft deprecates new multi-tenant bot registrations. Single-tenant required for new bots.</p>
     </div>
     <div class="timeline-item">
-      <div class="timeline-year">JAN 2026</div>
-      <h4>Breaking change: plugin extraction</h4>
-      <p>Teams moved out of core into <code>@openclaw/msteams</code>. Separately installable, independently versioned. This was the 2026.1.15 release.</p>
+      <div class="timeline-year">LATE 2025</div>
+      <h4>MCP adoption</h4>
+      <p>MCP servers for Teams operations (Composio, others) enable natural-language admin actions.</p>
     </div>
     <div class="timeline-item">
-      <div class="timeline-year">FEB 2026</div>
-      <h4>OpenClaw v2026.2+ &amp; Composio MCP</h4>
-      <p>Current version. Full Adaptive Card v1.5 support, SharePoint file integration, Composio MCP toolchain for Graph API operations, and expanded private channel support rolling out.</p>
+      <div class="timeline-year">EARLY 2026</div>
+      <h4>Adaptive Cards v1.5 + RSC expansion</h4>
+      <p>Rich card interactions, expanded private channel bot support rolling out across tenants.</p>
     </div>
   </div>
 </section>
@@ -1204,12 +1241,12 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
   <div class="grid-2">
     <div class="card" style="border-top:3px solid var(--success);">
-      <h4 style="color:var(--success);">✓ Use OpenClaw × Teams when</h4>
-      <p style="font-size:14px; margin-top:12px;">You need a self-hosted AI assistant that your org controls — model choice, data residency, prompt engineering, the lot.<br><br>Your team already lives in Teams and you want AI embedded in existing workflows, not bolted on.<br><br>You want to avoid Copilot's $30/user/month pricing and need a more flexible, multi-model approach.<br><br>You have (or can get) Azure AD admin consent for the required permissions and someone who can maintain the gateway.</p>
+      <h4 style="color:var(--success);">✓ Build a Teams agent channel when</h4>
+      <p style="font-size:14px; margin-top:12px;">Your workforce already lives in Teams and you want AI embedded in existing workflows, not bolted on as a separate app.<br><br>You need control over model choice, prompts, data residency, and cost — not locked into Copilot's pricing or model.<br><br>You want a multi-channel agent that works across Teams, Slack, WhatsApp, and others from the same codebase.<br><br>You have (or can get) Azure AD admin consent for bot registration and someone who can maintain the gateway.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--error);">
       <h4 style="color:var(--error);">✗ Skip this when</h4>
-      <p style="font-size:14px; margin-top:12px;">Your org blocks third-party bots in Teams or has a strict no-custom-app policy. Check with IT first.<br><br>You don't have access to Azure Portal to create a Bot registration — this is a hard requirement.<br><br>You need full message history search and recall. RSC only covers live events; Graph API with admin consent is needed for historical access.<br><br>You want zero maintenance. This requires a running gateway on a publicly accessible HTTPS endpoint. If that sounds like a burden, Copilot might be simpler.</p>
+      <p style="font-size:14px; margin-top:12px;">Your org blocks third-party bots in Teams or has a strict no-custom-app policy. Check with IT first.<br><br>You don't have access to Azure Portal to create a Bot registration — this is a hard requirement.<br><br>You need full message history search. RSC only covers live events; Graph API with admin consent is needed for historical access.<br><br>You want zero maintenance. This requires a running gateway on a publicly accessible HTTPS endpoint. If that sounds like a burden, Copilot might be simpler.</p>
     </div>
   </div>
 </section>
@@ -1217,32 +1254,29 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
 <!-- ═══════ 09 · PRICING & LIMITS ═══════ -->
 <section class="fade-up">
-  <div class="section-label">09 · Pricing & Limits</div>
-  <h2>What it costs. <span class="accent">What it can't do.</span></h2>
-
-  <div class="callout" style="margin-bottom:32px;">
-    <h4>Cost structure</h4>
-    <p style="font-size:14px; margin-top:8px;">OpenClaw itself is open-source and free. The Azure Bot Framework registration has a free tier sufficient for most use cases. Your actual cost is the LLM API tokens — Claude, OpenAI, or whatever model you route through. For a small team, expect $6–$50/month in API usage. Enterprise deployments with heavy traffic may run higher.</p>
-  </div>
+  <div class="section-label">09 · Permissions & Gotchas</div>
+  <h2>What you need. <span class="accent">What to watch for.</span></h2>
 
   <div class="grid-2">
-    <div class="card">
-      <h3>Known Limitations</h3>
-      <h4>What doesn't work (yet)</h4>
-      <p style="font-size:14px; margin-top:8px;">
-        Channel/group images — webhook payload only includes an HTML stub, not actual file bytes. Requires Graph API permissions.<br><br>
-        Message history — RSC is for real-time listening only. Historical message access needs <code>ChannelMessage.Read.All</code> with admin consent.<br><br>
-        Private channels — expanded app support is rolling out across tenants as of early 2026 but not universally available yet.<br><br>
-        Poll results auto-posting — votes are stored in a local JSON file but summary cards aren't auto-generated yet.
-      </p>
-    </div>
     <div class="card">
       <h3>Required Permissions</h3>
       <h4>Azure AD scopes</h4>
       <p style="font-size:14px; margin-top:8px;">
-        <strong style="color:var(--text-heading);">RSC (baseline):</strong> Read channel message text, send channel messages, receive DM file attachments.<br><br>
+        <strong style="color:var(--text-heading);">Bot Framework (baseline):</strong> Receive messages in DMs, group chats, and channels. Send replies to conversations.<br><br>
+        <strong style="color:var(--text-heading);">RSC — Resource-Specific Consent (recommended):</strong> Read channel message text and send messages without broad admin scopes. Enables real-time channel listening.<br><br>
         <strong style="color:var(--text-heading);">Graph API (optional):</strong> <code>Sites.ReadWrite.All</code> for SharePoint file uploads. <code>Chat.Read.All</code> for restricted file sharing links. <code>ChannelMessage.Read.All</code> for historical message access.<br><br>
-        All Graph permissions require admin consent from your M365 admin.
+        All Graph permissions require admin consent from your M365 administrator.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Known Gotchas</h3>
+      <h4>What to watch for</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <strong style="color:var(--text-heading);">Thread vs Post mode</strong> — Teams channels can be in "Posts" or "Threads" mode. The Bot Framework API does not tell you which mode is active. Configure reply style manually per channel, or replies appear in the wrong place.<br><br>
+        <strong style="color:var(--text-heading);">Multi-tenant deprecation</strong> — Microsoft deprecated new multi-tenant bot registrations in July 2025. Use single-tenant. Existing multi-tenant bots still work but won't receive new feature support.<br><br>
+        <strong style="color:var(--text-heading);">Channel images</strong> — Webhook payloads for images in channels only include an HTML stub, not actual file bytes. Graph API permissions are required to retrieve the content.<br><br>
+        <strong style="color:var(--text-heading);">Private channels</strong> — Expanded bot support in private channels is rolling out across tenants as of early 2026 but isn't universally available yet.<br><br>
+        <strong style="color:var(--text-heading);">RSC limitations</strong> — Resource-Specific Consent only covers real-time events. For historical message access, you need <code>ChannelMessage.Read.All</code> with full admin consent.
       </p>
     </div>
   </div>
@@ -1256,22 +1290,24 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
 
   <div class="grid-2" style="margin-top:24px;">
     <div class="card">
-      <h3>Official</h3>
-      <h4>OpenClaw Teams Resources</h4>
+      <h3>Official Documentation</h3>
+      <h4>Microsoft & Adaptive Cards</h4>
       <p style="font-size:14px; margin-top:8px;">
-        <a href="https://docs.openclaw.ai/channels/msteams" target="_blank" rel="noopener">OpenClaw Teams Docs</a> — Full configuration reference ↗<br>
-        <a href="https://learn.microsoft.com/en-us/microsoftteams/platform/" target="_blank" rel="noopener">Microsoft Teams Platform Docs</a> — Bot Framework, Adaptive Cards, Graph API ↗<br>
+        <a href="https://learn.microsoft.com/en-us/microsoftteams/platform/" target="_blank" rel="noopener">Microsoft Teams Platform Docs</a> — Bot Framework, app manifests, deployment ↗<br>
+        <a href="https://github.com/microsoft/botframework-sdk" target="_blank" rel="noopener">Bot Framework SDK (GitHub)</a> — Source code, samples, migration guides ↗<br>
+        <a href="https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/teams-conversational-ai/teams-conversation-ai-overview" target="_blank" rel="noopener">Teams AI Library</a> — LLM-powered bot building ↗<br>
         <a href="https://adaptivecards.io/designer/" target="_blank" rel="noopener">Adaptive Cards Designer</a> — Visual card builder and schema reference ↗<br>
-        <a href="https://composio.dev/toolkits/microsoft_teams/framework/openclaw" target="_blank" rel="noopener">Composio MCP Integration</a> — Teams MCP server for OpenClaw ↗
+        <a href="https://adaptivecards.io/explorer/" target="_blank" rel="noopener">Adaptive Cards Schema Explorer</a> — Full v1.5 element reference ↗<br>
+        <a href="https://learn.microsoft.com/en-us/graph/teams-concept-overview" target="_blank" rel="noopener">Microsoft Graph API — Teams</a> — Programmatic access to Teams data ↗
       </p>
     </div>
     <div class="card">
-      <h3>Community</h3>
-      <h4>Get Help & Contribute</h4>
+      <h3>Framework Options</h3>
+      <h4>Choose Your Approach</h4>
       <p style="font-size:14px; margin-top:8px;">
-        <a href="https://github.com/openclaw" target="_blank" rel="noopener">OpenClaw GitHub</a> — Source code, issues, plugin contributions ↗<br>
-        <a href="https://discord.gg/openclaw" target="_blank" rel="noopener">OpenClaw Discord</a> — Community support and discussion ↗<br>
-        <a href="https://open-claw.me/channels/teams" target="_blank" rel="noopener">Setup & Integration Guide</a> — Step-by-step walkthrough ↗
+        <a href="https://github.com/microsoft/botframework-sdk" target="_blank" rel="noopener">Microsoft Bot Framework SDK</a> — First-party, Node.js/Python/C#/Java ↗<br>
+        <a href="https://github.com/openclaw" target="_blank" rel="noopener">OpenClaw</a> — Multi-channel agent framework with Teams plugin ↗<br>
+        <a href="https://botpress.com/" target="_blank" rel="noopener">Botpress</a> — Visual bot builder with Teams integration ↗
       </p>
     </div>
   </div>
@@ -1279,12 +1315,12 @@ nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
   <div class="callout" style="margin-top:32px;">
     <h4>Sources & References</h4>
     <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
-      <a href="https://docs.openclaw.ai/channels/msteams" target="_blank" rel="noopener">OpenClaw Docs — Microsoft Teams Channel</a> ·
-      <a href="https://open-claw.me/channels/teams" target="_blank" rel="noopener">OpenClaw Teams Setup Guide</a> ·
-      <a href="https://composio.dev/toolkits/microsoft_teams/framework/openclaw" target="_blank" rel="noopener">Composio — OpenClaw Teams MCP</a> ·
-      <a href="https://openclaw-ai.com/en/channels/teams" target="_blank" rel="noopener">OpenClaw AI — Teams Integration</a>
+      <a href="https://learn.microsoft.com/en-us/microsoftteams/platform/" target="_blank" rel="noopener">Microsoft Teams Platform Documentation</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-activity" target="_blank" rel="noopener">Bot Framework Activity Protocol</a> ·
+      <a href="https://adaptivecards.io/" target="_blank" rel="noopener">Adaptive Cards Documentation</a> ·
+      <a href="https://learn.microsoft.com/en-us/graph/teams-concept-overview" target="_blank" rel="noopener">Microsoft Graph — Teams API</a>
     </p>
-    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. OpenClaw is open-source software. Microsoft Teams is a trademark of Microsoft Corporation. This is an independent educational explainer by Imbila.AI.</p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. Microsoft Teams and Azure Bot Framework are trademarks of Microsoft Corporation. Independent educational explainer by <a href="https://imbila.ai" target="_blank" rel="noopener">Imbila.AI</a>.</p>
   </div>
 </section>
 
