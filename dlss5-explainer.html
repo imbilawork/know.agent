@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVIDIA DLSS 5 Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="What DLSS 5 actually is, how neural rendering works, why gamers and developers are furious, and what it means for the future of real-time graphics. An Imbila.AI explainer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </div>
+  <div class="nav-links">
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#controversy">Debate</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="14" width="32" height="22" rx="3" stroke="var(--text-muted)" stroke-width="2" fill="none"/>
+      <path d="M14 14V12a10 10 0 0 1 20 0v2" stroke="var(--text-muted)" stroke-width="2" fill="none"/>
+      <circle cx="24" cy="25" r="5" fill="#EDAF42"/>
+      <path d="M21 25 l2 2 l4-4" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>NVIDIA DLSS 5<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">Neural rendering for visual fidelity — and the firestorm it ignited</p>
+  <div class="hero-meta">
+    <span>Announced March 2026</span>
+    <span>Ships Fall 2026</span>
+    <span>RTX GPUs</span>
+    <span>750+ DLSS Games</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS DLSS 5 ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is DLSS 5</div>
+  <h2>From performance tool <span class="accent">to image maker.</span></h2>
+  <p style="margin-bottom:24px;">Every previous version of DLSS (Deep Learning Super Sampling) was fundamentally a performance tool. Render at low resolution, use AI to reconstruct a higher-resolution image. More frames per second, less visual compromise. DLSS 5 breaks that pattern entirely. It's not about making your GPU faster — it's about making your game look different.</p>
+  <p>DLSS 5 introduces what NVIDIA calls "neural rendering for visual fidelity." It takes the colour buffer and motion vectors from a game's rendered frame, feeds them through an AI model trained on how light and materials behave in the real world, and outputs an enhanced image with more convincing lighting, skin, hair, fabric, and environmental detail. The geometry stays the same. The textures stay the same. But the final image can look dramatically different from what the game engine originally produced.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Gap</h3>
+      <h4>16ms vs. 16 hours</h4>
+      <p style="font-size:14px;">A game frame renders in roughly 16 milliseconds. A Hollywood VFX frame can take minutes to hours. That compute gap makes photorealistic lighting in real-time games extremely difficult with traditional rendering alone.</p>
+    </div>
+    <div class="card">
+      <h3>The Approach</h3>
+      <h4>Learned inference</h4>
+      <p style="font-size:14px;">Instead of simulating every light bounce, DLSS 5 uses an AI model that has learned what realistic lighting and material interactions look like, then applies that understanding to enhance a game frame in real time.</p>
+    </div>
+    <div class="card">
+      <h3>The Tension</h3>
+      <h4>Fidelity vs. intent</h4>
+      <p style="font-size:14px;">The output looks more "photoreal" — but it can also diverge from what artists designed. That trade-off between visual fidelity and artistic control is at the heart of the entire DLSS 5 debate.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">🎮</div>
+      <div class="flow-label">Game Engine</div>
+      <div class="flow-desc">Renders frame normally</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📐</div>
+      <div class="flow-label">Colour + Motion</div>
+      <div class="flow-desc">2D frame + vectors extracted</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🧠</div>
+      <div class="flow-label">Neural Model</div>
+      <div class="flow-desc">Infers lighting &amp; materials</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">✨</div>
+      <div class="flow-label">Enhanced Frame</div>
+      <div class="flow-desc">Photoreal output at up to 4K</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The numbers behind <span class="accent">the shift.</span></h2>
+  <p style="margin-bottom:40px;">DLSS has quietly become foundational infrastructure for PC gaming. Over seven years, it evolved from a niche NVIDIA feature into a technology integrated across hundreds of titles. DLSS 5 represents NVIDIA's bet that the next frontier isn't rendering faster — it's rendering smarter.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">750+</div>
+      <div class="stat-label">Games with DLSS integration</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">23/24</div>
+      <div class="stat-label">Pixels AI-drawn by DLSS 4.5</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">375,000×</div>
+      <div class="stat-label">GPU compute increase since GeForce 3</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">84%</div>
+      <div class="stat-label">Dislike ratio on DLSS 5 reveal video</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just add more GPU power?</h4>
+    <p style="font-size:14px; margin-top:8px;">NVIDIA has delivered a 375,000× increase in compute since 2001. But a real-time game frame still has only a fraction of the rendering budget available to a VFX frame. Brute-force simulation alone can't close the gap to photorealism at 60fps. Neural rendering is NVIDIA's argument that AI inference can bridge what raw compute cannot.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Under the hood: <span class="accent">four core concepts.</span></h2>
+  <p style="margin-bottom:40px;">DLSS 5 isn't a post-processing filter (NVIDIA is very insistent on this point). It's also not a prompt-driven generative model. It sits somewhere in between — a constrained neural renderer that uses the game's own data as ground truth.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>3D-Guided Neural Rendering</h4>
+      <p style="font-size:14px;">The model receives structured data from the game engine — not just the final 2D image, but also motion vectors that describe how objects are moving. This anchors the AI output to the actual 3D scene rather than hallucinating detail from scratch. NVIDIA says the result is deterministic and temporally stable: the same input produces the same output, frame after frame.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>Semantic Scene Understanding</h4>
+      <p style="font-size:14px;">The model is trained end-to-end to recognise scene elements — skin, hair, fabric, foliage, metal — and to understand lighting conditions like front-lit, back-lit, or overcast. It doesn't need per-game or per-asset training. One generalised model handles all content, applying learned material and lighting responses based on what it identifies in each frame.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Developer Controls</h4>
+      <p style="font-size:14px;">DLSS 5 provides intensity sliders, colour grading adjustments (contrast, saturation, gamma), and per-object masking. Developers can exclude specific objects or areas from enhancement. Integration uses the same NVIDIA Streamline framework as existing DLSS and Reflex implementations, so the pipeline is familiar.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>The 2D Input Debate</h4>
+      <p style="font-size:14px;">Despite NVIDIA's CEO claiming DLSS 5 operates "at the geometry level," an NVIDIA GeForce Evangelist confirmed the model takes a 2D frame plus motion vectors as input. The underlying geometry is unchanged. This distinction matters: critics argue it means DLSS 5 is fundamentally a 2D image transformation, while NVIDIA maintains the structured input data gives it deeper scene awareness than a simple filter.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · THE ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>DLSS vs. FSR vs. XeSS: <span class="accent">different tools, different goals.</span></h2>
+  <p style="margin-bottom:40px;">DLSS 5 exists within a broader upscaling and rendering ecosystem. The three major GPU vendors each have their own technology stack, but DLSS 5 has diverged from the pack by targeting visual fidelity rather than raw performance. Neither AMD nor Intel has anything comparable in development.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">NVIDIA</span>
+      <h4 style="margin-top:12px;">DLSS (1.0 – 5)</h4>
+      <p style="font-size:14px;">AI-driven suite using dedicated Tensor Cores on RTX GPUs. Includes super resolution (upscaling), frame generation, ray reconstruction, and now neural rendering for fidelity. RTX-exclusive. The most mature and highest-quality upscaling available, now expanding beyond performance into image transformation.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">AMD</span>
+      <h4 style="margin-top:12px;">FSR (1.0 – 4 Redstone)</h4>
+      <p style="font-size:14px;">AMD's FidelityFX Super Resolution. Originally spatial-only (no AI), FSR 4 now uses AI accelerators on RDNA 4 hardware. Older versions remain available on any GPU. Focuses on performance gains through upscaling and frame generation. No neural rendering equivalent planned.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Intel</span>
+      <h4 style="margin-top:12px;">XeSS (1.0 – 3)</h4>
+      <p style="font-size:14px;">Intel's Xe Super Sampling uses XMX AI cores on Arc GPUs, with a DP4a fallback for other hardware. Added frame generation and latency reduction in XeSS 2. Competitive image quality, smallest game library. Remains a performance tool with no fidelity-focused features.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Goal</th><th>Technology</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Best upscaling quality</td>
+        <td><span class="tag">DLSS 4.5</span></td>
+        <td>Transformer-based model, Tensor Core acceleration, top-rated in blind tests</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Cross-vendor compatibility</td>
+        <td><span class="tag">FSR 3.1</span></td>
+        <td>Works on any GPU. Can combine with other upscalers. Open-source components</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Intel Arc hardware</td>
+        <td><span class="tag">XeSS 3</span></td>
+        <td>Native XMX acceleration. Multi-frame generation on Arc. Competitive quality</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Maximum multi-frame gen</td>
+        <td><span class="tag">DLSS 4</span></td>
+        <td>Up to 3 AI frames per rendered frame. RTX 50 series exclusive</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">AI-enhanced lighting/materials</td>
+        <td><span class="tag">DLSS 5</span></td>
+        <td>Only option for neural rendering fidelity. Fall 2026. Hardware TBC</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · THE CONTROVERSY ═══════ -->
+<section id="controversy" class="fade-up">
+  <div class="section-label">05 · The Controversy</div>
+  <h2>The backlash <span class="accent">is the story.</span></h2>
+  <p style="margin-bottom:40px;">DLSS 5's reveal at GTC 2026 on 16 March triggered one of the most hostile community reactions to an NVIDIA technology announcement in the company's history. The debate touches on artistic control, AI distrust, hardware affordability, and what "better graphics" even means.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">What critics say</h4>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">"AI slop filter."</strong> The most common charge. Character faces — particularly in the Resident Evil Requiem and EA Sports FC demos — looked smoothed, homogenised, and eerily similar to AI-generated portraits. Critics coined the term "yassification filter" for the beauty-standard normalisation effect on characters.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Artistic control overridden.</strong> Developers argued that DLSS 5 fundamentally alters the look artists spent months crafting. One former Red Dead Redemption 2 developer called it "a complete AI re-render" where "you're no longer looking at the game anymore."</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Developers blindsided.</strong> Ubisoft and Capcom developers publicly stated they learned about DLSS 5's reveal at the same time as the public, despite their studios being listed as partners. Bethesda walked back its initial enthusiasm shortly after.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Training data opacity.</strong> No disclosure on what datasets trained the model. Critics question whether copyrighted game assets or other unverified sources were used.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">What defenders say</h4>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Early demos, not final product.</strong> The technology doesn't ship until Fall 2026. NVIDIA says performance optimisation hasn't even begun. The demo materials may not represent the final quality. NVIDIA reportedly had better comparison screenshots available but chose to lead with the most dramatic examples.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Environments look remarkable.</strong> Even harsh critics acknowledge the environmental lighting, foliage detail, and material interactions are genuinely impressive. The Zorah tech demo's overgrowth and lighting would be extremely difficult to achieve with conventional rendering.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Developer controls exist.</strong> Intensity, colour grading, and per-object masking are all available. The technology is opt-in per title. Jensen Huang has stated developers can force specific art styles and exclude elements from enhancement.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong style="color:var(--text-heading);">Historical pattern.</strong> DLSS 1.0 was mocked for "fake pixels." DLSS 3 was criticised for "fake frames." Both eventually gained acceptance. AMD and Intel later adopted similar approaches, validating the underlying ideas.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Jensen Huang's response arc</h4>
+    <p style="font-size:14px; margin-top:8px;">When first asked about the backlash at a GTC press Q&A, Huang called critics "completely wrong." A week later, on the Lex Fridman podcast, he struck a notably different tone: "I think their perspective makes sense and I can see where they're coming from, because I don't love AI slop myself." He maintained that DLSS 5 is not a post-processing filter but acknowledged the demo materials didn't communicate this effectively.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From blurry upscaler <span class="accent">to neural renderer.</span></h2>
+  <p style="margin-bottom:16px;">The DLSS story is one of persistent iteration. Every generation solved a different problem — and drew its own criticism before gaining acceptance.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2018</div>
+      <h4>DLSS 1.0 — Per-Game Upscaling</h4>
+      <p>Launched with RTX 2000 series. Required per-game model training. Results were frequently blurry with visible artefacts. The AI upscaling concept was sound, but the execution was widely criticised. Called "fake pixels" by sceptics.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2020</div>
+      <h4>DLSS 2.0 — Generalised Temporal Model</h4>
+      <p>Replaced per-game training with a single generalised model using temporal data from previous frames. Massive quality improvement. Became widely adopted and gained genuine praise. The version that made DLSS mainstream.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2022</div>
+      <h4>DLSS 3.0 — AI Frame Generation</h4>
+      <p>Introduced with RTX 4000 series. Generated entire frames between rendered frames using motion vectors and optical flow. Multiplied perceived frame rates but added latency. Criticised for "fake frames" — sound familiar?</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2023</div>
+      <h4>DLSS 3.5 — Ray Reconstruction</h4>
+      <p>Replaced multiple hand-tuned denoising algorithms with a single AI model for ray-traced content. Available on all RTX GPUs. Significantly improved path-traced image quality in titles like Cyberpunk 2077 and Alan Wake 2.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2025</div>
+      <h4>DLSS 4.0 / 4.5 — Transformer Architecture</h4>
+      <p>Launched alongside RTX 5000 (Blackwell). Swapped the CNN model for a vision transformer. Introduced multi-frame generation (up to 3 AI frames per rendered frame). By DLSS 4.5, AI draws 23 of every 24 pixels on screen. Won blind image quality tests against FSR and native rendering.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2026</div>
+      <h4>DLSS 5 — Neural Rendering for Fidelity</h4>
+      <p>Announced at GTC 2026. First DLSS version targeting visual quality rather than performance. Uses a generalised neural model to enhance lighting and material response. Ships Fall 2026. Sparked the most intense community backlash in DLSS history.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Should you care <span class="accent">about DLSS 5?</span></h2>
+  <p style="margin-bottom:32px;">This depends entirely on what you value. DLSS 5 isn't a universal upgrade — it's a specific tool with specific trade-offs. Here's an honest read on where it fits and where it doesn't.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Worth watching if</h4>
+      <p style="font-size:14px; margin-top:12px;">You play graphically demanding titles on RTX hardware and prioritise visual realism over artistic purity — DLSS 5's environmental lighting and material improvements are genuinely impressive.<br><br>You're a developer building photorealistic games and want to close the gap to offline rendering quality without waiting for next-gen hardware.<br><br>You work in virtual production, architectural visualisation, or interactive experiences where real-time photoreal lighting has direct commercial value.<br><br>You've followed DLSS long enough to know that v1.0 criticism didn't predict v2.0 quality. Early demos don't always represent the shipping product.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip or be cautious if</h4>
+      <p style="font-size:14px; margin-top:12px;">You value artistic intent above photorealism. If you believe the final image should reflect only what game artists designed, DLSS 5's modifications — however subtle developers make them — represent a philosophical line crossing.<br><br>Your game has a strong stylised aesthetic. Cel-shaded, painterly, retro, or otherwise non-photorealistic games gain nothing from DLSS 5 and risk having their style homogenised.<br><br>You can't afford bleeding-edge hardware. Early demos required dual RTX 5090s. Even with optimisation, this will be a high-end feature for some time.<br><br>You're concerned about AI training transparency. NVIDIA hasn't disclosed training data sources. If that matters to your studio's ethics policy, wait for clarity.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · IMBILA PERSPECTIVE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Imbila Perspective</div>
+  <h2>What this means <span class="accent">for SA businesses.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Our take</h4>
+    <p style="font-size:14px; margin-top:8px;">DLSS 5 is less about gaming and more about a structural shift in how images get made. The same neural rendering approach that enhances game frames today will show up in product visualisation, virtual staging, architectural walkthroughs, and training simulations tomorrow. South African businesses in property, retail, manufacturing, and education should be paying attention — not to the gaming controversy, but to the underlying capability: real-time photoreal rendering that previously required render farms and hours of compute time. That's the signal in the noise.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>Real-Time Visual Computing</h4>
+      <p style="font-size:14px;">For property developers, retailers, and manufacturers evaluating real-time 3D visualisation: neural rendering could collapse the cost and time of creating photoreal product imagery, architectural walkthroughs, and digital twins. Understanding this technology now means being ready when it moves beyond gaming into commercial tools.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Evaluating AI Rendering Pipelines</h4>
+      <p style="font-size:14px;">Teams building interactive experiences, training simulations, or visual content should evaluate how neural rendering fits (or doesn't fit) their pipeline. The key question isn't "is DLSS 5 good?" — it's "does AI-enhanced rendering solve a real bottleneck in our workflow, or does it introduce problems we don't have?"</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Understanding Neural Rendering</h4>
+      <p style="font-size:14px;">The DLSS 5 debate is a useful case study in AI adoption friction: what happens when AI capabilities collide with professional craft, artistic identity, and community trust. It's worth studying regardless of whether you touch game development, because similar tensions will appear in every creative industry AI enters.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Form your own view.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official &amp; Technical</h3>
+      <h4>DLSS Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://www.nvidia.com/en-us/geforce/technologies/dlss/" target="_blank" rel="noopener">NVIDIA DLSS Technology Page</a> — Official overview of the full DLSS suite ↗<br>
+        <a href="https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/" target="_blank" rel="noopener">DLSS 5 Announcement</a> — NVIDIA's full reveal article with comparison images ↗<br>
+        <a href="https://nvidianews.nvidia.com/news/nvidia-dlss-5-delivers-ai-powered-breakthrough-in-visual-fidelity-for-games" target="_blank" rel="noopener">NVIDIA Newsroom</a> — Official press release and publisher quotes ↗<br>
+        <a href="https://developer.nvidia.com/rtx/streamline" target="_blank" rel="noopener">NVIDIA Streamline SDK</a> — Integration framework for DLSS and Reflex ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Analysis &amp; Commentary</h3>
+      <h4>Independent Coverage</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://www.tomshardware.com/pc-components/gpus/we-got-a-first-look-at-nvidias-dlss-5-and-the-future-of-neural-rendering-at-gtc-the-results-can-be-impressive-but-theres-work-to-do" target="_blank" rel="noopener">Tom's Hardware</a> — Hands-on first look at GTC demos ↗<br>
+        <a href="https://www.fxguide.com/quicktakes/nvidias-new-real-time-neural-rendering-with-dlss-5/" target="_blank" rel="noopener">fxguide</a> — VFX industry perspective on neural rendering implications ↗<br>
+        <a href="https://www.redsharknews.com/nvidia-dlss-5-neural-rendering-backlash" target="_blank" rel="noopener">RedShark News</a> — Balanced analysis of the backlash and competitive landscape ↗<br>
+        <a href="https://en.wikipedia.org/wiki/Deep_Learning_Super_Sampling" target="_blank" rel="noopener">Wikipedia: DLSS</a> — Full technical and historical reference ↗
+      </p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources &amp; References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/" target="_blank" rel="noopener">NVIDIA GeForce News</a> ·
+      <a href="https://nvidianews.nvidia.com/news/nvidia-dlss-5-delivers-ai-powered-breakthrough-in-visual-fidelity-for-games" target="_blank" rel="noopener">NVIDIA Newsroom</a> ·
+      <a href="https://www.tomshardware.com/pc-components/gpus/we-got-a-first-look-at-nvidias-dlss-5-and-the-future-of-neural-rendering-at-gtc-the-results-can-be-impressive-but-theres-work-to-do" target="_blank" rel="noopener">Tom's Hardware</a> ·
+      <a href="https://www.fxguide.com/quicktakes/nvidias-new-real-time-neural-rendering-with-dlss-5/" target="_blank" rel="noopener">fxguide</a> ·
+      <a href="https://www.redsharknews.com/nvidia-dlss-5-neural-rendering-backlash" target="_blank" rel="noopener">RedShark News</a> ·
+      <a href="https://www.pcgamer.com/software/ai/bad-ending-now-every-game-is-slop-game-developers-share-mixed-reactions-to-dlss-5/" target="_blank" rel="noopener">PC Gamer</a> ·
+      <a href="https://kotaku.com/we-spoke-to-game-devs-and-all-of-them-hate-dlss-5-what-the-f-nvidia-2000680059" target="_blank" rel="noopener">Kotaku</a> ·
+      <a href="https://www.mindstudio.ai/blog/what-is-dlss-5-nvidia-neural-rendering-explained" target="_blank" rel="noopener">MindStudio</a> ·
+      <a href="https://en.wikipedia.org/wiki/Deep_Learning_Super_Sampling" target="_blank" rel="noopener">Wikipedia</a> ·
+      <a href="https://winbuzzer.com/2026/03/24/nvidia-ceo-backtracks-dlss-5-criticism-ai-slop-xcxwbn/" target="_blank" rel="noopener">WinBuzzer</a> ·
+      <a href="https://www.xda-developers.com/dlss-5-is-further-proof-that-rasterizations-days-are-numbered/" target="_blank" rel="noopener">XDA Developers</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. DLSS, GeForce, RTX, and Streamline are trademarks of NVIDIA Corporation. FSR and FidelityFX are trademarks of AMD. XeSS is a trademark of Intel Corporation. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://platform.imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://demo.imbila.ai" target="_blank" rel="noopener">Demos</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script src="https://platform.imbila.ai/auth-widget.js"></script>
+<script>
+(async function() {
+  if (!window.ImbilaAuth) return;
+  const authed = await ImbilaAuth.isAuthenticated();
+  if (!authed) ImbilaAuth.showReadingGate('.page', 3);
+  ImbilaAuth.injectAuthUI('nav');
+  ImbilaAuth.trackPageView();
+})();
+</script>
+</body>
+</html>
