@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-agent-id="openclaw-teams">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw × Microsoft Teams Explained — An Imbila.AI Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+  /* Teams mockup */
+  --teams-sidebar: #292929;
+  --teams-panel: #1E1E1E;
+  --teams-chat: #FFFFFF;
+  --teams-msg-bg: #F5F5F5;
+  --teams-msg-bot: #EBF3FD;
+  --teams-text: #242424;
+  --teams-text-dim: #616161;
+  --teams-border: #E0E0E0;
+  --teams-purple: #6264A7;
+  --teams-input-bg: #FFFFFF;
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+  /* Teams mockup */
+  --teams-sidebar: #1A1A1A;
+  --teams-panel: #242424;
+  --teams-chat: #141414;
+  --teams-msg-bg: #292929;
+  --teams-msg-bot: #1A2A3A;
+  --teams-text: #E0E0E0;
+  --teams-text-dim: #999999;
+  --teams-border: #333333;
+  --teams-purple: #7B83EB;
+  --teams-input-bg: #292929;
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── AGENT COPY ─── */
+.agent-copy { margin-top:48px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; }
+.agent-copy-label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--honey-dark); margin-bottom:8px; }
+[data-theme="dark"] .agent-copy-label { color:var(--honey); }
+.agent-copy p { font-size:14px; color:var(--text-secondary); margin:0 auto 16px; line-height:1.5; }
+.btn-agent { background:var(--honey-10); color:var(--honey-dark); border:1px solid var(--honey-25); }
+.btn-agent:hover { background:var(--honey-15); border-color:var(--honey); transform:translateY(-1px); }
+[data-theme="dark"] .btn-agent { color:var(--honey); }
+.btn-agent.copied { background:var(--success); color:#fff; border-color:var(--success); }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+
+/* ═══════════════════════════════════════════════
+   TEAMS UI MOCKUP STYLES
+   ═══════════════════════════════════════════════ */
+.teams-mockup-wrap {
+  margin-top: 48px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.35s ease;
+}
+.teams-mockup {
+  display: grid;
+  grid-template-columns: 68px 240px 1fr;
+  height: 520px;
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--teams-chat);
+  transition: background 0.35s ease;
+}
+@media (max-width: 800px) {
+  .teams-mockup { grid-template-columns: 48px 1fr; height: 440px; }
+  .teams-sidebar-panel { display: none !important; }
+}
+
+/* Activity Rail */
+.teams-rail {
+  background: var(--teams-sidebar);
+  display: flex; flex-direction: column;
+  align-items: center; padding: 12px 0; gap: 4px;
+  transition: background 0.35s ease;
+}
+.teams-rail-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #B4B4B4; font-size: 18px; cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+.teams-rail-icon:hover { background: rgba(255,255,255,0.08); }
+.teams-rail-icon.active { color: #FFFFFF; }
+.teams-rail-icon.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 18px; background: var(--teams-purple); border-radius: 0 3px 3px 0;
+}
+
+/* Sidebar Panel */
+.teams-sidebar-panel {
+  background: var(--teams-panel);
+  border-right: 1px solid var(--teams-border);
+  padding: 16px 0;
+  overflow-y: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.teams-panel-header {
+  padding: 0 16px 12px;
+  font-size: 18px; font-weight: 700;
+  color: var(--teams-text);
+}
+.teams-channel-group {
+  padding: 0 8px;
+}
+.teams-team-name {
+  padding: 8px 12px;
+  font-size: 13px; font-weight: 600;
+  color: var(--teams-text);
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; border-radius: 4px;
+}
+.teams-team-name:hover { background: rgba(255,255,255,0.04); }
+.teams-team-name .teams-chevron { font-size: 10px; color: var(--teams-text-dim); }
+.teams-channel {
+  padding: 4px 12px 4px 36px;
+  font-size: 13px; font-weight: 400;
+  color: var(--teams-text-dim);
+  cursor: pointer; border-radius: 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+.teams-channel:hover { background: rgba(255,255,255,0.04); color: var(--teams-text); }
+.teams-channel.active {
+  background: rgba(98,100,167,0.15); color: var(--teams-text); font-weight: 500;
+}
+.teams-channel-hash { font-weight: 700; opacity: 0.5; }
+
+/* Chat Area */
+.teams-chat-area {
+  display: flex; flex-direction: column;
+  background: var(--teams-chat);
+  transition: background 0.35s ease;
+}
+.teams-chat-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--teams-border);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 15px; font-weight: 600;
+  color: var(--teams-text);
+  transition: border-color 0.35s ease;
+}
+.teams-chat-header .teams-bot-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--teams-purple); color: #FFF;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.teams-chat-header .teams-status { font-size: 11px; color: var(--teams-text-dim); font-weight: 400; }
+.teams-messages {
+  flex: 1; overflow-y: auto; padding: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.teams-msg {
+  display: flex; gap: 10px; max-width: 85%;
+}
+.teams-msg.bot { align-self: flex-start; }
+.teams-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.teams-msg-avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #FFF;
+}
+.teams-msg.bot .teams-msg-avatar { background: var(--teams-purple); }
+.teams-msg.user .teams-msg-avatar { background: #5B5FC7; }
+.teams-msg-content {
+  padding: 10px 14px; border-radius: 8px;
+  font-size: 13px; line-height: 1.55;
+  color: var(--teams-text);
+}
+.teams-msg.bot .teams-msg-content { background: var(--teams-msg-bot); }
+.teams-msg.user .teams-msg-content { background: var(--teams-msg-bg); }
+.teams-msg-name { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+.teams-msg-time { font-size: 10px; color: var(--teams-text-dim); margin-left: 6px; font-weight: 400; }
+
+/* Adaptive Card in chat */
+.teams-adaptive-card {
+  background: var(--bg-card);
+  border: 1px solid var(--teams-border);
+  border-radius: 8px; padding: 16px;
+  margin-top: 8px; max-width: 340px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.teams-adaptive-card h5 {
+  font-size: 14px; font-weight: 700; color: var(--teams-text);
+  margin-bottom: 8px;
+}
+.teams-adaptive-card p {
+  font-size: 12px; line-height: 1.5; color: var(--teams-text-dim);
+  max-width: 100%;
+}
+.teams-ac-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+}
+.teams-ac-btn {
+  padding: 6px 16px; border-radius: 4px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; transition: opacity 0.15s;
+}
+.teams-ac-btn:hover { opacity: 0.85; }
+.teams-ac-btn.primary { background: var(--teams-purple); color: #FFF; }
+.teams-ac-btn.secondary { background: transparent; color: var(--teams-purple); border: 1px solid var(--teams-purple); }
+
+/* Input bar */
+.teams-input-bar {
+  padding: 12px 20px;
+  border-top: 1px solid var(--teams-border);
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.35s ease;
+}
+.teams-input {
+  flex: 1; padding: 10px 14px; border-radius: 6px;
+  border: 1px solid var(--teams-border);
+  background: var(--teams-input-bg);
+  font-family: var(--font); font-size: 13px;
+  color: var(--teams-text);
+  outline: none; transition: border-color 0.2s;
+}
+.teams-input::placeholder { color: var(--teams-text-dim); }
+.teams-input:focus { border-color: var(--teams-purple); }
+.teams-send-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--teams-purple); border: none;
+  color: #FFF; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.15s;
+}
+.teams-send-btn:hover { opacity: 0.85; }
+
+/* Poll card in mockup */
+.teams-poll {
+  margin-top: 8px;
+}
+.teams-poll-option {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0; font-size: 12px; color: var(--teams-text);
+}
+.teams-poll-radio {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--teams-purple); flex-shrink: 0;
+}
+.teams-poll-radio.filled { background: var(--teams-purple); border-color: var(--teams-purple); }
+.teams-poll-bar-wrap {
+  flex: 1; height: 6px; background: var(--teams-msg-bg); border-radius: 3px;
+  overflow: hidden; margin-left: 4px;
+}
+.teams-poll-bar { height: 100%; background: var(--teams-purple); border-radius: 3px; transition: width 0.5s ease; }
+
+/* Mockup label */
+.mockup-label {
+  text-align: center;
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-top: 12px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </div>
+  <div class="nav-links">
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#mockup">Mockup</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Teams-inspired icon -->
+      <rect x="8" y="10" width="32" height="28" rx="4" fill="none" stroke="var(--text-heading)" stroke-width="2"/>
+      <rect x="14" y="16" width="20" height="4" rx="2" fill="#EDAF42"/>
+      <rect x="14" y="24" width="14" height="3" rx="1.5" fill="var(--text-muted)"/>
+      <rect x="14" y="30" width="18" height="3" rx="1.5" fill="var(--text-muted)"/>
+      <circle cx="38" cy="10" r="6" fill="#6264A7"/>
+      <path d="M36 10l1.5 1.5L40 8.5" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1>OpenClaw × Teams<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">Your AI agent inside Microsoft Teams — DMs, channels, and Adaptive Cards</p>
+  <div class="hero-meta">
+    <span>Plugin Architecture</span>
+    <span>Azure Bot Framework</span>
+    <span>Adaptive Cards v1.5</span>
+    <span>23 Channels Supported</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS IT ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is OpenClaw × Teams</div>
+  <h2>Your AI agent lives <span class="accent">where your team already works.</span></h2>
+  <p style="margin-bottom:24px;">The OpenClaw Microsoft Teams integration is a plugin that connects your self-hosted AI agent to Microsoft Teams via the Azure Bot Framework. It handles personal DMs, group chats, and channel conversations — routing messages through a webhook gateway on port 3978 and replying deterministically back to the exact conversation they came from.</p>
+  <p>As of January 2026, the Teams channel ships as a standalone plugin rather than a core dependency. This was a deliberate breaking change to keep the core install lightweight and let Teams-specific features (Adaptive Cards, SharePoint uploads, RSC permissions) update independently.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Agents isolated from workflows</h4>
+      <p style="font-size:14px;">AI assistants that live in terminal windows or standalone UIs never get adopted by non-technical teams. People forget they exist.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Bot Framework webhook bridge</h4>
+      <p style="font-size:14px;">OpenClaw registers as an Azure Bot, receives Teams webhooks, processes with any LLM, and responds via the Bot Framework REST API — all self-hosted.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>AI in every Teams channel</h4>
+      <p style="font-size:14px;">Team members @mention the agent in channels, DM it directly, or trigger workflows through Adaptive Card buttons — without leaving Teams.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">💬</div>
+      <div class="flow-label">Teams Message</div>
+      <div class="flow-desc">User sends in Teams</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔐</div>
+      <div class="flow-label">Bot Framework</div>
+      <div class="flow-desc">Azure JWT validation</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">⚙️</div>
+      <div class="flow-label">OpenClaw Gateway</div>
+      <div class="flow-desc">Port 3978 · /api/messages</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🤖</div>
+      <div class="flow-label">LLM Processing</div>
+      <div class="flow-desc">Claude, GPT, etc.</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">📤</div>
+      <div class="flow-label">Teams Reply</div>
+      <div class="flow-desc">Back to same thread</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>Teams has the eyeballs. <span class="accent">OpenClaw has the brain.</span></h2>
+  <p style="margin-bottom:40px;">Microsoft Teams is the default workspace for most enterprises. OpenClaw's plugin model means you can run any model (Claude, GPT, local Ollama) behind a familiar chat interface — without Microsoft Copilot's per-user pricing or vendor lock-in.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">23</div>
+      <div class="stat-label">Supported channels total</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">3978</div>
+      <div class="stat-label">Default webhook port</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">v1.5</div>
+      <div class="stat-label">Adaptive Card schema</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$0</div>
+      <div class="stat-label">OpenClaw license cost</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use Microsoft Copilot?</h4>
+    <p style="font-size:14px; margin-top:8px;">Copilot costs $30/user/month, uses only Microsoft's models, and doesn't let you control prompts, data residency, or integrate with non-Microsoft tools. OpenClaw is self-hosted, model-agnostic, and free (you pay only for LLM API tokens). The tradeoff: you need to set up Azure Bot registration and maintain the gateway yourself.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Five concepts to understand <span class="accent">the integration.</span></h2>
+  <p style="margin-bottom:40px;">The Teams plugin is config-driven. You register an Azure Bot, install the plugin, set your credentials, and everything else is handled by OpenClaw's gateway layer.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>Plugin Installation</h4>
+      <p style="font-size:14px;">Since the January 2026 breaking change, Teams ships as a separate plugin. Install it via the CLI and it connects to the core gateway.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs"># Install the Teams plugin</span>
+<span class="ck">openclaw plugins install</span> <span class="cv">@openclaw/msteams</span></pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>Azure Bot Registration</h4>
+      <p style="font-size:14px;">You need three credentials from Azure: App ID, App Password (client secret), and Tenant ID. Single-tenant bots are recommended — multi-tenant registration was deprecated after July 2025.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs">// openclaw.json</span>
+{
+  <span class="ck">"channels"</span>: {
+    <span class="ck">"msteams"</span>: {
+      <span class="cv">"enabled"</span>: true,
+      <span class="cv">"appId"</span>: "<span class="cs">APP_ID</span>",
+      <span class="cv">"appPassword"</span>: "<span class="cs">SECRET</span>",
+      <span class="cv">"tenantId"</span>: "<span class="cs">TENANT_ID</span>"
+    }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Access Control Policies</h4>
+      <p style="font-size:14px;">DMs default to a "pairing" model — unknown senders are ignored until explicitly approved. Group chats default to "allowlist" — blocked unless you add users to <code>groupAllowFrom</code>. This is security-first by design: no accidental exposure in shared channels.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>Adaptive Cards</h4>
+      <p style="font-size:14px;">The plugin supports sending Adaptive Card v1.5 payloads — rich interactive cards with text blocks, images, action buttons, input fields, and polls. Cards are sent via CLI or agent tool actions and can collect user input through postback events.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 05</h3>
+      <h4>Reply Style Configuration</h4>
+      <p style="font-size:14px;">Teams channels can be set to either "Posts" or "Threads" mode, but the API doesn't tell you which is active. You configure <code>replyStyle</code> per channel — "thread" or "top-level" — to match the channel's actual UI mode. Get this wrong and replies appear in the wrong place.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 06</h3>
+      <h4>File Handling via SharePoint</h4>
+      <p style="font-size:14px;">DM file attachments work natively. For channel/group file sharing, you need to configure a <code>sharePointSiteId</code> and grant <code>Sites.ReadWrite.All</code> Graph permissions. Files are stored in SharePoint's <code>/OpenClawShared/</code> folder.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · UI MOCKUP ═══════ -->
+<section id="mockup" class="fade-up">
+  <div class="section-label">04 · UI Mockup</div>
+  <h2>What it looks like <span class="accent">inside Teams.</span></h2>
+  <p style="margin-bottom:16px;">This interactive mockup shows how OpenClaw appears when installed as a Teams bot — DM conversations with Adaptive Cards, polls, and standard message exchange.</p>
+
+  <div class="teams-mockup-wrap">
+    <div class="teams-mockup">
+
+      <!-- Activity Rail -->
+      <div class="teams-rail">
+        <div class="teams-rail-icon active" title="Chat">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4V4z"/></svg>
+        </div>
+        <div class="teams-rail-icon" title="Teams">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a3 3 0 100 6 3 3 0 000-6zM4 9a2 2 0 00-2 2v3h4v-3a2 2 0 00-2-2zm12 0a2 2 0 00-2 2v3h4v-3a2 2 0 00-2-2zM7 10a2 2 0 00-2 2v4h10v-4a2 2 0 00-2-2H7z"/></svg>
+        </div>
+        <div class="teams-rail-icon" title="Calendar">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 011 1v1h6V3a1 1 0 112 0v1h1a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 011-1zm-2 6v8h12V8H4z"/></svg>
+        </div>
+        <div class="teams-rail-icon" title="Apps">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"/></svg>
+        </div>
+      </div>
+
+      <!-- Sidebar Panel -->
+      <div class="teams-sidebar-panel">
+        <div class="teams-panel-header">Chat</div>
+        <div class="teams-channel-group">
+          <div class="teams-team-name">
+            <span class="teams-chevron">▾</span> Recent
+          </div>
+          <div class="teams-channel active">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
+              <circle cx="7" cy="7" r="6" fill="#6264A7"/>
+              <text x="7" y="10" text-anchor="middle" fill="#FFF" font-size="8" font-weight="700">O</text>
+            </svg>
+            OpenClaw Bot
+          </div>
+          <div class="teams-channel">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
+              <circle cx="7" cy="7" r="6" fill="#5B5FC7"/>
+              <text x="7" y="10" text-anchor="middle" fill="#FFF" font-size="7" font-weight="600">JD</text>
+            </svg>
+            Jane Doe
+          </div>
+          <div class="teams-channel">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;">
+              <circle cx="7" cy="7" r="6" fill="#4F6BED"/>
+              <text x="7" y="10" text-anchor="middle" fill="#FFF" font-size="7" font-weight="600">TS</text>
+            </svg>
+            Tom Smith
+          </div>
+
+          <div class="teams-team-name" style="margin-top:16px;">
+            <span class="teams-chevron">▾</span> Engineering
+          </div>
+          <div class="teams-channel">
+            <span class="teams-channel-hash">#</span> General
+          </div>
+          <div class="teams-channel">
+            <span class="teams-channel-hash">#</span> deployments
+          </div>
+          <div class="teams-channel">
+            <span class="teams-channel-hash">#</span> openclaw-alerts
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="teams-chat-area">
+        <div class="teams-chat-header">
+          <div class="teams-bot-avatar">O</div>
+          <div>
+            OpenClaw Bot
+            <div class="teams-status">Active now</div>
+          </div>
+        </div>
+
+        <div class="teams-messages">
+          <!-- User message -->
+          <div class="teams-msg user">
+            <div class="teams-msg-avatar">CL</div>
+            <div class="teams-msg-content">
+              <div class="teams-msg-name">Craig Leppan <span class="teams-msg-time">10:32 AM</span></div>
+              @OpenClaw summarise the deployment logs from last night
+            </div>
+          </div>
+
+          <!-- Bot reply -->
+          <div class="teams-msg bot">
+            <div class="teams-msg-avatar">O</div>
+            <div class="teams-msg-content">
+              <div class="teams-msg-name">OpenClaw Bot <span class="teams-msg-time">10:32 AM</span></div>
+              Here's the deployment summary for last night:
+
+              <div class="teams-adaptive-card">
+                <h5>🚀 Deployment Summary — 28 Mar 2026</h5>
+                <p>
+                  <strong style="color:var(--teams-text);">3 deployments</strong> completed between 01:00–04:30 SAST<br>
+                  <span style="color:#3A9E6B;">✓ api-gateway v2.4.1</span> — 01:12<br>
+                  <span style="color:#3A9E6B;">✓ auth-service v1.8.0</span> — 02:45<br>
+                  <span style="color:#E8A838;">⚠ worker-pool v3.1.2</span> — 04:28 (2 retries)<br>
+                </p>
+                <div class="teams-ac-actions">
+                  <button class="teams-ac-btn primary">View Full Logs</button>
+                  <button class="teams-ac-btn secondary">Rollback</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User message -->
+          <div class="teams-msg user">
+            <div class="teams-msg-avatar">CL</div>
+            <div class="teams-msg-content">
+              <div class="teams-msg-name">Craig Leppan <span class="teams-msg-time">10:34 AM</span></div>
+              run a team standup poll for today
+            </div>
+          </div>
+
+          <!-- Bot poll -->
+          <div class="teams-msg bot">
+            <div class="teams-msg-avatar">O</div>
+            <div class="teams-msg-content">
+              <div class="teams-msg-name">OpenClaw Bot <span class="teams-msg-time">10:34 AM</span></div>
+
+              <div class="teams-adaptive-card">
+                <h5>📊 Daily Standup — 29 Mar 2026</h5>
+                <p style="margin-bottom:10px;">What's your focus today?</p>
+                <div class="teams-poll">
+                  <div class="teams-poll-option">
+                    <div class="teams-poll-radio filled"></div>
+                    <span>Sprint tasks</span>
+                    <div class="teams-poll-bar-wrap"><div class="teams-poll-bar" style="width:60%;"></div></div>
+                    <span style="font-size:11px; color:var(--teams-text-dim);">3</span>
+                  </div>
+                  <div class="teams-poll-option">
+                    <div class="teams-poll-radio"></div>
+                    <span>Code review</span>
+                    <div class="teams-poll-bar-wrap"><div class="teams-poll-bar" style="width:40%;"></div></div>
+                    <span style="font-size:11px; color:var(--teams-text-dim);">2</span>
+                  </div>
+                  <div class="teams-poll-option">
+                    <div class="teams-poll-radio"></div>
+                    <span>Bug fixes</span>
+                    <div class="teams-poll-bar-wrap"><div class="teams-poll-bar" style="width:20%;"></div></div>
+                    <span style="font-size:11px; color:var(--teams-text-dim);">1</span>
+                  </div>
+                </div>
+                <div class="teams-ac-actions" style="margin-top:10px;">
+                  <button class="teams-ac-btn primary">Vote</button>
+                  <button class="teams-ac-btn secondary">Close Poll</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input bar -->
+        <div class="teams-input-bar">
+          <input class="teams-input" placeholder="Type a message to OpenClaw Bot..." readonly>
+          <button class="teams-send-btn" title="Send">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 1l14 7-14 7V9l10-1L1 7V1z"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="mockup-label">Interactive UI Mockup · OpenClaw DM view in Microsoft Teams</div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>What's happening under the hood</h4>
+    <p style="font-size:14px; margin-top:8px;">The bot avatar and messages flow through Azure Bot Framework webhooks to the OpenClaw gateway. Adaptive Cards (the deployment summary and poll above) are sent as JSON payloads conforming to the Adaptive Card v1.5 schema. Poll votes are stored locally in <code>~/.openclaw/msteams-polls.json</code> — the gateway must stay online to collect them.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 05 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">05 · The Ecosystem</div>
+  <h2>Where Teams fits <span class="accent">in the OpenClaw stack.</span></h2>
+  <p style="margin-bottom:40px;">OpenClaw's channel architecture supports 23 messaging platforms. Teams is one entry point — the same agent, prompts, and skills work identically across WhatsApp, Slack, Discord, Telegram, and the rest.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Channel Layer</span>
+      <h4 style="margin-top:12px;">Microsoft Teams Plugin</h4>
+      <p style="font-size:14px;">Handles Bot Framework webhooks, Adaptive Cards, file sharing via SharePoint, and per-channel configuration overrides.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">MCP Integration</span>
+      <h4 style="margin-top:12px;">Composio Connector</h4>
+      <p style="font-size:14px;">Connects via the Composio MCP server to enable granular Teams actions — scheduling meetings, archiving teams, managing memberships — from natural language commands.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Auth Layer</span>
+      <h4 style="margin-top:12px;">Azure AD + RSC</h4>
+      <p style="font-size:14px;">JWT validation on inbound webhooks, App ID + Password for outbound calls. Resource-Specific Consent (RSC) for real-time channel listening without broad admin scopes.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Simple channel notifications</td>
+        <td><span class="tag">Incoming Webhooks</span></td>
+        <td>No auth setup, fire-and-forget JSON POST to a channel URL</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Interactive bot conversations</td>
+        <td><span class="tag">OpenClaw Teams Plugin</span></td>
+        <td>Full bi-directional messaging, DMs, Adaptive Cards, file handling</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Meeting scheduling & admin</td>
+        <td><span class="tag">Composio MCP</span></td>
+        <td>Graph API operations via natural language — meetings, member management, team creation</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Message history & catch-up</td>
+        <td><span class="tag">Microsoft Graph API</span></td>
+        <td>RSC only handles live events — you need Graph with admin consent for historical access</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 06 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">06 · Use Cases</div>
+  <h2>What teams actually <span class="accent">do with it.</span></h2>
+  <p style="margin-bottom:40px;">Real patterns from production deployments — not theoretical possibilities.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>DevOps</h3>
+      <h4>Deployment Notifications</h4>
+      <p style="font-size:14px;">Adaptive Cards with build status, rollback buttons, and log links posted to a #deployments channel. One-click rollback from inside Teams.</p>
+    </div>
+    <div class="card">
+      <h3>IT Support</h3>
+      <h4>Helpdesk Triage</h4>
+      <p style="font-size:14px;">Employees DM the bot with issues. OpenClaw classifies, routes to the right queue, and auto-creates tickets — without a separate helpdesk portal.</p>
+    </div>
+    <div class="card">
+      <h3>HR</h3>
+      <h4>Onboarding Assistant</h4>
+      <p style="font-size:14px;">New hires get a personal DM bot that walks them through policy docs, benefits enrolment, and team introductions — answering questions in natural language.</p>
+    </div>
+    <div class="card">
+      <h3>Sales</h3>
+      <h4>CRM Query Bot</h4>
+      <p style="font-size:14px;">Via MCP connectors, sales reps ask the bot for deal status, contact history, or pipeline numbers directly in their Teams channel — no tab-switching to Salesforce.</p>
+    </div>
+    <div class="card">
+      <h3>Engineering</h3>
+      <h4>Daily Standup Polls</h4>
+      <p style="font-size:14px;">Automated Adaptive Card polls at 9am. Votes collected automatically. Summary posted at end-of-day. No meeting required for status updates.</p>
+    </div>
+    <div class="card">
+      <h3>Compliance</h3>
+      <h4>Policy Q&A</h4>
+      <p style="font-size:14px;">Trained on internal policy documents with RAG. Employees ask compliance questions in Teams and get source-attributed answers — audit-friendly.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">07 · Evolution</div>
+  <h2>From core feature <span class="accent">to modular plugin.</span></h2>
+  <p style="margin-bottom:16px;">The Teams integration has evolved alongside OpenClaw's architecture.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2024</div>
+      <h4>Teams bundled in core</h4>
+      <p>Early versions included Microsoft Teams as a built-in channel alongside WhatsApp, Telegram, and Discord. Configuration was simpler but the core install was heavier.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MID 2025</div>
+      <h4>Multi-tenant deprecation</h4>
+      <p>Microsoft deprecated new multi-tenant bot registrations (July 2025). OpenClaw recommended single-tenant bots for all new deployments.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2026</div>
+      <h4>Breaking change: plugin extraction</h4>
+      <p>Teams moved out of core into <code>@openclaw/msteams</code>. Separately installable, independently versioned. This was the 2026.1.15 release.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">FEB 2026</div>
+      <h4>OpenClaw v2026.2+ &amp; Composio MCP</h4>
+      <p>Current version. Full Adaptive Card v1.5 support, SharePoint file integration, Composio MCP toolchain for Graph API operations, and expanded private channel support rolling out.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Decision Guide</div>
+  <h2>Is this right <span class="accent">for your org?</span></h2>
+  <p style="margin-bottom:32px;">Honest assessment. This is powerful but not trivial to set up — and it's not always the right call.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use OpenClaw × Teams when</h4>
+      <p style="font-size:14px; margin-top:12px;">You need a self-hosted AI assistant that your org controls — model choice, data residency, prompt engineering, the lot.<br><br>Your team already lives in Teams and you want AI embedded in existing workflows, not bolted on.<br><br>You want to avoid Copilot's $30/user/month pricing and need a more flexible, multi-model approach.<br><br>You have (or can get) Azure AD admin consent for the required permissions and someone who can maintain the gateway.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip this when</h4>
+      <p style="font-size:14px; margin-top:12px;">Your org blocks third-party bots in Teams or has a strict no-custom-app policy. Check with IT first.<br><br>You don't have access to Azure Portal to create a Bot registration — this is a hard requirement.<br><br>You need full message history search and recall. RSC only covers live events; Graph API with admin consent is needed for historical access.<br><br>You want zero maintenance. This requires a running gateway on a publicly accessible HTTPS endpoint. If that sounds like a burden, Copilot might be simpler.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · PRICING & LIMITS ═══════ -->
+<section class="fade-up">
+  <div class="section-label">09 · Pricing & Limits</div>
+  <h2>What it costs. <span class="accent">What it can't do.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Cost structure</h4>
+    <p style="font-size:14px; margin-top:8px;">OpenClaw itself is open-source and free. The Azure Bot Framework registration has a free tier sufficient for most use cases. Your actual cost is the LLM API tokens — Claude, OpenAI, or whatever model you route through. For a small team, expect $6–$50/month in API usage. Enterprise deployments with heavy traffic may run higher.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Known Limitations</h3>
+      <h4>What doesn't work (yet)</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        Channel/group images — webhook payload only includes an HTML stub, not actual file bytes. Requires Graph API permissions.<br><br>
+        Message history — RSC is for real-time listening only. Historical message access needs <code>ChannelMessage.Read.All</code> with admin consent.<br><br>
+        Private channels — expanded app support is rolling out across tenants as of early 2026 but not universally available yet.<br><br>
+        Poll results auto-posting — votes are stored in a local JSON file but summary cards aren't auto-generated yet.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Required Permissions</h3>
+      <h4>Azure AD scopes</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <strong style="color:var(--text-heading);">RSC (baseline):</strong> Read channel message text, send channel messages, receive DM file attachments.<br><br>
+        <strong style="color:var(--text-heading);">Graph API (optional):</strong> <code>Sites.ReadWrite.All</code> for SharePoint file uploads. <code>Chat.Read.All</code> for restricted file sharing links. <code>ChannelMessage.Read.All</code> for historical message access.<br><br>
+        All Graph permissions require admin consent from your M365 admin.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 10 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">10 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>OpenClaw Teams Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://docs.openclaw.ai/channels/msteams" target="_blank" rel="noopener">OpenClaw Teams Docs</a> — Full configuration reference ↗<br>
+        <a href="https://learn.microsoft.com/en-us/microsoftteams/platform/" target="_blank" rel="noopener">Microsoft Teams Platform Docs</a> — Bot Framework, Adaptive Cards, Graph API ↗<br>
+        <a href="https://adaptivecards.io/designer/" target="_blank" rel="noopener">Adaptive Cards Designer</a> — Visual card builder and schema reference ↗<br>
+        <a href="https://composio.dev/toolkits/microsoft_teams/framework/openclaw" target="_blank" rel="noopener">Composio MCP Integration</a> — Teams MCP server for OpenClaw ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Community</h3>
+      <h4>Get Help & Contribute</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://github.com/openclaw" target="_blank" rel="noopener">OpenClaw GitHub</a> — Source code, issues, plugin contributions ↗<br>
+        <a href="https://discord.gg/openclaw" target="_blank" rel="noopener">OpenClaw Discord</a> — Community support and discussion ↗<br>
+        <a href="https://open-claw.me/channels/teams" target="_blank" rel="noopener">Setup & Integration Guide</a> — Step-by-step walkthrough ↗
+      </p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://docs.openclaw.ai/channels/msteams" target="_blank" rel="noopener">OpenClaw Docs — Microsoft Teams Channel</a> ·
+      <a href="https://open-claw.me/channels/teams" target="_blank" rel="noopener">OpenClaw Teams Setup Guide</a> ·
+      <a href="https://composio.dev/toolkits/microsoft_teams/framework/openclaw" target="_blank" rel="noopener">Composio — OpenClaw Teams MCP</a> ·
+      <a href="https://openclaw-ai.com/en/channels/teams" target="_blank" rel="noopener">OpenClaw AI — Teams Integration</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. OpenClaw is open-source software. Microsoft Teams is a trademark of Microsoft Corporation. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ AGENT COPY ═══════ -->
+<section class="agent-copy fade-up">
+  <div class="agent-copy-label">For AI Agents</div>
+  <p>Copy this explainer as markdown — paste it into Claude Code, ChatGPT, or any AI agent as reference material.</p>
+  <button class="btn btn-agent" id="agentCopyBtn" onclick="copyForAgent()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg>
+    Copy for AI agent
+  </button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Agent-friendly copy
+async function copyForAgent() {
+  const btn = document.getElementById('agentCopyBtn');
+  const agentId = document.documentElement.dataset.agentId;
+  if (!agentId) return;
+  const mdUrl = `https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/${agentId}.md`;
+  const originalHTML = btn.innerHTML;
+  btn.textContent = 'Fetching\u2026'; btn.disabled = true;
+  try {
+    const res = await fetch(mdUrl);
+    if (!res.ok) throw new Error(res.status);
+    await navigator.clipboard.writeText(await res.text());
+    btn.classList.add('copied'); btn.textContent = 'Copied!';
+  } catch (e) {
+    const fallback = `Fetch and read this explainer:\n${mdUrl}\n\nJSON: https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/${agentId}.json`;
+    try { await navigator.clipboard.writeText(fallback); btn.classList.add('copied'); btn.textContent = 'Copied URL!'; }
+    catch (e2) { btn.textContent = 'Copy failed'; }
+  }
+  setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('copied'); btn.disabled = false; }, 2000);
+}
+</script>
+
+</body>
+</html>
