@@ -13,11 +13,13 @@ know.agent/
 ├── llms.txt              # Agent discovery file — start here
 ├── content/              # Markdown explainers (full prose)
 │   ├── arc-agi-3.md
+│   ├── agent-skills.md
 │   ├── agents2026.md
 │   ├── claude-code-skills.md
 │   ├── cloudflare-ai.md
 │   ├── crewai.md
 │   ├── dlss5.md
+│   ├── elevencreative.md
 │   ├── langchain.md
 │   ├── liteparse.md
 │   ├── llama-cpp.md
@@ -25,11 +27,13 @@ know.agent/
 │   └── teams-agent-channel.md
 ├── data/                 # Structured JSON (programmatic access)
 │   ├── arc-agi-3.json
+│   ├── agent-skills.json
 │   ├── agents2026.json
 │   ├── claude-code-skills.json
 │   ├── cloudflare-ai.json
 │   ├── crewai.json
 │   ├── dlss5.json
+│   ├── elevencreative.json
 │   ├── langchain.json
 │   ├── liteparse.json
 │   ├── llama-cpp.json
@@ -64,10 +68,12 @@ The JSON files are designed to be returned directly as tool responses. Each file
 |----|-------|-------|
 | `arc-agi-3` | ARC-AGI-3 Explained | Interactive reasoning benchmark for AGI |
 | `agents2026` | Top Agent Frameworks — Q2 2026 | Comparison of 10 agent frameworks |
+| `agent-skills` | Agent Skills Explained | Open standard for modular AI agent capabilities |
 | `claude-code-skills` | Claude Code Skills Explained | Skill system for AI coding agents |
 | `crewai` | CrewAI Explained | Multi-agent orchestration framework |
 | `cloudflare-ai` | Cloudflare AI Explained | Serverless AI inference and agents |
 | `dlss5` | NVIDIA DLSS 5 Explained | Neural rendering technology |
+| `elevencreative` | ElevenCreative Explained | AI creative workspace (speech, music, video) |
 | `langchain` | LangChain Explained | AI agent framework |
 | `liteparse` | LiteParse Explained | Local document parsing for agents |
 | `llama-cpp` | llama.cpp Explained | Local LLM inference engine |

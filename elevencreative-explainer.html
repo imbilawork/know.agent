@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-agent-id="elevencreative">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElevenCreative Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="A fact-based explainer on ElevenLabs' ElevenCreative platform — the all-in-one AI creative workspace for speech, music, image, video and localisation at scale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── AGENT COPY ─── */
+.agent-copy { margin-top:48px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; }
+.agent-copy-label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--honey-dark); margin-bottom:8px; }
+[data-theme="dark"] .agent-copy-label { color:var(--honey); }
+.agent-copy p { font-size:14px; color:var(--text-secondary); margin:0 auto 16px; line-height:1.5; }
+.btn-agent { background:var(--honey-10); color:var(--honey-dark); border:1px solid var(--honey-25); }
+.btn-agent:hover { background:var(--honey-15); border-color:var(--honey); transform:translateY(-1px); }
+[data-theme="dark"] .btn-agent { color:var(--honey); }
+.btn-agent.copied { background:var(--success); color:#fff; border-color:var(--success); }
+.agent-url { display:block; font-family:monospace; font-size:13px; color:var(--text-secondary); background:var(--bg-code); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 16px; margin:0 auto 16px; max-width:640px; word-break:break-all; user-select:all; cursor:text; }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Waveform icon representing audio/creative -->
+      <rect x="6" y="20" width="4" height="8" rx="2" fill="#EDAF42"/>
+      <rect x="14" y="14" width="4" height="20" rx="2" fill="#EDAF42"/>
+      <rect x="22" y="8" width="4" height="32" rx="2" fill="#EDAF42"/>
+      <rect x="30" y="14" width="4" height="20" rx="2" fill="#EDAF42"/>
+      <rect x="38" y="20" width="4" height="8" rx="2" fill="#EDAF42"/>
+    </svg>
+  </div>
+  <h1>ElevenCreative<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">ElevenLabs' all-in-one AI workspace for speech, music, video, and global localisation</p>
+  <div class="hero-meta">
+    <span>By ElevenLabs</span>
+    <span>$11B Valuation (Feb 2026)</span>
+    <span>70+ Languages</span>
+    <span>35+ AI Models</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS ELEVENCREATIVE ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is ElevenCreative</div>
+  <h2>One workspace, every creative asset. <span class="accent">No tab-switching.</span></h2>
+  <p style="margin-bottom:24px;">ElevenCreative is ElevenLabs' end-to-end AI creative platform. It brings speech synthesis, sound effects, music generation, image creation, and video production into a single browser-based workspace. The pitch: go from a raw idea to a polished, localised ad campaign without leaving one tool.</p>
+  <p>Before ElevenCreative, producing a multilingual video ad meant juggling separate tools for voiceover, music licensing, image generation, video editing, and dubbing — each with its own exports, re-uploads, and version-control headaches. ElevenCreative collapses that into a unified pipeline where assets can flow between generation steps natively.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Fragmented Pipelines</h4>
+      <p style="font-size:14px;">Creative teams use 5–8 separate platforms for voice, music, video, image, and localisation. Every export/import cycle introduces delays, version mismatches, and manual rework.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Unified AI Workspace</h4>
+      <p style="font-size:14px;">ElevenCreative integrates speech (V3), music (Eleven Music), sound effects, and third-party image/video models (Veo, Sora, Kling, Wan, Seedance) in one canvas. Assets pass between steps without leaving the platform.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Idea to Campaign, Same Day</h4>
+      <p style="font-size:14px;">Teams can produce, iterate, and localise ad creative into 70+ languages from a single workspace — collapsing what traditionally took weeks into hours.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">💡</div>
+      <div class="flow-label">Brief / Prompt</div>
+      <div class="flow-desc">Text or concept input</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🖼️</div>
+      <div class="flow-label">Generate</div>
+      <div class="flow-desc">Image, video, voice, SFX, music</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🎬</div>
+      <div class="flow-label">Studio / Flows</div>
+      <div class="flow-desc">Edit, compose, chain</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🌍</div>
+      <div class="flow-label">Localise & Export</div>
+      <div class="flow-desc">70+ languages, lip-sync</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The economics of content production <span class="accent">just changed.</span></h2>
+  <p style="margin-bottom:40px;">Ad networks like Meta and YouTube demand high volumes of fresh creative. Traditional TV spots take months; social ads take weeks. At the same time, global brands need every asset localised into dozens of markets. ElevenCreative targets that intersection: volume, speed, and multilingual reach from a single platform.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$11B</div>
+      <div class="stat-label">ElevenLabs valuation (Feb 2026 Series D)</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$330M</div>
+      <div class="stat-label">Annual recurring revenue (end of 2025)</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">70+</div>
+      <div class="stat-label">Languages supported for generation & dubbing</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">35+</div>
+      <div class="stat-label">Image & video models integrated in Flows</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use separate best-in-class tools?</h4>
+    <p style="font-size:14px; margin-top:8px;">You can. And for individual asset types, standalone tools may still offer more depth. The value of ElevenCreative isn't that each individual model is the best — it's that the workflow between them is native. No downloads, no re-uploads, no format conversions. For teams producing dozens of campaign variants across markets, that integration is where the time savings compound.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Five pillars, two interfaces, <span class="accent">one workspace.</span></h2>
+  <p style="margin-bottom:40px;">ElevenCreative organises around five core creative capabilities, accessible through two production interfaces: Studio (linear timeline editing) and Flows (node-based pipeline canvas).</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 01</h3>
+      <h4>Speech — Eleven V3</h4>
+      <p style="font-size:14px;">The V3 text-to-speech model supports 70+ languages with inline audio tags for emotional direction — <code>[whispers]</code>, <code>[excited]</code>, <code>[sighs]</code>. Text-to-Dialogue mode handles multi-speaker conversations with automatic turn-taking and emotional transitions. A library of 10,000+ community voices plus Instant and Professional voice cloning.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 02</h3>
+      <h4>Music — Eleven Music</h4>
+      <p style="font-size:14px;">Launched August 2025, Eleven Music generates full tracks from text prompts — with or without vocals, in multiple languages. Outputs are commercially licensed for ads, film, TV, podcasts, social media, and games. No separate music-licensing negotiation required for standard commercial use.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 03</h3>
+      <h4>Sound Effects</h4>
+      <p style="font-size:14px;">On-demand contextual sound effect generation. Integrated into both Studio and Flows as a native node type, so SFX can be layered directly into compositions without external audio tools.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Pillar 04</h3>
+      <h4>Image & Video</h4>
+      <p style="font-size:14px;">ElevenCreative integrates third-party image and video models including Google Veo, OpenAI Sora, Kling, Wan, and Seedance — over 35 models accessible from the same canvas. No separate subscriptions or API keys needed. Lip-sync capability connects generated video with voice output.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Interface A</h3>
+      <h4>Studio — Timeline Editor</h4>
+      <p style="font-size:14px;">A traditional linear timeline for frame-by-frame editing with separate tracks for video, audio, music, and captions. Best for precise finishing: trimming, layering, and manual track adjustments on existing assets.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Interface B</h3>
+      <h4>Flows — Node-Based Canvas</h4>
+      <p style="font-size:14px;">Launched March 2026. A visual pipeline builder where you chain models together on an infinite canvas. Connect an image generator to a video animator to a TTS node to a music scorer — and re-run any single node without regenerating the full chain. Designed for batch production: swap a prompt or avatar and re-execute the entire pipeline to produce campaign variants at scale. API access for programmatic execution is planned.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>Three platforms, <span class="accent">one company.</span></h2>
+  <p style="margin-bottom:40px;">ElevenLabs restructured in early 2026 from a single product into three distinct platform families. ElevenCreative is the content-creation arm. It sits alongside ElevenAgents (conversational AI) and ElevenAPI (developer infrastructure).</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Content Creation</span>
+      <h4 style="margin-top:12px;">ElevenCreative</h4>
+      <p style="font-size:14px;">The workspace covered in this explainer. Generate, edit, and localise speech, music, image, and video. Includes Studio (timeline), Flows (canvas), and the Iconic Voice Marketplace.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Conversational AI</span>
+      <h4 style="margin-top:12px;">ElevenAgents</h4>
+      <p style="font-size:14px;">Real-time voice and chat agents for customer support, sales, and interactive experiences. Powered by V3 Conversational with expressive turn-taking. Used by Deutsche Telekom, Revolut, Klarna.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Developer Platform</span>
+      <h4 style="margin-top:12px;">ElevenAPI</h4>
+      <p style="font-size:14px;">Programmatic access to all ElevenLabs models via REST API, Python SDK, and TypeScript SDK. Supports streaming, batch processing, SOC 2, HIPAA, GDPR compliance. Global routing reduces latency by region.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Produce an ad campaign with voice, music, and video</td>
+        <td><span class="tag">ElevenCreative</span></td>
+        <td>End-to-end asset creation and localisation in one workspace</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Deploy a voice agent for customer support</td>
+        <td><span class="tag">ElevenAgents</span></td>
+        <td>Real-time conversational AI with workflow routing and tool execution</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Embed TTS in your own product</td>
+        <td><span class="tag">ElevenAPI</span></td>
+        <td>Low-latency streaming, SDKs, enterprise compliance controls</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Batch-produce 500 localised video variants</td>
+        <td><span class="tag">ElevenCreative + Flows</span></td>
+        <td>Node-based pipeline with re-executable templates; API trigger planned</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">License an iconic celebrity voice for a brand campaign</td>
+        <td><span class="tag">Iconic Marketplace</span></td>
+        <td>Curated, rights-cleared voices (Michael Caine, Maya Angelou, etc.) with formal licensing via rights holders</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What teams actually <span class="accent">build with it.</span></h2>
+  <p style="margin-bottom:40px;">ElevenCreative spans marketing, entertainment, education, and enterprise content production. Here's where it lands in practice.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Performance Marketing</h3>
+      <h4>A/B Testing at Scale</h4>
+      <p style="font-size:14px;">Use Flows to build a reusable pipeline, then swap hooks, avatars, voices, and languages systematically to produce hundreds of ad variants from a single creative architecture. No manual rebuilds.</p>
+    </div>
+    <div class="card">
+      <h3>Global Localisation</h3>
+      <h4>70+ Language Dubbing</h4>
+      <p style="font-size:14px;">Dub existing video or audio content into 70+ languages with lip-sync. ElevenLabs Productions offers managed services for high-volume dubbing, subtitling, and transcription alongside self-serve tools.</p>
+    </div>
+    <div class="card">
+      <h3>E-Commerce</h3>
+      <h4>Product Video Automation</h4>
+      <p style="font-size:14px;">Connect product photography to a Flow that generates consistent, on-brand video ads with voiceover and music — repeatable for every new SKU without starting from scratch.</p>
+    </div>
+    <div class="card">
+      <h3>Audiobook Publishing</h3>
+      <h4>Long-Form Narration</h4>
+      <p style="font-size:14px;">Produce full audiobooks with consistent character voices using V3's multi-speaker dialogue mode. ElevenLabs has partnered with publishers like HarperCollins and Bookwire for scaled audio publishing.</p>
+    </div>
+    <div class="card">
+      <h3>Gaming & Animation</h3>
+      <h4>Character Voiceover</h4>
+      <p style="font-size:14px;">Generate expressive character voices with audio tags for emotional direction. Clone or design custom voices and iterate on dialogue without booking studio sessions.</p>
+    </div>
+    <div class="card">
+      <h3>Corporate Training</h3>
+      <h4>Multilingual Learning Content</h4>
+      <p style="font-size:14px;">Convert training materials into narrated video across languages for global workforces. Enterprises like Deutsche Telekom use ElevenLabs for internal training and customer-facing content at scale.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From TTS startup <span class="accent">to full-stack audio platform.</span></h2>
+  <p style="margin-bottom:16px;">ElevenLabs was founded in 2022 by Piotr Dąbkowski (ex-Google) and Mati Staniszewski (ex-Palantir). In under four years, it went from a single text-to-speech model to a three-platform company valued at $11 billion.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2022</div>
+      <h4>Founded</h4>
+      <p>Dąbkowski and Staniszewski start ElevenLabs to build human-like AI voice synthesis.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2023</div>
+      <h4>Platform Launch & Series A</h4>
+      <p>First human-like AI voice model released. $19M Series A from Andreessen Horowitz. Rapid adoption — 1M+ users by June 2023.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2024</div>
+      <h4>Series B — Unicorn</h4>
+      <p>$80M raised, valuation reaches $1B+. Sequoia Capital joins. Expansion into dubbing, multilingual support (28 languages), and voice marketplace.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2025</div>
+      <h4>Series C — $3.3B Valuation</h4>
+      <p>$180M raised, co-led by a16z and ICONIQ Growth. Strategic investors include Deutsche Telekom, LG, HubSpot Ventures. Conversational AI platform launched.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JUN 2025</div>
+      <h4>Eleven V3 (Alpha)</h4>
+      <p>New TTS model with audio tags for emotional control, 70+ languages, and Text-to-Dialogue mode for multi-speaker conversations.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">AUG 2025</div>
+      <h4>Eleven Music</h4>
+      <p>AI music generation from text prompts. Commercially cleared for ads, film, TV, games. Developed in collaboration with record labels and artists.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">NOV 2025</div>
+      <h4>Iconic Voice Marketplace</h4>
+      <p>Michael Caine, Liza Minnelli, Matthew McConaughey and 25+ other voices available for licensed commercial use. Rights-holder-controlled marketplace.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">FEB 2026</div>
+      <h4>Series D — $11B Valuation</h4>
+      <p>$500M raised led by Sequoia Capital. Platform restructured into three families: ElevenCreative, ElevenAgents, ElevenAPI. V3 exits alpha. $330M ARR disclosed. Total funding: $781M.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2026</div>
+      <h4>Flows Launches</h4>
+      <p>Node-based creative canvas goes live inside ElevenCreative. 35+ image/video models. Reusable templates, batch execution, API access waitlist opens.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Is ElevenCreative right <span class="accent">for your team?</span></h2>
+  <p style="margin-bottom:32px;">ElevenCreative is powerful for teams producing volume creative at global scale. But it's not the right tool for every situation. Here's an honest breakdown.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use ElevenCreative when</h4>
+      <p style="font-size:14px; margin-top:12px;">You produce ad creative in multiple languages and need same-day turnaround on localised variants.<br><br>You want one workspace for voice, music, SFX, and video instead of managing 5+ separate tools and subscriptions.<br><br>Your workflow involves batch-producing campaign variants with systematic swaps (avatars, hooks, voices, languages) — this is exactly what Flows was built for.<br><br>You need commercially licensed AI music and don't want to negotiate separate music rights for each campaign.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip ElevenCreative when</h4>
+      <p style="font-size:14px; margin-top:12px;">You need deep, frame-level video editing — Studio is competent but won't replace dedicated NLEs like Premiere Pro or DaVinci Resolve.<br><br>Your use case is purely conversational AI (phone agents, chatbots) — ElevenAgents is the right product, not ElevenCreative.<br><br>Budget is tight and volume is low. Credit-based pricing burns fast during experimentation. If you're producing one video a month, the ROI doesn't stack up.<br><br>You need enterprise-grade Professional Voice Clones on V3 — PVC optimisation is still in progress and clone quality may lag earlier models for now.<br><br>You require fully self-hosted or air-gapped deployment. ElevenCreative is cloud-only.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · IMBILA PERSPECTIVE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Imbila Perspective</div>
+  <h2>How we see it. <span class="accent">What we recommend.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Our take</h4>
+    <p style="font-size:14px; margin-top:8px;">ElevenCreative is the strongest bet right now for teams that need to produce localised multimedia content at volume. The Flows canvas is the real differentiator — it turns ad production from a one-off creative act into a repeatable, reusable pipeline. That said, it's a credit-burning platform, and South African teams should factor in both USD-denominated pricing and the latency implications of routing through international infrastructure. ElevenLabs added global routing (auto-selecting nearest servers in the US, Netherlands, or Singapore) as default in early 2026 — that helps, but there's no African edge node yet. For teams running production-critical voice agents, latency matters more than for batch creative workflows.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>Global Campaign Infrastructure</h4>
+      <p style="font-size:14px;">For enterprise marketing teams producing multilingual campaigns across markets, ElevenCreative replaces a fragmented vendor stack with a single platform. Evaluate it alongside your existing localisation partners. The SOC 2 compliance, SSO, and audit log support means it can pass most enterprise procurement reviews. Start with a Flows pilot on a single campaign before committing to platform-wide adoption.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Rapid Creative Production</h4>
+      <p style="font-size:14px;">Smaller creative agencies and production studios should prototype a client campaign in Flows to test the batch-variation workflow. The value proposition is strongest for performance marketing — if you're running 50+ ad variants per campaign, the per-unit cost drops significantly versus manual production. Watch credit burn rate carefully during the experimentation phase.</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Learn the AI Creative Pipeline</h4>
+      <p style="font-size:14px;">For teams upskilling on AI-native creative workflows, ElevenCreative is the most integrated sandbox available today. Start with Studio for basic asset generation (TTS, music, SFX), then move to Flows to understand node-based pipeline thinking. That mental model — treating creative production as reusable infrastructure rather than one-off projects — transfers to every AI creative tool.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>ElevenCreative Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://elevenlabs.io/creative" target="_blank" rel="noopener">ElevenCreative Platform</a> — Product homepage and features overview ↗<br>
+        <a href="https://elevenlabs.io/docs/eleven-creative/overview" target="_blank" rel="noopener">ElevenCreative Documentation</a> — Technical docs and capability guides ↗<br>
+        <a href="https://elevenlabs.io/flows" target="_blank" rel="noopener">Flows</a> — Node-based canvas product page ↗<br>
+        <a href="https://elevenlabs.io/docs/eleven-creative/products/flows" target="_blank" rel="noopener">Flows Documentation</a> — Node types, pipeline design, export options ↗<br>
+        <a href="https://elevenlabs.io/v3" target="_blank" rel="noopener">Eleven V3</a> — Latest TTS model with audio tags and dialogue mode ↗<br>
+        <a href="https://elevenlabs.io/iconic-marketplace" target="_blank" rel="noopener">Iconic Voice Marketplace</a> — Licensed celebrity voice catalog ↗<br>
+        <a href="https://elevenlabs.io/blog/series-d" target="_blank" rel="noopener">Series D Announcement</a> — $500M raise, $11B valuation, platform restructure ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>Stay Informed</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        We publish twice-weekly AI briefings covering tools, frameworks, and developments that matter to South African businesses and AI practitioners. No fluff, no hype — just what you need to make informed decisions about AI adoption.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-primary">Get in touch</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">Read the blog ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://elevenlabs.io/creative" target="_blank" rel="noopener">ElevenCreative Product Page</a> ·
+      <a href="https://elevenlabs.io/docs/eleven-creative/overview" target="_blank" rel="noopener">ElevenCreative Documentation</a> ·
+      <a href="https://elevenlabs.io/blog/introducing-flows-in-elevencreative" target="_blank" rel="noopener">Introducing Flows (ElevenLabs Blog)</a> ·
+      <a href="https://elevenlabs.io/docs/eleven-creative/products/flows" target="_blank" rel="noopener">Flows Documentation</a> ·
+      <a href="https://elevenlabs.io/v3" target="_blank" rel="noopener">Eleven V3 Product Page</a> ·
+      <a href="https://elevenlabs.io/blog/eleven-v3" target="_blank" rel="noopener">Eleven V3 Launch Blog</a> ·
+      <a href="https://elevenlabs.io/blog/series-d" target="_blank" rel="noopener">Series D Announcement</a> ·
+      <a href="https://www.cnbc.com/2026/02/04/nvidia-backed-ai-startup-elevenlabs-11-billion-valuation.html" target="_blank" rel="noopener">CNBC — ElevenLabs $11B Valuation</a> ·
+      <a href="https://en.wikipedia.org/wiki/ElevenLabs" target="_blank" rel="noopener">ElevenLabs — Wikipedia</a> ·
+      <a href="https://elevenlabs.io/blog/announcing-partnership-with-sir-michael-caine-to-newly-launched-iconic-marketplace" target="_blank" rel="noopener">Michael Caine & Iconic Marketplace (ElevenLabs Blog)</a> ·
+      <a href="https://variety.com/2025/digital/news/matthew-mcconaughey-michael-caine-ai-voice-elevenlabs-1236574041/" target="_blank" rel="noopener">Variety — McConaughey & Caine AI Voice</a> ·
+      <a href="https://elevenlabs.io/events/elevenlabs-summit/ldn-26" target="_blank" rel="noopener">ElevenLabs Summit London 2026</a> ·
+      <a href="https://elevenlabs.io/events/elevenlabs-summit/ldn-26/resource/creating-with-elevenlabs-ldn-2026" target="_blank" rel="noopener">Creating with ElevenLabs — Summit Session (Luke Harries)</a> ·
+      <a href="https://releasebot.io/updates/eleven-labs" target="_blank" rel="noopener">ElevenLabs Release Notes (Releasebot)</a> ·
+      <a href="https://sacra.com/c/elevenlabs/" target="_blank" rel="noopener">Sacra — ElevenLabs Revenue & Valuation</a> ·
+      <a href="https://newsroom.ibm.com/2026-03-25-enterprise-ai-finds-its-voice-elevenlabs-and-ibm-bring-premium-voice-capabilities-to-agentic-ai" target="_blank" rel="noopener">IBM Newsroom — ElevenLabs Partnership</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. ElevenLabs, ElevenCreative, ElevenAgents, and ElevenAPI are trademarks of ElevenLabs Inc. This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ AGENT COPY ═══════ -->
+<section class="agent-copy fade-up">
+  <div class="agent-copy-label">For AI Agents</div>
+  <p>Give this URL to any AI agent — it can fetch the full explainer as structured markdown, no Cloudflare blocking.</p>
+  <code class="agent-url" id="agentUrl"></code>
+  <button class="btn btn-agent" id="agentCopyBtn" onclick="copyForAgent()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg>
+    Copy URL
+  </button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// Agent-friendly URL copy
+(function() {
+  var agentId = document.documentElement.dataset.agentId;
+  if (!agentId) return;
+  var mdUrl = 'https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/' + agentId + '.md';
+  var el = document.getElementById('agentUrl');
+  if (el) el.textContent = mdUrl;
+})();
+function copyForAgent() {
+  var btn = document.getElementById('agentCopyBtn');
+  var url = document.getElementById('agentUrl').textContent;
+  var originalHTML = btn.innerHTML;
+  navigator.clipboard.writeText(url).then(function() {
+    btn.classList.add('copied'); btn.textContent = 'Copied!';
+  }).catch(function() {
+    btn.textContent = 'Copy failed';
+  });
+  setTimeout(function() { btn.innerHTML = originalHTML; btn.classList.remove('copied'); }, 2000);
+}
+</script>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

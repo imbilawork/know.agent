@@ -23,11 +23,15 @@ https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.
 
 - [Top Agent Frameworks — Q2 2026](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agents2026.md): The top 10 autonomous agent frameworks ranked by OpenAI and Gemini — compared side by side. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/agents2026.json)
 
+- [Agent Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agent-skills.md): The open standard for teaching AI agents reusable, modular capabilities via SKILL.md files. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/agent-skills.json)
+
 - [Claude Code Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/claude-code-skills.md): Turn your AI coding agent into a specialist. On demand. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/claude-code-skills.json)
 
 - [CrewAI Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/crewai.md): Open-source multi-agent framework for orchestrating role-based, collaborative AI agent teams. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/crewai.json)
 
 - [Cloudflare AI Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/cloudflare-ai.md): Serverless AI inference, agents, and RAG on Cloudflare's edge network. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/cloudflare-ai.json)
+
+- [ElevenCreative Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/elevencreative.md): ElevenLabs' all-in-one AI creative workspace for speech, music, image, video, and localisation at scale. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/elevencreative.json)
 
 - [NVIDIA DLSS 5 Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/dlss5.md): Neural rendering for visual fidelity — and the firestorm it ignited. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/dlss5.json)
 

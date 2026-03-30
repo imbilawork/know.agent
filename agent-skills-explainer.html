@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-agent-id="agent-skills">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Skills Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="Agent Skills: the open standard for teaching AI agents reusable, modular capabilities via SKILL.md files. Progressive disclosure, token optimization, and cross-platform portability explained.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── AGENT COPY ─── */
+.agent-copy { margin-top:48px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; }
+.agent-copy-label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--honey-dark); margin-bottom:8px; }
+[data-theme="dark"] .agent-copy-label { color:var(--honey); }
+.agent-copy p { font-size:14px; color:var(--text-secondary); margin:0 auto 16px; line-height:1.5; }
+.btn-agent { background:var(--honey-10); color:var(--honey-dark); border:1px solid var(--honey-25); }
+.btn-agent:hover { background:var(--honey-15); border-color:var(--honey); transform:translateY(-1px); }
+[data-theme="dark"] .btn-agent { color:var(--honey); }
+.btn-agent.copied { background:var(--success); color:#fff; border-color:var(--success); }
+.agent-url { display:block; font-family:monospace; font-size:13px; color:var(--text-secondary); background:var(--bg-code); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 16px; margin:0 auto 16px; max-width:640px; word-break:break-all; user-select:all; cursor:text; }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="12" width="32" height="24" rx="4" stroke="var(--text-muted)" stroke-width="2" fill="none"/>
+      <path d="M8 18h32" stroke="var(--text-muted)" stroke-width="2"/>
+      <rect x="12" y="22" width="10" height="3" rx="1.5" fill="#EDAF42"/>
+      <rect x="12" y="28" width="16" height="2" rx="1" fill="var(--border-strong)"/>
+      <rect x="12" y="32" width="12" height="2" rx="1" fill="var(--border-strong)"/>
+      <circle cx="35" cy="14" r="3" fill="#EDAF42"/>
+    </svg>
+  </div>
+  <h1>Agent Skills<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The open standard for teaching AI agents reusable, modular capabilities</p>
+  <div class="hero-meta">
+    <span>Open Standard — agentskills.io</span>
+    <span>26+ Platforms</span>
+    <span>Apache 2.0 Licensed</span>
+    <span>Published Dec 2025</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT ARE AGENT SKILLS ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Are Agent Skills</div>
+  <h2>Folders of expertise. <span class="accent">Loaded on demand.</span></h2>
+  <p style="margin-bottom:24px;">Agent Skills are a simple, open format for giving AI agents new capabilities and domain-specific expertise. Each skill is a directory containing at minimum a <code>SKILL.md</code> file — YAML frontmatter describing the skill plus Markdown instructions the agent follows. Optional subdirectories hold scripts, reference docs, and templates. The agent discovers installed skills at startup, sees only lightweight metadata, and loads full instructions only when it decides a skill is relevant to the current task.</p>
+  <p>Think of it as an onboarding guide for an AI colleague. Instead of cramming every possible instruction into one bloated system prompt, you package domain knowledge into discrete, reusable modules. The agent stays lean until it actually needs the expertise — then loads just what's required. Anthropic published the specification as an open standard on 18 December 2025 at <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a> ↗, and within weeks it was adopted by OpenAI Codex, Gemini CLI, GitHub Copilot, Cursor, and dozens of other tools.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Context Window Bloat</h4>
+      <p style="font-size:14px;">Agents are capable generalists, but they don't know your workflows, security checks, or domain edge cases. Loading everything upfront wastes tokens and degrades performance as context fills with irrelevant instructions.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>Modular, On-Demand Expertise</h4>
+      <p style="font-size:14px;">Skills package instructions, scripts, and reference material into self-contained directories. The agent sees skill names and descriptions at startup (~50–100 tokens each) and loads full instructions only when triggered.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Write Once, Use Everywhere</h4>
+      <p style="font-size:14px;">A skill written for Claude Code works identically in OpenAI Codex, Gemini CLI, GitHub Copilot, and every other platform implementing the spec. Portable, version-controlled, and sharable across teams.</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">📂</div>
+      <div class="flow-label">Skill Directory</div>
+      <div class="flow-desc">SKILL.md + assets</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔍</div>
+      <div class="flow-label">Discovery</div>
+      <div class="flow-desc">Name + description only</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">⚡</div>
+      <div class="flow-label">Activation</div>
+      <div class="flow-desc">Full instructions load</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">
+      <div class="flow-icon">🛠️</div>
+      <div class="flow-label">Execution</div>
+      <div class="flow-desc">Scripts + references run</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>The industry aligned <span class="accent">in weeks, not years.</span></h2>
+  <p style="margin-bottom:40px;">Agent Skills solved a problem every AI tool vendor had independently: how to give agents specialised knowledge without wrecking context window efficiency. The speed of adoption — from a single vendor's internal pattern to an industry-wide open standard in under six months — signals that this format hit a genuine architectural nerve.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">26+</div>
+      <div class="stat-label">Platforms adopted<br>the standard</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">500K+</div>
+      <div class="stat-label">Skills indexed on<br>public marketplaces</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">~90%</div>
+      <div class="stat-label">Token reduction via<br>targeted scripts vs generic fetches</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">50–100</div>
+      <div class="stat-label">Tokens per skill at<br>discovery (metadata only)</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use MCP for everything?</h4>
+    <p style="font-size:14px; margin-top:8px;">MCP (Model Context Protocol) is excellent for connecting agents to external APIs, databases, and live services — it handles tool-calling and structured data retrieval. Agent Skills solve a different problem: packaging procedural knowledge, workflows, and instructions that the agent should follow. MCP gives agents tools to call. Skills give agents expertise to apply. In practice, the two are complementary — a skill can reference MCP servers, and many production workflows use both.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Progressive disclosure. <span class="accent">Token intentionality.</span></h2>
+  <p style="margin-bottom:40px;">Agent Skills are built on two core engineering principles: progressive disclosure (load information in tiers, not all at once) and token intentionality (strictly control what enters, exits, and never touches the context window). Here are the key mechanics.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 01</h3>
+      <h4>Three-Tier Progressive Disclosure</h4>
+      <p style="font-size:14px;">At startup, the agent reads only YAML frontmatter — name and description — from every installed skill. This is the <strong style="color:var(--text-heading);">Discovery</strong> tier. When the agent decides a skill is relevant, it loads the full SKILL.md body (<strong style="color:var(--text-heading);">Activation</strong>, recommended under 5,000 tokens). Supporting scripts and reference files load only during <strong style="color:var(--text-heading);">Execution</strong>. This means you can install dozens of skills with negligible context cost.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 02</h3>
+      <h4>SKILL.md Structure</h4>
+      <p style="font-size:14px;">Every skill starts with a <code>SKILL.md</code> file. YAML frontmatter declares name, description, optional license and metadata. The Markdown body contains the instructions the agent follows when the skill activates. The spec recommends keeping the body under 500 lines.</p>
+      <div class="code-block" style="margin-top:16px;">
+<pre><span class="cs">---</span>
+<span class="ck">name:</span> <span class="cv">api-security-reviewer</span>
+<span class="ck">description:</span> <span class="cv">Reviews API code for security</span>
+  <span class="cv">vulnerabilities. Use when reviewing</span>
+  <span class="cv">backend code or APIs.</span>
+<span class="ck">license:</span> <span class="cv">Apache-2.0</span>
+<span class="cs">---</span>
+
+<span class="cs"># API Security Review</span>
+<span class="cv">Analyze code for auth issues,</span>
+<span class="cv">injection attacks, data exposure...</span></pre>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 03</h3>
+      <h4>Code Scripts Beat Vague Markdown</h4>
+      <p style="font-size:14px;">A common mistake: writing goals in SKILL.md but relying on the LLM to figure out execution via generic tools. If an agent uses a default web fetcher, it can burn 8,000+ tokens on a single HTML page. A targeted Python or Bash script in <code>scripts/</code> can filter noise, parse structured data, and return clean JSON — cutting token consumption by up to 90%. Pre-making logical decisions in code means the LLM doesn't waste compute figuring it out on the fly.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Concept 04</h3>
+      <h4>Deterministic Tooling in Scripts</h4>
+      <p style="font-size:14px;">Skills can bundle executable scripts (Python, Bash, Node, etc.) that the agent runs in a sandbox. These scripts handle operations that benefit from deterministic execution — sorting, parsing, data transformation, API calls — rather than burning tokens on tasks code handles better. Anthropic's own PDF skill includes a Python script that extracts form fields without loading either the script or the PDF into context.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>One format. <span class="accent">Every major agent platform.</span></h2>
+  <p style="margin-bottom:40px;">The Agent Skills standard has been adopted across the AI coding and agent ecosystem at a pace reminiscent of MCP's earlier spread. The specification lives at agentskills.io, maintained by Anthropic and open to community contributions. Here's the landscape.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Agent Platforms</span>
+      <h4 style="margin-top:12px;">Claude Code, Codex CLI, Gemini CLI</h4>
+      <p style="font-size:14px;">The three major model vendors all support SKILL.md natively. Claude Code pioneered the format, OpenAI adopted it for Codex, and Google's Gemini CLI implements full progressive disclosure with consent-based activation.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">IDE Integration</span>
+      <h4 style="margin-top:12px;">GitHub Copilot, Cursor, VS Code</h4>
+      <p style="font-size:14px;">Microsoft adopted Agent Skills as a first-class feature in GitHub Copilot and VS Code. Cursor, one of the most popular AI-native IDEs, supports the standard alongside its existing rules system. Skills created in any tool are portable.</p>
+    </div>
+    <div class="card">
+      <span class="tag" style="margin-bottom:16px;">Marketplaces & Directories</span>
+      <h4 style="margin-top:12px;">skills.sh, SkillsMP, SkillHub, LobeHub</h4>
+      <p style="font-size:14px;">A growing ecosystem of directories indexes community and official skills from GitHub repositories. SkillsMP claims 500,000+ indexed skills. Security-focused directories like SkillsDirectory.com scan for prompt injection and credential theft.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">When to use what</h3>
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Repeatable workflow with domain logic</td>
+        <td><span class="tag">Agent Skill</span></td>
+        <td>Packages instructions + scripts the agent loads on demand. Portable across platforms.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Connect to external API or service</td>
+        <td><span class="tag">MCP Server</span></td>
+        <td>Structured tool-calling protocol for live data sources. Handles auth, schemas, streaming.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Project-wide coding conventions</td>
+        <td><span class="tag">CLAUDE.md / GEMINI.md</span></td>
+        <td>Always-loaded context for persistent project rules. Skills complement these for specialised tasks.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">One-off explicit command</td>
+        <td><span class="tag">Slash Command</span></td>
+        <td>User-invoked, deterministic triggers. Skills are model-invoked based on context matching.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What people actually <span class="accent">build with skills.</span></h2>
+  <p style="margin-bottom:40px;">Skills are being used across engineering, documentation, compliance, and creative workflows. These are real patterns from the community and official skill repositories.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Engineering</h3>
+      <h4>Code Review & Security Audit</h4>
+      <p style="font-size:14px;">Skills that run structured review passes checking for auth issues, injection vectors, and code quality — then fix problems before presenting code to the developer. Anthropic's official <code>simplify</code> skill does this natively.</p>
+    </div>
+    <div class="card">
+      <h3>Document Generation</h3>
+      <h4>Brand-Consistent Outputs</h4>
+      <p style="font-size:14px;">Skills package brand guidelines, templates, and design tokens so every generated document, presentation, or report follows organisational standards without re-explaining them each session.</p>
+    </div>
+    <div class="card">
+      <h3>Data Extraction</h3>
+      <h4>Targeted Web Scraping</h4>
+      <p style="font-size:14px;">Instead of the agent fetching entire HTML pages (8,000+ tokens), a bundled script filters out scripts, styles, and nav — returning only structured data. Pre-defining CSS selectors in the script eliminates per-run discovery costs.</p>
+    </div>
+    <div class="card">
+      <h3>DevOps</h3>
+      <h4>Release & Deployment Workflows</h4>
+      <p style="font-size:14px;">Git release skills generate changelogs, tag versions, and create PRs following team conventions. Firebase skills scaffold apps with auth and database configuration pre-wired to best practices.</p>
+    </div>
+    <div class="card">
+      <h3>Compliance</h3>
+      <h4>Regulatory Document Review</h4>
+      <p style="font-size:14px;">Skills for MDR compliance, SOC2 preparation, and accessibility auditing (WCAG 2.2) encode regulatory checklists and verification workflows that the agent applies consistently across code and documentation.</p>
+    </div>
+    <div class="card">
+      <h3>Research & Analysis</h3>
+      <h4>Experiment Analysis Pipelines</h4>
+      <p style="font-size:14px;">Skills that query databases, run analysis scripts, and produce comparative reports — with bundled schema references so the agent doesn't need to rediscover data structures on every invocation.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From internal pattern <span class="accent">to industry standard.</span></h2>
+  <p style="margin-bottom:16px;">Agent Skills evolved from Anthropic's internal tooling for Claude Code into the fastest-adopted open standard in the AI agent space.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">EARLY 2025</div>
+      <h4>Claude Code Internal Skills</h4>
+      <p>Anthropic develops skills as an internal mechanism for Claude Code — structured folders of instructions that Claude loads dynamically to improve performance on document editing, code generation, and specialised tasks.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">SEP 2025</div>
+      <h4>Context Engineering Guide Published</h4>
+      <p>Anthropic publishes its engineering guide on context engineering for agents, establishing the theoretical foundation for progressive disclosure and token-efficient agent architectures. Released alongside Claude Sonnet 4.5.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">NOV 2025</div>
+      <h4>Building More Efficient Agents</h4>
+      <p>Anthropic's engineering blog describes presenting tools as a filesystem the model can explore incrementally — the architectural pattern that skills formalise.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">DEC 2025</div>
+      <h4>Open Standard Published</h4>
+      <p>On 18 December 2025, Anthropic publishes Agent Skills as an open standard at agentskills.io with an Apache 2.0 code license and CC-BY-4.0 documentation license. The specification repo moves to github.com/agentskills/agentskills.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">JAN 2026</div>
+      <h4>Rapid Cross-Platform Adoption</h4>
+      <p>OpenAI adopts the SKILL.md format for Codex CLI. Google's Gemini CLI implements full progressive disclosure. GitHub Copilot, Cursor, VS Code, OpenCode, and Amp all add native support. Community marketplaces like skills.sh and SkillsMP launch.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">MAR 2026</div>
+      <h4>Ecosystem Maturation</h4>
+      <p>500,000+ skills indexed across public marketplaces. Google publishes official Gemini API skills with evaluation data showing 87–96% accuracy improvement. Security scanning becomes standard — Cisco researchers flag exfiltration risks, driving the emergence of security-first directories.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Are Agent Skills right <span class="accent">for your workflow?</span></h2>
+  <p style="margin-bottom:32px;">Skills are not always the answer. Here's an honest assessment of when they add value and when they add friction.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">✓ Use Agent Skills when</h4>
+      <p style="font-size:14px; margin-top:12px;">You repeat the same prompt patterns across conversations — code review checklists, release workflows, data analysis pipelines. Skills eliminate prompt repetition.<br><br>You need consistent, deterministic outputs — brand compliance, regulatory checks, security audits — where bundled scripts handle the repeatable logic.<br><br>Your team shares domain knowledge that new hires (or new agent sessions) need. Skills act as version-controlled onboarding docs for AI colleagues.<br><br>You work across multiple AI tools and want portable capabilities. A skill written for Claude Code also works in Codex, Gemini CLI, and Copilot.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">✗ Skip Agent Skills when</h4>
+      <p style="font-size:14px; margin-top:12px;">Your task is genuinely one-off. Writing a skill for something you'll do once is overhead — just use the prompt directly.<br><br>You need real-time data from external services. Skills aren't API connectors — use MCP servers for live data integrations. Skills can reference MCP, but they don't replace it.<br><br>Your instructions are short enough for CLAUDE.md or GEMINI.md. If the guidance fits in persistent project context without bloating it, a skill adds unnecessary indirection.<br><br>You're working in a constrained environment without filesystem access. Skills require directory structures — they don't work in environments that can't read local files.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · IMBILA PERSPECTIVE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Imbila Perspective</div>
+  <h2>How we think about it. <span class="accent">What we recommend.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Our take</h4>
+    <p style="font-size:14px; margin-top:8px;">Agent Skills represent the strongest signal yet that AI agent workflows are converging on composable, modular architectures rather than monolithic prompt engineering. The open standard model — Apache 2.0 licensed, cross-platform by design — mirrors the MCP playbook that proved effective for tool integration. For South African businesses evaluating AI agent adoption, skills lower the barrier meaningfully: expertise can be packaged once and deployed across whichever tools the team already uses, avoiding vendor lock-in. The security surface is real, though — community skills need vetting, and the ecosystem's maturity varies. Treat skills like any open-source dependency: inspect before installing.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>Institutional Knowledge Capture</h4>
+      <p style="font-size:14px;">Large organisations should evaluate skills as a mechanism for encoding internal workflows, compliance requirements, and domain expertise into portable, auditable packages. The key advantage: skills are version-controlled text files, making them compatible with existing governance and change management processes. Start with high-repetition workflows — code review standards, document templates, deployment checklists — where the ROI is immediate and measurable.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Workflow Acceleration</h4>
+      <p style="font-size:14px;">Small teams and agencies get disproportionate value from skills because they eliminate the "explain everything every session" tax. Package your client delivery process, your testing workflow, your documentation standards into skills that any team member's agent can use consistently. The cross-platform portability matters here: if one developer uses Claude Code and another uses Cursor, the same skills work for both.</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Learning Context Engineering</h4>
+      <p style="font-size:14px;">Building skills is one of the best ways to learn context engineering — the discipline of managing what enters an LLM's context window and when. Writing a SKILL.md forces you to think about progressive disclosure, token budgets, and the boundary between what the model should reason about versus what code should handle deterministically. Start with the official Anthropic skills repo and the spec at agentskills.io.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Official</h3>
+      <h4>Agent Skills Resources</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://agentskills.io/specification" target="_blank" rel="noopener">Agent Skills Specification</a> — The canonical format spec ↗<br>
+        <a href="https://github.com/agentskills/agentskills" target="_blank" rel="noopener">agentskills/agentskills</a> — Spec repo, SDK, and documentation ↗<br>
+        <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">anthropics/skills</a> — Anthropic's official example skills ↗<br>
+        <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Equipping Agents for the Real World</a> — Anthropic engineering blog ↗<br>
+        <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener">Agent Skills API Documentation</a> — Claude API integration guide ↗<br>
+        <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code Skills Docs</a> — Building skills for Claude Code ↗<br>
+        <a href="https://developers.openai.com/codex/skills" target="_blank" rel="noopener">OpenAI Codex Skills</a> — Using skills with Codex CLI ↗<br>
+        <a href="https://geminicli.com/docs/cli/skills/" target="_blank" rel="noopener">Gemini CLI Skills</a> — Google's implementation ↗<br>
+        <a href="https://code.visualstudio.com/docs/copilot/customization/agent-skills" target="_blank" rel="noopener">VS Code Agent Skills</a> — GitHub Copilot integration ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Community</h3>
+      <h4>Marketplaces & Directories</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://skills.sh/" target="_blank" rel="noopener">skills.sh</a> — The Agent Skills Directory ↗<br>
+        <a href="https://skillsmp.com/" target="_blank" rel="noopener">SkillsMP</a> — 500K+ indexed skills with filtering ↗<br>
+        <a href="https://www.skillsdirectory.com/" target="_blank" rel="noopener">Skills Directory</a> — Security-scanned skills registry ↗<br>
+        <a href="https://github.com/alirezarezvani/claude-skills" target="_blank" rel="noopener">claude-skills (5.2K★)</a> — 192+ skills for 11 platforms ↗<br>
+        <a href="https://github.com/google-gemini/gemini-skills" target="_blank" rel="noopener">google-gemini/gemini-skills</a> — Official Gemini API skills ↗<br>
+        <a href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank" rel="noopener">Anthropic Skills Course</a> — Official training on building skills ↗
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-primary">Get in touch</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">Read the blog ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Sources & References</h4>
+    <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">
+      <a href="https://agentskills.io/specification" target="_blank" rel="noopener">Agent Skills Specification — agentskills.io</a> ·
+      <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic Engineering Blog (Jan 2026)</a> ·
+      <a href="https://github.com/agentskills/agentskills" target="_blank" rel="noopener">agentskills/agentskills GitHub</a> ·
+      <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener">Claude API Skills Docs</a> ·
+      <a href="https://developers.openai.com/codex/skills" target="_blank" rel="noopener">OpenAI Codex Skills Docs</a> ·
+      <a href="https://geminicli.com/docs/cli/skills/" target="_blank" rel="noopener">Gemini CLI Skills Docs</a> ·
+      <a href="https://code.visualstudio.com/docs/copilot/customization/agent-skills" target="_blank" rel="noopener">VS Code Agent Skills</a> ·
+      <a href="https://developers.googleblog.com/closing-the-knowledge-gap-with-agent-skills/" target="_blank" rel="noopener">Google Developers Blog — Closing the Knowledge Gap (Mar 2026)</a> ·
+      <a href="https://simonwillison.net/2025/Dec/19/agent-skills/" target="_blank" rel="noopener">Simon Willison — Agent Skills (Dec 2025)</a> ·
+      <a href="https://youtu.be/IjiaCOt7bP8" target="_blank" rel="noopener">Sam Witteveen — Agent Skills Deep Dive (YouTube)</a> ·
+      <a href="https://www.newsletter.swirlai.com/p/state-of-context-engineering-in-2026" target="_blank" rel="noopener">State of Context Engineering in 2026 — SwirlAI</a> ·
+      <a href="https://skillsmp.com/" target="_blank" rel="noopener">SkillsMP Marketplace</a> ·
+      <a href="https://skills.sh/" target="_blank" rel="noopener">skills.sh Directory</a>
+    </p>
+    <p style="font-size:12px; margin-top:8px; color:var(--text-muted);">Content validated March 2026. Agent Skills is an open standard maintained by Anthropic under Apache 2.0 (code) and CC-BY-4.0 (documentation). This is an independent educational explainer by Imbila.AI.</p>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ AGENT COPY ═══════ -->
+<section class="agent-copy fade-up">
+  <div class="agent-copy-label">For AI Agents</div>
+  <p>Give this URL to any AI agent — it can fetch the full explainer as structured markdown, no Cloudflare blocking.</p>
+  <code class="agent-url" id="agentUrl"></code>
+  <button class="btn btn-agent" id="agentCopyBtn" onclick="copyForAgent()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg>
+    Copy URL
+  </button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Agent-friendly URL copy
+(function() {
+  var agentId = document.documentElement.dataset.agentId;
+  if (!agentId) return;
+  var mdUrl = 'https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/' + agentId + '.md';
+  var el = document.getElementById('agentUrl');
+  if (el) el.textContent = mdUrl;
+})();
+function copyForAgent() {
+  var btn = document.getElementById('agentCopyBtn');
+  var url = document.getElementById('agentUrl').textContent;
+  var originalHTML = btn.innerHTML;
+  navigator.clipboard.writeText(url).then(function() {
+    btn.classList.add('copied'); btn.textContent = 'Copied!';
+  }).catch(function() {
+    btn.textContent = 'Copy failed';
+  });
+  setTimeout(function() { btn.innerHTML = originalHTML; btn.classList.remove('copied'); }, 2000);
+}
+</script>
+
+</body>
+</html>

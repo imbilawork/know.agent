@@ -1,0 +1,144 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "agent-skills",
+    "title": "Agent Skills Explained",
+    "subtitle": "The open standard for teaching AI agents reusable, modular capabilities via SKILL.md files",
+    "topic": "Agent Skills",
+    "category": "ai-standard",
+    "tags": ["agent-skills", "skill-md", "progressive-disclosure", "context-engineering", "open-standard", "mcp", "ai-agents"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/agent-skills-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "Agent Skills are a simple, open format for giving AI agents new capabilities and domain-specific expertise. Each skill is a directory containing a SKILL.md file with YAML frontmatter and Markdown instructions. The agent discovers installed skills at startup via lightweight metadata and loads full instructions only when relevant. Published by Anthropic as an open standard in December 2025, it was adopted by OpenAI Codex, Gemini CLI, GitHub Copilot, Cursor, and 26+ platforms within weeks.",
+  "key_stats": [
+    { "value": "26+", "label": "Platforms Adopted" },
+    { "value": "500K+", "label": "Skills Indexed" },
+    { "value": "~90%", "label": "Token Reduction via Scripts" },
+    { "value": "50–100", "label": "Tokens per Skill at Discovery" }
+  ],
+  "concepts": [
+    {
+      "name": "Three-Tier Progressive Disclosure",
+      "description": "At startup, the agent reads only YAML frontmatter (name and description) from every installed skill (Discovery). When relevant, it loads the full SKILL.md body (Activation, recommended under 5,000 tokens). Supporting scripts and reference files load only during Execution."
+    },
+    {
+      "name": "SKILL.md Structure",
+      "description": "Every skill starts with a SKILL.md file. YAML frontmatter declares name, description, optional license and metadata. The Markdown body contains instructions the agent follows when the skill activates. The spec recommends keeping the body under 500 lines."
+    },
+    {
+      "name": "Code Scripts Beat Vague Markdown",
+      "description": "A targeted Python or Bash script in scripts/ can filter noise, parse structured data, and return clean JSON — cutting token consumption by up to 90% compared to generic web fetchers that burn 8,000+ tokens on a single HTML page."
+    },
+    {
+      "name": "Deterministic Tooling in Scripts",
+      "description": "Skills can bundle executable scripts (Python, Bash, Node) that the agent runs in a sandbox for deterministic operations — sorting, parsing, data transformation, API calls — rather than burning tokens on tasks code handles better."
+    }
+  ],
+  "ecosystem": {
+    "agent_platforms": {
+      "names": "Claude Code, Codex CLI, Gemini CLI",
+      "description": "The three major model vendors all support SKILL.md natively. Claude Code pioneered the format, OpenAI adopted it for Codex, and Google's Gemini CLI implements full progressive disclosure with consent-based activation."
+    },
+    "ide_integration": {
+      "names": "GitHub Copilot, Cursor, VS Code",
+      "description": "Microsoft adopted Agent Skills as a first-class feature in GitHub Copilot and VS Code. Cursor supports the standard alongside its existing rules system. Skills created in any tool are portable."
+    },
+    "marketplaces": {
+      "names": "skills.sh, SkillsMP, SkillHub, LobeHub",
+      "description": "A growing ecosystem of directories indexes community and official skills from GitHub repositories. SkillsMP claims 500,000+ indexed skills. Security-focused directories like SkillsDirectory.com scan for prompt injection and credential theft."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You repeat the same prompt patterns across conversations — code review checklists, release workflows, data analysis pipelines.",
+      "You need consistent, deterministic outputs — brand compliance, regulatory checks, security audits — where bundled scripts handle the repeatable logic.",
+      "Your team shares domain knowledge that new hires or new agent sessions need. Skills act as version-controlled onboarding docs for AI colleagues.",
+      "You work across multiple AI tools and want portable capabilities. A skill written for Claude Code also works in Codex, Gemini CLI, and Copilot."
+    ],
+    "skip_when": [
+      "Your task is genuinely one-off. Writing a skill for something you'll do once is overhead — just use the prompt directly.",
+      "You need real-time data from external services. Skills aren't API connectors — use MCP servers for live data integrations.",
+      "Your instructions are short enough for CLAUDE.md or GEMINI.md. If the guidance fits in persistent project context without bloating it, a skill adds unnecessary indirection.",
+      "You're working in a constrained environment without filesystem access. Skills require directory structures — they don't work in environments that can't read local files."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Engineering",
+      "title": "Code Review & Security Audit",
+      "description": "Skills that run structured review passes checking for auth issues, injection vectors, and code quality — then fix problems before presenting code to the developer."
+    },
+    {
+      "category": "Document Generation",
+      "title": "Brand-Consistent Outputs",
+      "description": "Skills package brand guidelines, templates, and design tokens so every generated document follows organisational standards without re-explaining them each session."
+    },
+    {
+      "category": "Data Extraction",
+      "title": "Targeted Web Scraping",
+      "description": "Bundled scripts filter out scripts, styles, and nav from HTML pages — returning only structured data. Pre-defining CSS selectors eliminates per-run discovery costs."
+    },
+    {
+      "category": "DevOps",
+      "title": "Release & Deployment Workflows",
+      "description": "Git release skills generate changelogs, tag versions, and create PRs following team conventions. Firebase skills scaffold apps with auth and database configuration."
+    },
+    {
+      "category": "Compliance",
+      "title": "Regulatory Document Review",
+      "description": "Skills for MDR compliance, SOC2 preparation, and accessibility auditing (WCAG 2.2) encode regulatory checklists and verification workflows."
+    },
+    {
+      "category": "Research & Analysis",
+      "title": "Experiment Analysis Pipelines",
+      "description": "Skills that query databases, run analysis scripts, and produce comparative reports — with bundled schema references so the agent doesn't rediscover data structures."
+    }
+  ],
+  "timeline": [
+    { "date": "2025-early", "title": "Claude Code Internal Skills", "detail": "Anthropic develops skills as an internal mechanism for Claude Code — structured folders of instructions that Claude loads dynamically." },
+    { "date": "2025-09", "title": "Context Engineering Guide Published", "detail": "Anthropic publishes its engineering guide on context engineering for agents, establishing the theoretical foundation for progressive disclosure. Released alongside Claude Sonnet 4.5." },
+    { "date": "2025-11", "title": "Building More Efficient Agents", "detail": "Anthropic's engineering blog describes presenting tools as a filesystem the model can explore incrementally — the architectural pattern that skills formalise." },
+    { "date": "2025-12", "title": "Open Standard Published", "detail": "On 18 December 2025, Anthropic publishes Agent Skills as an open standard at agentskills.io with an Apache 2.0 code license and CC-BY-4.0 documentation license." },
+    { "date": "2026-01", "title": "Rapid Cross-Platform Adoption", "detail": "OpenAI adopts SKILL.md for Codex CLI. Google's Gemini CLI implements full progressive disclosure. GitHub Copilot, Cursor, VS Code, OpenCode, and Amp all add native support." },
+    { "date": "2026-03", "title": "Ecosystem Maturation", "detail": "500,000+ skills indexed across public marketplaces. Google publishes official Gemini API skills with 87–96% accuracy improvement. Security scanning becomes standard." }
+  ],
+  "code_examples": [
+    {
+      "title": "SKILL.md Structure",
+      "language": "yaml",
+      "code": "---\nname: api-security-reviewer\ndescription: Reviews API code for security\n  vulnerabilities. Use when reviewing\n  backend code or APIs.\nlicense: Apache-2.0\n---\n\n# API Security Review\nAnalyze code for auth issues,\ninjection attacks, data exposure..."
+    }
+  ],
+  "resources": {
+    "official": [
+      { "title": "Agent Skills Specification", "url": "https://agentskills.io/specification" },
+      { "title": "agentskills/agentskills GitHub", "url": "https://github.com/agentskills/agentskills" },
+      { "title": "anthropics/skills", "url": "https://github.com/anthropics/skills" },
+      { "title": "Equipping Agents for the Real World", "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" },
+      { "title": "Agent Skills API Documentation", "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" },
+      { "title": "Claude Code Skills Docs", "url": "https://code.claude.com/docs/en/skills" },
+      { "title": "OpenAI Codex Skills", "url": "https://developers.openai.com/codex/skills" },
+      { "title": "Gemini CLI Skills", "url": "https://geminicli.com/docs/cli/skills/" },
+      { "title": "VS Code Agent Skills", "url": "https://code.visualstudio.com/docs/copilot/customization/agent-skills" }
+    ],
+    "community": [
+      { "title": "skills.sh", "url": "https://skills.sh/" },
+      { "title": "SkillsMP", "url": "https://skillsmp.com/" },
+      { "title": "Skills Directory", "url": "https://www.skillsdirectory.com/" },
+      { "title": "claude-skills (5.2K stars)", "url": "https://github.com/alirezarezvani/claude-skills" },
+      { "title": "google-gemini/gemini-skills", "url": "https://github.com/google-gemini/gemini-skills" },
+      { "title": "Anthropic Skills Course", "url": "https://anthropic.skilljar.com/introduction-to-agent-skills" }
+    ],
+    "sources": [
+      { "title": "Agent Skills Specification — agentskills.io", "url": "https://agentskills.io/specification" },
+      { "title": "Anthropic Engineering Blog (Jan 2026)", "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" },
+      { "title": "Google Developers Blog — Closing the Knowledge Gap (Mar 2026)", "url": "https://developers.googleblog.com/closing-the-knowledge-gap-with-agent-skills/" },
+      { "title": "Simon Willison — Agent Skills (Dec 2025)", "url": "https://simonwillison.net/2025/Dec/19/agent-skills/" },
+      { "title": "State of Context Engineering in 2026 — SwirlAI", "url": "https://www.newsletter.swirlai.com/p/state-of-context-engineering-in-2026" }
+    ]
+  }
+}

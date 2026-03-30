@@ -1,0 +1,147 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "elevencreative",
+    "title": "ElevenCreative Explained",
+    "subtitle": "ElevenLabs' all-in-one AI workspace for speech, music, video, and global localisation",
+    "topic": "ElevenCreative",
+    "category": "ai-creative-platform",
+    "tags": ["speech-synthesis", "tts", "music-generation", "video-generation", "localisation", "dubbing", "ai-creative", "elevenlabs"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/elevencreative-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "ElevenCreative is ElevenLabs' end-to-end AI creative platform that brings speech synthesis (V3), sound effects, music generation (Eleven Music), image creation, and video production into a single browser-based workspace. It includes Studio (timeline editor) and Flows (node-based pipeline canvas) for batch-producing localised campaign variants across 70+ languages. Part of ElevenLabs' three-platform family alongside ElevenAgents (conversational AI) and ElevenAPI (developer infrastructure). $11B valuation as of February 2026.",
+  "key_stats": [
+    { "value": "$11B", "label": "ElevenLabs Valuation (Feb 2026)" },
+    { "value": "$330M", "label": "Annual Recurring Revenue" },
+    { "value": "70+", "label": "Languages Supported" },
+    { "value": "35+", "label": "Image & Video Models Integrated" }
+  ],
+  "products": [
+    {
+      "name": "Speech — Eleven V3",
+      "role": "Text-to-speech engine",
+      "description": "V3 TTS model supporting 70+ languages with inline audio tags for emotional direction ([whispers], [excited], [sighs]). Text-to-Dialogue mode for multi-speaker conversations. 10,000+ community voices plus Instant and Professional voice cloning."
+    },
+    {
+      "name": "Eleven Music",
+      "role": "AI music generation",
+      "description": "Launched August 2025. Generates full tracks from text prompts with or without vocals, in multiple languages. Commercially licensed for ads, film, TV, podcasts, social media, and games."
+    },
+    {
+      "name": "Sound Effects",
+      "role": "Contextual SFX generation",
+      "description": "On-demand sound effect generation integrated into both Studio and Flows as a native node type. SFX can be layered directly into compositions."
+    },
+    {
+      "name": "Image & Video",
+      "role": "Third-party model integration",
+      "description": "Integrates 35+ third-party image and video models including Google Veo, OpenAI Sora, Kling, Wan, and Seedance. Lip-sync connects generated video with voice output. No separate subscriptions needed."
+    },
+    {
+      "name": "Studio",
+      "role": "Timeline editor",
+      "description": "Traditional linear timeline for frame-by-frame editing with separate tracks for video, audio, music, and captions. Best for precise finishing: trimming, layering, and manual track adjustments."
+    },
+    {
+      "name": "Flows",
+      "role": "Node-based pipeline canvas",
+      "description": "Launched March 2026. Visual pipeline builder where you chain models on an infinite canvas. Re-run any single node without regenerating the full chain. Designed for batch production of campaign variants. API access planned."
+    }
+  ],
+  "ecosystem": {
+    "content_creation": {
+      "product": "ElevenCreative",
+      "description": "Generate, edit, and localise speech, music, image, and video. Includes Studio (timeline), Flows (canvas), and the Iconic Voice Marketplace."
+    },
+    "conversational_ai": {
+      "product": "ElevenAgents",
+      "description": "Real-time voice and chat agents for customer support, sales, and interactive experiences. Powered by V3 Conversational. Used by Deutsche Telekom, Revolut, Klarna."
+    },
+    "developer_platform": {
+      "product": "ElevenAPI",
+      "description": "Programmatic access to all ElevenLabs models via REST API, Python SDK, and TypeScript SDK. Streaming, batch processing, SOC 2, HIPAA, GDPR compliance. Global routing."
+    }
+  },
+  "decision_guide": {
+    "use_when": [
+      "You produce ad creative in multiple languages and need same-day turnaround on localised variants.",
+      "You want one workspace for voice, music, SFX, and video instead of managing 5+ separate tools and subscriptions.",
+      "Your workflow involves batch-producing campaign variants with systematic swaps (avatars, hooks, voices, languages) — this is exactly what Flows was built for.",
+      "You need commercially licensed AI music and don't want to negotiate separate music rights for each campaign."
+    ],
+    "skip_when": [
+      "You need deep, frame-level video editing — Studio is competent but won't replace dedicated NLEs like Premiere Pro or DaVinci Resolve.",
+      "Your use case is purely conversational AI (phone agents, chatbots) — ElevenAgents is the right product, not ElevenCreative.",
+      "Budget is tight and volume is low. Credit-based pricing burns fast during experimentation. If you're producing one video a month, the ROI doesn't stack up.",
+      "You need enterprise-grade Professional Voice Clones on V3 — PVC optimisation is still in progress and clone quality may lag earlier models.",
+      "You require fully self-hosted or air-gapped deployment. ElevenCreative is cloud-only."
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "Marketing",
+      "title": "Performance Marketing — A/B Testing at Scale",
+      "description": "Use Flows to build a reusable pipeline, then swap hooks, avatars, voices, and languages systematically to produce hundreds of ad variants from a single creative architecture."
+    },
+    {
+      "category": "Localisation",
+      "title": "Global Localisation — 70+ Language Dubbing",
+      "description": "Dub existing video or audio content into 70+ languages with lip-sync. ElevenLabs Productions offers managed services for high-volume dubbing, subtitling, and transcription."
+    },
+    {
+      "category": "E-Commerce",
+      "title": "Product Video Automation",
+      "description": "Connect product photography to a Flow that generates consistent, on-brand video ads with voiceover and music — repeatable for every new SKU."
+    },
+    {
+      "category": "Publishing",
+      "title": "Audiobook Publishing — Long-Form Narration",
+      "description": "Produce full audiobooks with consistent character voices using V3's multi-speaker dialogue mode. Partnerships with HarperCollins and Bookwire."
+    },
+    {
+      "category": "Gaming",
+      "title": "Gaming & Animation — Character Voiceover",
+      "description": "Generate expressive character voices with audio tags for emotional direction. Clone or design custom voices and iterate on dialogue without booking studio sessions."
+    },
+    {
+      "category": "Enterprise",
+      "title": "Corporate Training — Multilingual Learning Content",
+      "description": "Convert training materials into narrated video across languages for global workforces. Used by Deutsche Telekom for internal training and customer-facing content."
+    }
+  ],
+  "timeline": [
+    { "date": "2022", "title": "Founded", "detail": "Dąbkowski (ex-Google) and Staniszewski (ex-Palantir) start ElevenLabs to build human-like AI voice synthesis." },
+    { "date": "2023-01", "title": "Platform Launch & Series A", "detail": "First AI voice model released. $19M from Andreessen Horowitz. 1M+ users by June 2023." },
+    { "date": "2024-01", "title": "Series B — Unicorn", "detail": "$80M raised, $1B+ valuation. Sequoia Capital joins. Dubbing, 28 languages, voice marketplace." },
+    { "date": "2025-01", "title": "Series C — $3.3B Valuation", "detail": "$180M raised, co-led by a16z and ICONIQ Growth. Strategic investors include Deutsche Telekom, LG, HubSpot Ventures. Conversational AI platform launched." },
+    { "date": "2025-06", "title": "Eleven V3 (Alpha)", "detail": "New TTS model with audio tags for emotional control, 70+ languages, Text-to-Dialogue mode for multi-speaker conversations." },
+    { "date": "2025-08", "title": "Eleven Music", "detail": "AI music generation from text prompts. Commercially cleared for ads, film, TV, games. Developed in collaboration with record labels and artists." },
+    { "date": "2025-11", "title": "Iconic Voice Marketplace", "detail": "Michael Caine, Liza Minnelli, Matthew McConaughey and 25+ voices available for licensed commercial use. Rights-holder-controlled marketplace." },
+    { "date": "2026-02", "title": "Series D — $11B Valuation", "detail": "$500M raised led by Sequoia Capital. Platform restructured into ElevenCreative, ElevenAgents, ElevenAPI. V3 exits alpha. $330M ARR. Total funding: $781M." },
+    { "date": "2026-03", "title": "Flows Launches", "detail": "Node-based creative canvas goes live inside ElevenCreative. 35+ image/video models. Reusable templates, batch execution, API access waitlist opens." }
+  ],
+  "resources": {
+    "official": [
+      { "title": "ElevenCreative Platform", "url": "https://elevenlabs.io/creative" },
+      { "title": "ElevenCreative Documentation", "url": "https://elevenlabs.io/docs/eleven-creative/overview" },
+      { "title": "Flows", "url": "https://elevenlabs.io/flows" },
+      { "title": "Flows Documentation", "url": "https://elevenlabs.io/docs/eleven-creative/products/flows" },
+      { "title": "Eleven V3", "url": "https://elevenlabs.io/v3" },
+      { "title": "Iconic Voice Marketplace", "url": "https://elevenlabs.io/iconic-marketplace" },
+      { "title": "Series D Announcement", "url": "https://elevenlabs.io/blog/series-d" }
+    ],
+    "sources": [
+      { "title": "Introducing Flows (ElevenLabs Blog)", "url": "https://elevenlabs.io/blog/introducing-flows-in-elevencreative" },
+      { "title": "Eleven V3 Launch Blog", "url": "https://elevenlabs.io/blog/eleven-v3" },
+      { "title": "CNBC — ElevenLabs $11B Valuation", "url": "https://www.cnbc.com/2026/02/04/nvidia-backed-ai-startup-elevenlabs-11-billion-valuation.html" },
+      { "title": "Michael Caine & Iconic Marketplace (ElevenLabs Blog)", "url": "https://elevenlabs.io/blog/announcing-partnership-with-sir-michael-caine-to-newly-launched-iconic-marketplace" },
+      { "title": "Variety — McConaughey & Caine AI Voice", "url": "https://variety.com/2025/digital/news/matthew-mcconaughey-michael-caine-ai-voice-elevenlabs-1236574041/" },
+      { "title": "IBM Newsroom — ElevenLabs Partnership", "url": "https://newsroom.ibm.com/2026-03-25-enterprise-ai-finds-its-voice-elevenlabs-and-ibm-bring-premium-voice-capabilities-to-agentic-ai" },
+      { "title": "Sacra — ElevenLabs Revenue & Valuation", "url": "https://sacra.com/c/elevenlabs/" }
+    ]
+  }
+}
