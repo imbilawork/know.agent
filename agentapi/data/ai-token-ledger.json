@@ -1,0 +1,264 @@
+{
+  "$schema": "https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/schema/explainer-v1.json",
+  "meta": {
+    "id": "ai-token-ledger",
+    "title": "AI Token Ledger Explained",
+    "subtitle": "The emerging system of record for AI work — metering, tracing, storing, and governing every token transaction",
+    "topic": "AI Token Ledger",
+    "category": "ai-infrastructure",
+    "tags": ["token-accounting", "observability", "llm-gateway", "audit-trail", "finops", "ai-governance", "opentelemetry", "immutable-ledger"],
+    "published": "2026-03",
+    "validated": "2026-03",
+    "author": "Imbila.AI",
+    "canonical_url": "https://know.imbila.ai/ai-token-ledger-explainer",
+    "license": "CC-BY-SA-4.0"
+  },
+  "summary": "An AI Token Ledger is a composable system of record that meters, logs, attributes, and audits every unit of work performed by AI agents and LLM-powered applications. It treats the token as an atomic unit of economic activity. No single product owns this space — the architecture is assembled from five layers: observability (Langfuse, Helicone, OpenTelemetry), API gateway (LiteLLM, Portkey), event/workflow engine (Temporal, Inngest, Kafka), immutable ledger (PostgreSQL append-only, immudb), and policy engine (OPA).",
+  "key_stats": [
+    { "value": "10B+", "label": "Tokens/Day via LiteLLM" },
+    { "value": "24K+", "label": "GitHub Stars on Langfuse" },
+    { "value": "$0", "label": "Unified Token Ledger Standards" },
+    { "value": "5", "label": "Infrastructure Layers Required" }
+  ],
+  "layers": [
+    {
+      "id": "A",
+      "name": "Observability & Tracing",
+      "description": "Captures token usage, latency, cost, prompts, responses, and traces across agent steps.",
+      "tools": [
+        {
+          "name": "Langfuse",
+          "description": "Open-source LLM engineering platform (YC W23). Tracks traces, sessions, token usage, cost per request. Native OTel ingestion since v3. Self-hostable via Docker/Kubernetes. Architecture: Postgres + ClickHouse + Redis + S3.",
+          "github": "https://github.com/langfuse/langfuse",
+          "docs": "https://langfuse.com/docs",
+          "license": "MIT (core)"
+        },
+        {
+          "name": "Helicone",
+          "description": "Open-source LLM observability (YC W23). Proxy-based one-line integration. Rust-based AI gateway for low-latency proxying. Cost, latency, usage, caching, analytics.",
+          "github": "https://github.com/Helicone/helicone",
+          "docs": "https://docs.helicone.ai",
+          "license": "Open Source"
+        },
+        {
+          "name": "OpenTelemetry GenAI Semantic Conventions",
+          "description": "Emerging industry standard for LLM telemetry. Defines span attributes for gen_ai.usage.input_tokens, gen_ai.usage.output_tokens, gen_ai.request.model. Agent-level conventions for create_agent and invoke_agent. Status: experimental.",
+          "spec": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+          "license": "Apache 2.0"
+        },
+        {
+          "name": "OpenLLMetry",
+          "description": "Extends OTel semantic conventions for GenAI. Instrumentation libraries for Python, TypeScript, Go, Ruby. Contributors lead the OTel GenAI SIG working group.",
+          "docs": "https://www.traceloop.com/docs/openllmetry/contributing/semantic-conventions",
+          "license": "Open Source"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "API Gateway / Proxy",
+      "description": "Centralises all LLM calls through a single control point. Normalises requests across providers. Enforces rate limits, budgets, routing. The natural metering point.",
+      "tools": [
+        {
+          "name": "LiteLLM",
+          "description": "Python SDK + Proxy Server (AI Gateway). Calls 100+ LLMs in OpenAI-compatible format. Multi-tenant cost tracking. Virtual keys. Budget enforcement per key/team. 8ms P95 latency at 1K RPS. Native Langfuse integration.",
+          "github": "https://github.com/BerriAI/litellm",
+          "docs": "https://docs.litellm.ai",
+          "license": "MIT"
+        },
+        {
+          "name": "Portkey AI Gateway",
+          "description": "<1ms latency, 122KB footprint. Routes to 1,600+ models. Load balancing, fallbacks, retries, guardrails, cost tracking. 10B+ tokens daily. Open-source LLM pricing DB for 2,300+ models.",
+          "github": "https://github.com/Portkey-AI/gateway",
+          "docs": "https://portkey.ai/docs/product/open-source",
+          "license": "MIT"
+        },
+        {
+          "name": "Helicone AI Gateway",
+          "description": "Rust-based, fully open-source. Smart routing, caching, rate limiting, tracing, fallbacks. 20+ providers.",
+          "github": "https://github.com/Helicone/ai-gateway",
+          "license": "Open Source"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Event & Workflow Engine",
+      "description": "Treats every agent action as a durable event. Provides replayability, fault tolerance, and audit trails across multi-step workflows.",
+      "tools": [
+        {
+          "name": "Temporal",
+          "description": "Durable execution platform. Fork of Uber's Cadence. Workflows survive process failures, network partitions. Complete execution history. SDKs for Go, Java, PHP, TypeScript, Python. Used by Stripe, Netflix, Datadog, Coinbase, Snap.",
+          "github": "https://github.com/temporalio/temporal",
+          "docs": "https://temporal.io",
+          "license": "MIT"
+        },
+        {
+          "name": "Inngest",
+          "description": "Serverless event-driven workflow engine. Functions invoked via HTTP, no worker fleet. Built-in retries, scheduling, concurrency control. Self-hostable.",
+          "github": "https://github.com/inngest/inngest",
+          "docs": "https://www.inngest.com",
+          "license": "SSPL + Apache 2.0"
+        },
+        {
+          "name": "Apache Kafka",
+          "description": "Distributed event streaming platform. Append-only commit log. De facto backbone for high-throughput event pipelines.",
+          "github": "https://github.com/apache/kafka",
+          "license": "Apache 2.0"
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Immutable Ledger / Storage",
+      "description": "Stores permanent, tamper-proof record of all token transactions. Most underdeveloped layer — no dominant open-source AI token ledger exists.",
+      "tools": [
+        {
+          "name": "PostgreSQL (append-only)",
+          "description": "Most common pragmatic choice. INSERT-only patterns, triggers to prevent UPDATE/DELETE, timestamped versioning. No cryptographic tamper-proofing but operationally sufficient.",
+          "github": "https://github.com/postgres/postgres",
+          "license": "PostgreSQL License"
+        },
+        {
+          "name": "immudb",
+          "description": "Open-source immutable database. Cryptographic verification via Merkle trees. SQL and Key-Value access. Millions of TPS. FIPS-compliant. Time-travel queries. Used in financial services, government, defence.",
+          "github": "https://github.com/codenotary/immudb",
+          "docs": "https://immudb.io",
+          "license": "BSL 1.1"
+        },
+        {
+          "name": "ClickHouse",
+          "description": "Column-oriented OLAP database. Used by Langfuse as analytics backend. Excellent for aggregation queries over token usage data.",
+          "github": "https://github.com/ClickHouse/ClickHouse",
+          "license": "Apache 2.0"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Policy & Governance",
+      "description": "Enforces rules about who can spend what, which tools agents can use, when human approval is required. Separates policy logic from application code.",
+      "tools": [
+        {
+          "name": "Open Policy Agent (OPA)",
+          "description": "General-purpose policy engine. CNCF Graduated (2021). Policy-as-code using Rego. Used by Netflix, Intuit. Applicable to AI governance: budget caps, tool access lists, human-in-the-loop checkpoints, model access control.",
+          "github": "https://github.com/open-policy-agent/opa",
+          "docs": "https://www.openpolicyagent.org",
+          "license": "Apache 2.0"
+        }
+      ]
+    }
+  ],
+  "proven_combinations": [
+    {
+      "name": "LiteLLM + Langfuse",
+      "description": "Most documented integration. LiteLLM routes and meters; Langfuse traces and analyses. Endorsed by both projects. Lemonade runs this in production."
+    },
+    {
+      "name": "Helicone + n8n",
+      "description": "Helicone publishes an official n8n nodes package for workflow integration."
+    },
+    {
+      "name": "OpenTelemetry + Langfuse",
+      "description": "Langfuse v3 natively ingests OTel spans using GenAI semantic conventions. Compliant with v1.37+."
+    },
+    {
+      "name": "OpenTelemetry + Datadog",
+      "description": "Datadog LLM Observability natively supports OTel GenAI SemConv (v1.37+)."
+    }
+  ],
+  "decision_guide": {
+    "use_when": [
+      "Running autonomous agents consuming real budget unsupervised",
+      "Need cost attribution to customers, projects, or business units for chargeback",
+      "Regulated industry requiring auditable agent decisions",
+      "Scaling past prototype with multi-provider LLM usage (OpenAI + Anthropic + Bedrock)"
+    ],
+    "skip_when": [
+      "Single LLM integration with predictable, low-volume usage — provider dashboards sufficient",
+      "AI spend is immaterial and doesn't warrant governance infrastructure",
+      "No autonomous agent decisions — just human-initiated single-turn completions",
+      "Early prototyping where five-layer stack overhead would slow you down"
+    ],
+    "minimum_viable_stack": [
+      "LiteLLM (gateway + metering)",
+      "Langfuse (observability + tracing)",
+      "PostgreSQL (append-only tables)"
+    ]
+  },
+  "use_cases": [
+    {
+      "category": "FinOps",
+      "title": "FinOps for AI",
+      "description": "Track and allocate token spend per team, project, customer. Enforce budget caps. Generate chargeback reports. Gateway + observability provide data; ledger makes it auditable."
+    },
+    {
+      "category": "Compliance",
+      "title": "Agent Audit Trails",
+      "description": "Log every autonomous agent decision — tools invoked, reasoning chains, data accessed. Critical for regulated industries and enterprise risk management."
+    },
+    {
+      "category": "Multi-Agent",
+      "title": "Multi-Agent Cost Attribution",
+      "description": "When Agent A calls Agent B which calls Agent C across different models, attribute full cost chain back to originating request. Requires trace propagation."
+    },
+    {
+      "category": "Regulatory",
+      "title": "Compliance & Regulatory Reporting",
+      "description": "Demonstrate AI systems operated within policies. Human-in-the-loop controls respected. Data handling complied with governance. Immutable ledger + policy engine."
+    },
+    {
+      "category": "Product",
+      "title": "AI-Powered Product Billing",
+      "description": "Accurate token metering per customer request for AI feature billing. Gateway captures usage; ledger provides billing record of truth."
+    },
+    {
+      "category": "Incident Response",
+      "title": "Incident Investigation & Replay",
+      "description": "Replay exact sequence of calls, prompts, tool invocations. Temporal/Inngest provide replay; Langfuse provides trace detail."
+    }
+  ],
+  "timeline": [
+    { "date": "2017-2019", "title": "Foundations", "detail": "OpenTelemetry formed. OPA accepted into CNCF (2018). Temporal forked from Uber's Cadence." },
+    { "date": "2020-2022", "title": "LLM Era Begins", "detail": "GPT-3 launches (2020). Ad-hoc LLM logging. immudb gains financial services and government adoption." },
+    { "date": "2023", "title": "Observability Explodes", "detail": "Langfuse and Helicone launch (YC W23). LiteLLM and Portkey gain traction. Gateway + observability + ledger pattern emerges." },
+    { "date": "2024", "title": "Standards Emerge", "detail": "OTel GenAI SemConv published (experimental). Agent-level conventions added. AWS QLDB discontinued; immudb becomes primary alternative." },
+    { "date": "2025-2026", "title": "Convergence (Current)", "detail": "Langfuse v3 adds native OTel ingestion. LiteLLM processes 10B+ tokens/day. Portkey handles 400B+ tokens for 200+ enterprises. Five-layer architecture solidifies. No unified standard yet." }
+  ],
+  "ledger_schema": {
+    "description": "Minimum viable record for an AI Token Ledger",
+    "fields": [
+      { "name": "event_id", "description": "Unique identifier for this token transaction" },
+      { "name": "agent_id", "description": "Which agent (or agent chain) made the call" },
+      { "name": "human_id", "description": "Which human initiated or is responsible" },
+      { "name": "workflow_id", "description": "Which workflow / session this belongs to" },
+      { "name": "tokens_in", "description": "Input tokens consumed" },
+      { "name": "tokens_out", "description": "Output tokens generated" },
+      { "name": "cost", "description": "Calculated cost in currency" },
+      { "name": "model", "description": "Which model was called" },
+      { "name": "provider", "description": "Which provider served the request" },
+      { "name": "tools_used", "description": "Which tools / functions were invoked" },
+      { "name": "timestamp", "description": "When it happened (UTC)" },
+      { "name": "trace_id", "description": "OpenTelemetry trace ID for full context" }
+    ]
+  },
+  "resources": {
+    "standards": [
+      { "title": "OTel GenAI Semantic Conventions", "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/" },
+      { "title": "OTel GenAI Metrics Spec", "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/" },
+      { "title": "OTel GenAI Agent Spans", "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/" },
+      { "title": "OpenLLMetry Semantic Conventions", "url": "https://www.traceloop.com/docs/openllmetry/contributing/semantic-conventions" },
+      { "title": "OTel GenAI Span YAML", "url": "https://github.com/open-telemetry/semantic-conventions/blob/main/model/gen-ai/spans.yaml" }
+    ],
+    "documentation": [
+      { "title": "Langfuse Self-Hosting Guide", "url": "https://langfuse.com/self-hosting" },
+      { "title": "Langfuse OTel Integration", "url": "https://langfuse.com/integrations/native/opentelemetry" },
+      { "title": "LiteLLM Proxy Docs", "url": "https://docs.litellm.ai/docs/simple_proxy" },
+      { "title": "LiteLLM + Langfuse Integration", "url": "https://langfuse.com/integrations/gateways/litellm" },
+      { "title": "Portkey Open Source Docs", "url": "https://portkey.ai/docs/product/open-source" },
+      { "title": "immudb Documentation", "url": "https://docs.immudb.io/" },
+      { "title": "OPA Documentation", "url": "https://www.openpolicyagent.org/docs/latest/" },
+      { "title": "Temporal Documentation", "url": "https://temporal.io/" }
+    ]
+  }
+}

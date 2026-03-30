@@ -23,6 +23,8 @@ https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/{id}.
 
 - [Top Agent Frameworks — Q2 2026](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agents2026.md): The top 10 autonomous agent frameworks ranked by OpenAI and Gemini — compared side by side. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/agents2026.json)
 
+- [AI Token Ledger Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/ai-token-ledger.md): The emerging system of record for AI work — metering, tracing, and governing every token transaction. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/ai-token-ledger.json)
+
 - [Agent Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agent-skills.md): The open standard for teaching AI agents reusable, modular capabilities via SKILL.md files. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/agent-skills.json)
 
 - [Claude Code Skills Explained](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/claude-code-skills.md): Turn your AI coding agent into a specialist. On demand. [JSON](https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/data/claude-code-skills.json)

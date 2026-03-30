@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-agent-id="ai-token-ledger">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Token Ledger Explained — An Imbila.AI Explainer</title>
+<meta name="description" content="A fact-based explainer on the AI Token Ledger — the emerging composable system of record for metering, tracing, storing, and governing every token transaction in AI agent workflows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   IMBILA.AI EXPLAINER TOKENS v1.0
+   Light-first with dark mode toggle.
+   Source: brand.imbila.ai
+   ═══════════════════════════════════════════════ */
+:root {
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --honey: #EDAF42;
+  --honey-light: #F5C96E;
+  --honey-dark: #C8922F;
+  --honey-deep: #A67720;
+  --honey-wash: #FAE0A5;
+  --honey-10: rgba(237,175,66,0.10);
+  --honey-15: rgba(237,175,66,0.15);
+  --honey-25: rgba(237,175,66,0.25);
+  --success: #3A9E6B;
+  --warning: #E8A838;
+  --error: #D94F4F;
+  --info: #4A90B8;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+}
+
+/* ─── LIGHT THEME (default) ─── */
+[data-theme="light"] {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F5F5F5;
+  --bg-code: #F5F5F5;
+  --bg-nav: rgba(250,250,250,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.06);
+  --bg-hero-orb2: rgba(237,175,66,0.09);
+  --text-primary: #0A0A0A;
+  --text-heading: #0A0A0A;
+  --text-body: #555555;
+  --text-secondary: #777777;
+  --text-muted: #999999;
+  --text-code: #A67720;
+  --border: #EEEEEE;
+  --border-strong: #DDDDDD;
+  --border-hover: #BBBBBB;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.20);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* ─── DARK THEME ─── */
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-card: #1F1E1E;
+  --bg-card-alt: #111111;
+  --bg-code: #1A1A1A;
+  --bg-nav: rgba(10,10,10,0.88);
+  --bg-hero-orb1: rgba(237,175,66,0.04);
+  --bg-hero-orb2: rgba(237,175,66,0.06);
+  --text-primary: #FAFAFA;
+  --text-heading: #FAFAFA;
+  --text-body: #BBBBBB;
+  --text-secondary: #999999;
+  --text-muted: #777777;
+  --text-code: #EDAF42;
+  --border: #2A2A2A;
+  --border-strong: #3D3D3D;
+  --border-hover: #555555;
+  --accent-tag-bg: rgba(237,175,66,0.10);
+  --accent-tag-border: rgba(237,175,66,0.15);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font);
+  color: var(--text-body);
+  background: var(--bg);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+a { color: var(--honey-dark); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--honey); }
+[data-theme="dark"] a { color: var(--honey); }
+[data-theme="dark"] a:hover { color: var(--honey-light); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--honey-25); color: var(--text-primary); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 64px 0; }
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1 {
+  font-size: clamp(40px, 5vw, 56px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.035em;
+  color: var(--text-heading);
+}
+h2 {
+  font-size: clamp(28px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.12; letter-spacing: -0.025em;
+  color: var(--text-heading); margin-bottom: 16px;
+}
+h3 {
+  font-size: 11px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+h4 { font-size: 18px; font-weight: 600; color: var(--text-heading); margin-bottom: 8px; }
+p { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); max-width: 64ch; }
+p + p { margin-top: 12px; }
+.accent { color: var(--honey-dark); }
+[data-theme="dark"] .accent { color: var(--honey); }
+.dim { color: var(--text-muted); }
+.strong { color: var(--text-heading); font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-brand span {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.nav-brand em { font-style: normal; color: var(--honey-dark); font-weight: 700; }
+[data-theme="dark"] .nav-brand em { color: var(--honey); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--honey-dark); background: var(--honey-10); }
+[data-theme="dark"] .nav-links a:hover { color: var(--honey); }
+.nav-tag {
+  font-size: 10px; font-weight: 600; color: var(--honey-deep);
+  padding: 3px 10px; border: 1px solid var(--honey-15);
+  border-radius: var(--radius-pill); letter-spacing: 0.06em;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+  transition: all 0.25s ease;
+  margin-left: 12px; flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--honey);
+  background: var(--honey-10);
+  transform: scale(1.08);
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links a { display: none; }
+  .nav-tag { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center;
+  padding: 80px 40px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 48%, var(--bg-hero-orb2) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, var(--bg-hero-orb1) 0%, transparent 50%);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+.hero-mark {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px; position: relative;
+  animation: markIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: border-color 0.35s ease;
+}
+.hero-mark::after {
+  content: ''; position: absolute; inset: -8px;
+  border-radius: 50%; border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.hero-mark svg { width: 48px; height: 48px; }
+.hero h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero .hero-sub {
+  font-size: 15px; font-weight: 500; color: var(--text-secondary);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 16px; max-width: 50ch;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.hero .hero-meta {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+.hero .hero-meta span {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  padding: 5px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.35s ease, color 0.35s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes markIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--honey-deep); margin-bottom: 10px;
+}
+[data-theme="dark"] .section-label { color: var(--honey-dark); }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.35s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── STAT CARDS ─── */
+.stat-figure {
+  font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--honey-dark);
+  line-height: 1;
+}
+[data-theme="dark"] .stat-figure { color: var(--honey); }
+.stat-label {
+  font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ─── TAGS ─── */
+.tag {
+  display: inline-block; padding: 4px 14px;
+  background: var(--accent-tag-bg); border: 1px solid var(--accent-tag-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500; color: var(--honey-deep);
+}
+[data-theme="dark"] .tag { color: var(--honey); }
+
+/* ─── CODE ─── */
+code {
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text-code);
+  background: var(--bg-code);
+  padding: 2px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  overflow-x: auto;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.code-block pre {
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  line-height: 1.8; color: var(--text-body); white-space: pre;
+}
+.code-block .ck { color: var(--text-code); font-weight: 600; }
+.code-block .cs { color: var(--text-muted); }
+.code-block .cv { color: var(--text-heading); font-weight: 500; }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 32px; margin-top: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--border);
+  transition: background 0.35s ease;
+}
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--honey); border: 3px solid var(--bg);
+  transition: border-color 0.35s ease;
+}
+.timeline-year {
+  font-size: 12px; font-weight: 700; color: var(--honey-deep);
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+[data-theme="dark"] .timeline-year { color: var(--honey); }
+.timeline-item h4 { font-size: 16px; margin-bottom: 4px; }
+.timeline-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--bg-card);
+  border: 1px solid var(--honey-15);
+  border-left: 3px solid var(--honey);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.callout h4 { color: var(--honey-deep); }
+[data-theme="dark"] .callout h4 { color: var(--honey); }
+
+/* ─── DIAGRAM FLOW ─── */
+.flow-row {
+  display: flex; align-items: center; gap: 0;
+  flex-wrap: wrap; justify-content: center;
+  margin-top: 32px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s ease;
+  min-width: 120px;
+}
+.flow-node:hover { border-color: var(--honey); transform: translateY(-2px); }
+.flow-node .flow-icon { font-size: 22px; margin-bottom: 6px; }
+.flow-node .flow-label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
+.flow-node .flow-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.flow-arrow {
+  font-size: 18px; color: var(--honey-dark); padding: 0 8px;
+  font-weight: 700;
+}
+[data-theme="dark"] .flow-arrow { color: var(--honey); }
+@media (max-width: 700px) {
+  .flow-row { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table {
+  width: 100%; border-collapse: collapse; margin-top: 24px;
+  font-size: 14px;
+}
+.comp-table th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+}
+.comp-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text-body); vertical-align: top;
+  transition: background 0.15s;
+}
+.comp-table tr:hover td { background: var(--bg-card-alt); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.btn-primary { background: var(--honey); color: #0A0A0A; }
+.btn-primary:hover { background: var(--honey-light); color: #0A0A0A; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--text-body);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .btn-secondary:hover { color: var(--honey); }
+
+/* ─── AGENT COPY ─── */
+.agent-copy { margin-top:48px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; }
+.agent-copy-label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--honey-dark); margin-bottom:8px; }
+[data-theme="dark"] .agent-copy-label { color:var(--honey); }
+.agent-copy p { font-size:14px; color:var(--text-secondary); margin:0 auto 16px; line-height:1.5; }
+.btn-agent { background:var(--honey-10); color:var(--honey-dark); border:1px solid var(--honey-25); }
+.btn-agent:hover { background:var(--honey-15); border-color:var(--honey); transform:translateY(-1px); }
+[data-theme="dark"] .btn-agent { color:var(--honey); }
+.btn-agent.copied { background:var(--success); color:#fff; border-color:var(--success); }
+.agent-url { display:block; font-family:monospace; font-size:13px; color:var(--text-secondary); background:var(--bg-code); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 16px; margin:0 auto 16px; max-width:640px; word-break:break-all; user-select:all; cursor:text; }
+
+/* ─── FADE-IN ─── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px 0; text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+footer p { margin: 0 auto; }
+.footer-brand { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.footer-brand span { color: var(--honey-dark); }
+[data-theme="dark"] .footer-brand span { color: var(--honey); }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 16px; }
+.footer-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+.footer-links a:hover { color: var(--honey); }
+
+/* ─── GLOBAL TRANSITIONS ─── */
+nav, .card, .callout, .code-block, .flow-node, .hero-mark, .hero-mark::after,
+.hero .hero-meta span, .timeline::before, .timeline-item::before,
+.comp-table td, footer {
+  transition-property: background, border-color, box-shadow, color, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <a href="/" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <span>Imbila<em>.AI</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="#what">What</a>
+    <a href="#why">Why</a>
+    <a href="#how">How</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#resources">Resources</a>
+    <span class="nav-tag">Explainer</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtn">☀️</button>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="themeBtnMobile" style="display:none;">☀️</button>
+</nav>
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-mark">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="12" width="28" height="24" rx="3" stroke="var(--border-strong)" stroke-width="1.5" fill="none"/>
+      <line x1="10" y1="20" x2="38" y2="20" stroke="var(--border-strong)" stroke-width="1.5"/>
+      <line x1="10" y1="28" x2="38" y2="28" stroke="var(--border-strong)" stroke-width="1"/>
+      <line x1="10" y1="32" x2="38" y2="32" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="24" cy="16" r="2.5" fill="#EDAF42"/>
+      <circle cx="16" cy="24" r="1.5" fill="var(--text-muted)" opacity="0.5"/>
+      <circle cx="32" cy="24" r="1.5" fill="var(--text-muted)" opacity="0.5"/>
+    </svg>
+  </div>
+  <h1>AI Token Ledger<br><span class="accent">Explained</span></h1>
+  <p class="hero-sub">The emerging system of record for AI work</p>
+  <div class="hero-meta">
+    <span>No Single Standard</span>
+    <span>5-Layer Reference Stack</span>
+    <span>Open-Source Components</span>
+    <span>Token = Atomic Unit</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════ 01 · WHAT IS AN AI TOKEN LEDGER ═══════ -->
+<section id="what" class="fade-up">
+  <div class="section-label">01 · What Is an AI Token Ledger</div>
+  <h2>The system of record <span class="accent">for every unit of AI work.</span></h2>
+  <p style="margin-bottom:24px;">An AI Token Ledger is a system of record that meters, logs, attributes and audits every unit of work performed by AI agents and LLM-powered applications. It treats the <strong>token</strong> — the fundamental unit of LLM input and output — as an atomic unit of economic activity, the same way cloud billing treats API calls or fintech ledgers treat financial transactions.</p>
+  <p style="margin-bottom:24px;">No single product or protocol owns this space today. What exists is a <strong>composable architecture</strong> assembled from open-source components spanning observability, API gateways, workflow engines, immutable storage, and policy engines. Think of it as the "Stripe + Ledger + Observability + Policy Engine" for AI tokens — each layer handled by a different tool, none of them yet unified into one canonical system.</p>
+  <p>The problem it solves is straightforward: as organisations deploy autonomous agents that make API calls, invoke tools, chain reasoning steps, and consume real money in tokens, they need to know <strong>what happened, who did it, what it cost, and whether it was authorised</strong>. Without a system of record, AI spend is ungovernable and agent behaviour is unauditable.</p>
+
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h3>The Problem</h3>
+      <h4>Invisible AI Spend &amp; Unauditable Actions</h4>
+      <p style="font-size:14px;">Tokens are consumed across providers, models, agents, and workflows with no unified accounting. Traditional logging captures requests but not economic attribution or decision provenance.</p>
+    </div>
+    <div class="card">
+      <h3>The Solution</h3>
+      <h4>A Composable Metering Stack</h4>
+      <p style="font-size:14px;">By layering an LLM gateway, observability platform, event stream, immutable ledger, and policy engine, teams create a complete audit trail from prompt to cost allocation.</p>
+    </div>
+    <div class="card">
+      <h3>The Result</h3>
+      <h4>Full Visibility Into AI Economics</h4>
+      <p style="font-size:14px;">Every API call is metered (tokens, latency, cost). Every agent action is logged (inputs, outputs, tools used). Every decision is auditable (human vs agent vs chain-of-agents). Every cost is allocatable (per user, agent, task, customer).</p>
+    </div>
+  </div>
+
+  <div class="flow-row" style="margin-top:48px;">
+    <div class="flow-node">
+      <div class="flow-icon">👤</div>
+      <div class="flow-label">Agent / User</div>
+      <div class="flow-desc">Initiates request</div>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-node">
+      <div class="flow-icon">🚪</div>
+      <div class="flow-label">LLM Gateway</div>
+      <div class="flow-desc">LiteLLM / Portkey</div>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-node">
+      <div class="flow-icon">🔍</div>
+      <div class="flow-label">Observability</div>
+      <div class="flow-desc">Langfuse / OTel</div>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-node">
+      <div class="flow-icon">📨</div>
+      <div class="flow-label">Event Stream</div>
+      <div class="flow-desc">Kafka / Inngest</div>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-node">
+      <div class="flow-icon">📒</div>
+      <div class="flow-label">Immutable Ledger</div>
+      <div class="flow-desc">Postgres / immudb</div>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-node">
+      <div class="flow-icon">⚖️</div>
+      <div class="flow-label">Governance</div>
+      <div class="flow-desc">OPA / Custom</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 02 · WHY IT MATTERS ═══════ -->
+<section id="why" class="fade-up">
+  <div class="section-label">02 · Why It Matters</div>
+  <h2>AI spend is now <span class="accent">a material line item.</span></h2>
+  <p style="margin-bottom:40px;">As organisations move from single-prompt applications to multi-agent systems that run autonomously for hours or days, the gap between "tokens consumed" and "value delivered" becomes a governance problem. Every untracked agent run is an unaudited financial transaction.</p>
+
+  <div class="grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">10B+</div>
+      <div class="stat-label">Tokens/Day via LiteLLM</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">24K+</div>
+      <div class="stat-label">GitHub Stars on Langfuse</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">$0</div>
+      <div class="stat-label">Unified Token Ledger Standards</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="stat-figure">5</div>
+      <div class="stat-label">Infrastructure Layers Required</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:40px;">
+    <h4>Why not just use cloud billing?</h4>
+    <p style="font-size:14px; margin-top:8px;">Cloud provider bills tell you aggregate spend. They don't tell you which agent made which decision, whether it was authorised, what reasoning chain led to the cost, or how to attribute that cost to a specific customer, project, or workflow. The AI Token Ledger fills the gap between cloud invoices and operational accountability.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 03 · HOW IT WORKS ═══════ -->
+<section id="how" class="fade-up">
+  <div class="section-label">03 · How It Works</div>
+  <h2>Five composable layers. <span class="accent">All open-source options.</span></h2>
+  <p style="margin-bottom:40px;">The system of record for AI work is built from five composable layers. Each layer has open-source options at production maturity.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Layer A</h3>
+      <h4>Observability &amp; Tracing</h4>
+      <p style="font-size:14px;">Captures token usage, latency, cost, prompts, responses, and traces across agent steps. The foundational data collection layer.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong>Langfuse</strong> — Open-source LLM engineering platform (YC W23). Tracks traces, sessions, token usage, cost per request. Supports OpenTelemetry ingestion natively since v3. Self-hostable via Docker or Kubernetes. Architecture: Postgres + ClickHouse + Redis + S3. License: MIT (core).</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>Helicone</strong> — Open-source LLM observability (YC W23). Proxy-based: change one line (your base URL) to start logging. Rust-based AI gateway for low-latency proxying. Tracks cost, latency, usage, caching, and analytics.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>OpenTelemetry GenAI Semantic Conventions</strong> — Emerging industry standard for LLM telemetry. Defines span attributes for <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.usage.output_tokens</code>, <code>gen_ai.request.model</code>, and more. Agent-level conventions for <code>create_agent</code> and <code>invoke_agent</code>. Status: experimental.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>OpenLLMetry</strong> (by Traceloop) — Extends OTel semantic conventions for GenAI. Instrumentation libraries for Python, TypeScript, Go, and Ruby. Contributors lead the OTel GenAI SIG working group.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Layer B</h3>
+      <h4>API Gateway / Proxy</h4>
+      <p style="font-size:14px;">Centralises all LLM calls through a single control point. Normalises requests across providers. Enforces rate limits, budgets, and routing. Captures usage at the edge before it reaches the model.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong>LiteLLM</strong> — Python SDK + Proxy Server (AI Gateway). Calls 100+ LLMs in OpenAI-compatible format. Multi-tenant cost tracking per project/user. Virtual keys for access control. Budget enforcement per key/team. 8ms P95 latency at 1K RPS. Native Langfuse integration. License: MIT.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>Portkey AI Gateway</strong> — &lt;1ms latency, 122KB footprint. Routes to 1,600+ models. Load balancing, fallbacks, retries, guardrails, cost tracking. 10B+ tokens daily in production. Open-source LLM pricing database for 2,300+ models. License: MIT.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>Helicone AI Gateway</strong> — Rust-based, fully open-source. Smart routing, caching, rate limiting, tracing, fallbacks. Supports 20+ providers.</p>
+      <div class="callout" style="margin-top:16px;">
+        <h4>This layer is where token accounting becomes enforceable.</h4>
+        <p style="font-size:13px; margin-top:4px;">The gateway sees every request before it reaches the provider, making it the natural metering point.</p>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Layer C</h3>
+      <h4>Event &amp; Workflow Engine</h4>
+      <p style="font-size:14px;">Treats every agent action as a durable event. Provides replayability, fault tolerance, and audit trails across multi-step workflows. Your "transaction log backbone."</p>
+      <p style="font-size:14px; margin-top:12px;"><strong>Temporal</strong> — Durable execution platform. Fork of Uber's Cadence. Workflows survive process failures, network partitions, and infrastructure outages. Complete execution history. SDKs for Go, Java, PHP, TypeScript, Python. Used by Stripe, Netflix, Datadog, Coinbase, Snap. License: MIT.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>Inngest</strong> — Event-driven workflow engine. Serverless-first: functions invoked via HTTP, no worker fleet. Built-in retries, scheduling, concurrency control. Self-hostable. License: SSPL + delayed Apache 2.0.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>Apache Kafka</strong> — Distributed event streaming platform. Append-only commit log. De facto backbone for high-throughput event pipelines. License: Apache 2.0.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--honey);">
+      <h3>Layer D</h3>
+      <h4>Immutable Ledger / Storage</h4>
+      <p style="font-size:14px;">Stores the permanent, tamper-proof record of all token transactions. Makes the system auditable and compliant. <strong>This is the most underdeveloped layer in the current stack</strong> — no dominant open-source "AI token ledger" exists.</p>
+      <p style="font-size:14px; margin-top:12px;"><strong>PostgreSQL with append-only tables</strong> — Most common pragmatic choice. INSERT-only patterns, triggers to prevent UPDATE/DELETE, timestamped versioning. No cryptographic tamper-proofing, but operationally sufficient.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>immudb</strong> — Open-source immutable database. Zero-trust: cryptographically coherent via Merkle trees. SQL and Key-Value access. Millions of TPS. FIPS-compliant verification. Time-travel queries. Used in financial services, government, defence. License: BSL 1.1.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>ClickHouse</strong> — Column-oriented OLAP database. Used by Langfuse as analytics backend. Excellent for aggregation queries over token usage data. License: Apache 2.0.</p>
+      <p style="font-size:14px; margin-top:8px;"><strong>AWS QLDB</strong> — Amazon's managed ledger database. <strong>Discontinued</strong> — AWS announced end of service. immudb is the primary open-source alternative.</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--honey); margin-top:28px;">
+    <h3>Layer E</h3>
+    <h4>Policy &amp; Governance</h4>
+    <p style="font-size:14px;">Enforces rules about who can spend what, which tools agents can use, and when human approval is required. Separates policy logic from application code.</p>
+    <p style="font-size:14px; margin-top:12px;"><strong>Open Policy Agent (OPA)</strong> — General-purpose policy engine. CNCF Graduated project (accepted 2018, graduated 2021). Policy-as-code using the Rego declarative language. Used by Netflix, Intuit, and thousands of Kubernetes clusters. Applicable to AI governance: budget caps per agent, allowed tool lists, human-in-the-loop approval checkpoints, model access control. License: Apache 2.0.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 04 · THE ECOSYSTEM ═══════ -->
+<section id="ecosystem" class="fade-up">
+  <div class="section-label">04 · The Ecosystem</div>
+  <h2>When to use what <span class="accent">across the stack.</span></h2>
+  <p style="margin-bottom:40px;">The AI Token Ledger is assembled from best-of-breed open-source tools. Here's how they map to needs.</p>
+
+  <table class="comp-table">
+    <thead>
+      <tr><th>Need</th><th>Use This</th><th>GitHub</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Track token usage + cost per request</td>
+        <td><span class="tag">Langfuse</span></td>
+        <td><a href="https://github.com/langfuse/langfuse" target="_blank" rel="noopener">langfuse/langfuse</a></td>
+        <td>Purpose-built LLM observability with native OTel support</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Centralise LLM calls + enforce budgets</td>
+        <td><span class="tag">LiteLLM</span></td>
+        <td><a href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">BerriAI/litellm</a></td>
+        <td>OpenAI-compatible proxy with multi-tenant spend tracking</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Fast gateway with routing + guardrails</td>
+        <td><span class="tag">Portkey</span></td>
+        <td><a href="https://github.com/Portkey-AI/gateway" target="_blank" rel="noopener">Portkey-AI/gateway</a></td>
+        <td>Sub-millisecond latency, 1,600+ model support</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Proxy-first observability</td>
+        <td><span class="tag">Helicone</span></td>
+        <td><a href="https://github.com/Helicone/helicone" target="_blank" rel="noopener">Helicone/helicone</a></td>
+        <td>One-line integration, Rust gateway, cost analytics</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Standardised telemetry schema</td>
+        <td><span class="tag">OTel GenAI SemConv</span></td>
+        <td><a href="https://github.com/open-telemetry/semantic-conventions" target="_blank" rel="noopener">open-telemetry/semantic-conventions</a></td>
+        <td>Vendor-neutral standard for LLM span attributes</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Durable multi-step workflows</td>
+        <td><span class="tag">Temporal</span></td>
+        <td><a href="https://github.com/temporalio/temporal" target="_blank" rel="noopener">temporalio/temporal</a></td>
+        <td>Complete execution history, survives any failure</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Serverless event-driven workflows</td>
+        <td><span class="tag">Inngest</span></td>
+        <td><a href="https://github.com/inngest/inngest" target="_blank" rel="noopener">inngest/inngest</a></td>
+        <td>No worker fleet, built-in retries and scheduling</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Tamper-proof immutable storage</td>
+        <td><span class="tag">immudb</span></td>
+        <td><a href="https://github.com/codenotary/immudb" target="_blank" rel="noopener">codenotary/immudb</a></td>
+        <td>Cryptographic verification, Merkle tree integrity</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">High-speed cost analytics</td>
+        <td><span class="tag">ClickHouse</span></td>
+        <td><a href="https://github.com/ClickHouse/ClickHouse" target="_blank" rel="noopener">ClickHouse/ClickHouse</a></td>
+        <td>Column-oriented OLAP, used by Langfuse internally</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-heading); font-weight:500;">Policy-as-code governance</td>
+        <td><span class="tag">OPA</span></td>
+        <td><a href="https://github.com/open-policy-agent/opa" target="_blank" rel="noopener">open-policy-agent/opa</a></td>
+        <td>CNCF Graduated, declarative policy engine</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:48px;">Proven Combinations</h3>
+  <div class="grid-2" style="margin-top:16px;">
+    <div class="card">
+      <h4>LiteLLM + Langfuse</h4>
+      <p style="font-size:14px;">The most documented integration. LiteLLM routes and meters; Langfuse traces and analyses. Endorsed by both projects. Lemonade (insurer) runs this pairing in production.</p>
+    </div>
+    <div class="card">
+      <h4>Helicone + n8n</h4>
+      <p style="font-size:14px;">Helicone publishes an official n8n nodes package for workflow integration.</p>
+    </div>
+    <div class="card">
+      <h4>OpenTelemetry + Langfuse</h4>
+      <p style="font-size:14px;">Langfuse v3 natively ingests OTel spans using GenAI semantic conventions. Compliant with v1.37+ of the spec.</p>
+    </div>
+    <div class="card">
+      <h4>OpenTelemetry + Datadog</h4>
+      <p style="font-size:14px;">Datadog LLM Observability natively supports OTel GenAI SemConv (v1.37+), allowing teams to instrument once and analyse across platforms.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 05 · USE CASES ═══════ -->
+<section class="fade-up">
+  <div class="section-label">05 · Use Cases</div>
+  <h2>What teams actually <span class="accent">build with this stack.</span></h2>
+  <p style="margin-bottom:40px;">The AI Token Ledger pattern serves any scenario where token consumption needs to be tracked, attributed, governed, or billed.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>FinOps</h3>
+      <h4>FinOps for AI</h4>
+      <p style="font-size:14px;">Track and allocate token spend per team, project, and customer. Enforce budget caps. Generate chargeback reports. The gateway + observability layers provide the data; the ledger makes it auditable.</p>
+    </div>
+    <div class="card">
+      <h3>Compliance</h3>
+      <h4>Agent Audit Trails</h4>
+      <p style="font-size:14px;">Log every decision an autonomous agent makes — which tools it invoked, what reasoning chain it followed, what data it accessed. Critical for regulated industries and enterprise risk management.</p>
+    </div>
+    <div class="card">
+      <h3>Multi-Agent</h3>
+      <h4>Multi-Agent Cost Attribution</h4>
+      <p style="font-size:14px;">When Agent A calls Agent B which calls Agent C, each consuming tokens across different models, attribute the full cost chain back to the originating request. Requires trace propagation across the full stack.</p>
+    </div>
+    <div class="card">
+      <h3>Regulatory</h3>
+      <h4>Compliance &amp; Regulatory Reporting</h4>
+      <p style="font-size:14px;">Demonstrate to auditors that AI systems operated within defined policies. Show human-in-the-loop controls were respected. Prove data handling complied with governance rules. Immutable ledger + policy engine enables this.</p>
+    </div>
+    <div class="card">
+      <h3>Product</h3>
+      <h4>AI-Powered Product Billing</h4>
+      <p style="font-size:14px;">If your product bills customers for AI features, you need accurate token metering per customer request. The gateway captures raw usage; the ledger provides the billing record of truth.</p>
+    </div>
+    <div class="card">
+      <h3>Incident Response</h3>
+      <h4>Incident Investigation &amp; Replay</h4>
+      <p style="font-size:14px;">When an agent produces a bad outcome, replay the exact sequence of calls, prompts, and tool invocations that led to it. Temporal and Inngest provide native replay; Langfuse provides the trace detail.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 06 · EVOLUTION ═══════ -->
+<section id="timeline" class="fade-up">
+  <div class="section-label">06 · Evolution</div>
+  <h2>From general-purpose infra <span class="accent">to AI system of record.</span></h2>
+  <p style="margin-bottom:16px;">The tools that compose an AI Token Ledger emerged from different eras of infrastructure, converging around the token as the atomic unit of AI economics.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2017–2019</div>
+      <h4>Foundations</h4>
+      <p>OpenTelemetry project formed (merger of OpenTracing and OpenCensus). Open Policy Agent accepted into CNCF (2018). Temporal forked from Uber's Cadence. These general-purpose infrastructure tools laid the groundwork.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2020–2022</div>
+      <h4>LLM Era Begins</h4>
+      <p>GPT-3 launches (2020). Teams start wrapping LLM calls in ad-hoc logging. immudb gains production adoption in financial services and government. No AI-specific observability tooling exists yet.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2023</div>
+      <h4>Observability Explodes</h4>
+      <p>Langfuse launches (YC W23). Helicone launches (YC W23). LiteLLM gains traction as the de facto LLM proxy. Portkey AI Gateway open-sourced. Teams start combining these tools into bespoke stacks. The pattern of "gateway + observability + ledger" emerges.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2024</div>
+      <h4>Standards Emerge</h4>
+      <p>OpenTelemetry GenAI Semantic Conventions published (experimental). Defines standard span attributes for LLM operations. Agent-level semantic conventions added. OpenLLMetry project leads the OTel GenAI SIG working group. AWS announces QLDB discontinuation; immudb becomes primary open-source immutable DB alternative.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2025–2026</div>
+      <h4>Convergence (Current)</h4>
+      <p>Langfuse v3 adds native OpenTelemetry ingestion. Datadog supports OTel GenAI SemConv v1.37+ natively. LiteLLM processes 10B+ tokens daily. Portkey gateway handles 400B+ tokens for 200+ enterprises. The five-layer reference architecture solidifies. But still: no unified token ledger standard, no open protocol for cross-provider usage accounting, no "GAAP for AI usage."</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 07 · DECISION GUIDE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">07 · Decision Guide</div>
+  <h2>Should you build <span class="accent">an AI Token Ledger stack?</span></h2>
+  <p style="margin-bottom:32px;">The five-layer stack adds real infrastructure overhead. That trade-off is worth it in specific scenarios and wasteful in others.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid var(--success);">
+      <h4 style="color:var(--success);">Build this stack when</h4>
+      <p style="font-size:14px; margin-top:12px;">You're running autonomous agents that make unsupervised API calls and consume real budget.<br><br>You need to attribute AI costs to specific customers, projects, or business units for chargeback.<br><br>You operate in regulated industries where agent decisions must be auditable.<br><br>You're scaling past prototype stage and need to answer "what did that agent do and why did it cost $X?"<br><br>You have multi-provider LLM usage (OpenAI + Anthropic + Bedrock, etc.) that needs unified tracking.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--error);">
+      <h4 style="color:var(--error);">Skip this complexity when</h4>
+      <p style="font-size:14px; margin-top:12px;">You're running a single LLM integration with predictable, low-volume usage — provider dashboards are sufficient.<br><br>Your AI spend is immaterial and doesn't warrant governance infrastructure.<br><br>You don't have agents making autonomous decisions — just human-initiated, single-turn completions.<br><br>You're in early prototyping and the overhead of a five-layer stack would slow you down — come back when you have production traffic.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Minimum Viable Stack</h4>
+    <p style="font-size:14px; margin-top:8px;">If you're starting from zero, the smallest meaningful combination is:<br><br><strong>1. LiteLLM</strong> (gateway + metering) — centralise all LLM calls<br><strong>2. Langfuse</strong> (observability + tracing) — capture traces and costs<br><strong>3. PostgreSQL</strong> (append-only tables) — store the ledger<br><br>Add Temporal/Inngest (workflow durability), immudb (tamper-proofing), and OPA (governance) as your requirements grow.</p>
+  </div>
+</section>
+
+
+<!-- ═══════ 08 · IMBILA PERSPECTIVE ═══════ -->
+<section class="fade-up">
+  <div class="section-label">08 · Imbila Perspective</div>
+  <h2>How we see it. <span class="accent">What we recommend.</span></h2>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <h4>Our take</h4>
+    <p style="font-size:14px; margin-top:8px;">The "AI Token Ledger" is not a product you buy — it's an architecture you compose. The industry is converging toward treating the token as the atomic unit of AI economics, but no one has built the unified system of record yet. For South African businesses, the additional consideration is latency and cost overhead: every observability proxy between your application and a US/EU-hosted LLM API adds round-trip time. Choose lightweight gateways (Portkey at 122KB, LiteLLM at 8ms P95) and self-host observability (Langfuse via Docker) close to your compute to minimise the penalty.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Enterprise</h3>
+      <h4>AI Spend Governance Framework</h4>
+      <p style="font-size:14px;">For organisations running multiple AI initiatives across departments, the priority is centralising all LLM calls through a single gateway (LiteLLM or Portkey) and feeding traces to Langfuse. This gives finance teams cost attribution by project and business unit. Add OPA policies to enforce per-department budget caps and model access controls. The immutable ledger layer (PostgreSQL append-only or immudb) becomes critical for audit compliance.</p>
+    </div>
+    <div class="card">
+      <h3>Studio</h3>
+      <h4>Production-Ready Agent Observability</h4>
+      <p style="font-size:14px;">For teams building and shipping AI products, instrument from day one. Wire LiteLLM + Langfuse into your agent stack before you have production traffic. Design your trace schema around the OpenTelemetry GenAI semantic conventions so your telemetry is portable. Use Temporal or Inngest for any multi-step agent workflow that needs to survive failures and remain auditable.</p>
+    </div>
+    <div class="card">
+      <h3>Dojo</h3>
+      <h4>Token Economics Literacy</h4>
+      <p style="font-size:14px;">Understanding how tokens translate to cost, how cost attribution works across agent chains, and how observability stacks compose is becoming essential knowledge for AI practitioners. The five-layer reference architecture is a practical framework for reasoning about AI system design. Start with the OTel GenAI Semantic Conventions spec — it's the closest thing to a shared vocabulary for this space.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════ 09 · RESOURCES ═══════ -->
+<section id="resources" class="fade-up">
+  <div class="section-label">09 · Resources &amp; Sources</div>
+  <h2>Go deeper. <span class="accent">Start building.</span></h2>
+
+  <h3 style="margin-top:24px;">Core Open-Source Repositories</h3>
+  <table class="comp-table" style="margin-bottom:32px;">
+    <thead>
+      <tr><th>Tool</th><th>GitHub</th><th>Stars</th><th>License</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Langfuse</td><td><a href="https://github.com/langfuse/langfuse" target="_blank" rel="noopener">langfuse/langfuse</a></td><td>24K+</td><td>MIT</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">LiteLLM</td><td><a href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">BerriAI/litellm</a></td><td>—</td><td>MIT</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Portkey AI Gateway</td><td><a href="https://github.com/Portkey-AI/gateway" target="_blank" rel="noopener">Portkey-AI/gateway</a></td><td>—</td><td>MIT</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Helicone</td><td><a href="https://github.com/Helicone/helicone" target="_blank" rel="noopener">Helicone/helicone</a></td><td>—</td><td>Apache 2.0</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Helicone AI Gateway</td><td><a href="https://github.com/Helicone/ai-gateway" target="_blank" rel="noopener">Helicone/ai-gateway</a></td><td>—</td><td>Open Source</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Temporal</td><td><a href="https://github.com/temporalio/temporal" target="_blank" rel="noopener">temporalio/temporal</a></td><td>—</td><td>MIT</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Inngest</td><td><a href="https://github.com/inngest/inngest" target="_blank" rel="noopener">inngest/inngest</a></td><td>—</td><td>SSPL + Apache 2.0</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">immudb</td><td><a href="https://github.com/codenotary/immudb" target="_blank" rel="noopener">codenotary/immudb</a></td><td>—</td><td>BSL 1.1</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Open Policy Agent</td><td><a href="https://github.com/open-policy-agent/opa" target="_blank" rel="noopener">open-policy-agent/opa</a></td><td>—</td><td>Apache 2.0</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">ClickHouse</td><td><a href="https://github.com/ClickHouse/ClickHouse" target="_blank" rel="noopener">ClickHouse/ClickHouse</a></td><td>—</td><td>Apache 2.0</td></tr>
+      <tr><td style="color:var(--text-heading); font-weight:500;">Apache Kafka</td><td><a href="https://github.com/apache/kafka" target="_blank" rel="noopener">apache/kafka</a></td><td>—</td><td>Apache 2.0</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h3>Standards &amp; Specifications</h3>
+      <h4>Industry Standards</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" target="_blank" rel="noopener">OTel GenAI Semantic Conventions</a> — Emerging standard for LLM telemetry ↗<br>
+        <a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/" target="_blank" rel="noopener">OTel GenAI Metrics Spec</a> — Token usage, latency, and cost metrics ↗<br>
+        <a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/" target="_blank" rel="noopener">OTel GenAI Agent Spans</a> — Agent-level tracing conventions ↗<br>
+        <a href="https://www.traceloop.com/docs/openllmetry/contributing/semantic-conventions" target="_blank" rel="noopener">OpenLLMetry Semantic Conventions</a> — Extended GenAI conventions by Traceloop ↗<br>
+        <a href="https://github.com/open-telemetry/semantic-conventions/blob/main/model/gen-ai/spans.yaml" target="_blank" rel="noopener">OTel GenAI Span YAML</a> — Machine-readable spec ↗
+      </p>
+    </div>
+    <div class="card">
+      <h3>Key Documentation</h3>
+      <h4>Getting Started</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        <a href="https://langfuse.com/self-hosting" target="_blank" rel="noopener">Langfuse Self-Hosting Guide</a> — Architecture and deployment options ↗<br>
+        <a href="https://langfuse.com/integrations/native/opentelemetry" target="_blank" rel="noopener">Langfuse OTel Integration</a> — OTel spans to Langfuse data model ↗<br>
+        <a href="https://docs.litellm.ai/docs/simple_proxy" target="_blank" rel="noopener">LiteLLM Proxy Docs</a> — Gateway setup with spend tracking ↗<br>
+        <a href="https://langfuse.com/integrations/gateways/litellm" target="_blank" rel="noopener">LiteLLM + Langfuse Integration</a> — Combined gateway + observability ↗<br>
+        <a href="https://portkey.ai/docs/product/open-source" target="_blank" rel="noopener">Portkey Open Source Docs</a> — Gateway, pricing DB, community ↗<br>
+        <a href="https://docs.immudb.io/" target="_blank" rel="noopener">immudb Documentation</a> — Immutable database setup and SDKs ↗<br>
+        <a href="https://www.openpolicyagent.org/docs/latest/" target="_blank" rel="noopener">OPA Documentation</a> — Policy-as-code setup and integration ↗<br>
+        <a href="https://temporal.io/" target="_blank" rel="noopener">Temporal Documentation</a> — Durable execution platform ↗
+      </p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px;">
+    <h4>Ledger Schema — Conceptual Primitive</h4>
+    <p style="font-size:14px; margin-top:8px;">For teams designing their own AI Token Ledger, the minimum viable record should capture:</p>
+    <div class="code-block" style="margin-top:16px;">
+<pre><span class="cv">event_id</span>         <span class="cs">— Unique identifier for this token transaction</span>
+<span class="cv">agent_id</span>         <span class="cs">— Which agent (or agent chain) made the call</span>
+<span class="cv">human_id</span>         <span class="cs">— Which human initiated or is responsible</span>
+<span class="cv">workflow_id</span>      <span class="cs">— Which workflow / session this belongs to</span>
+<span class="cv">tokens_in</span>        <span class="cs">— Input tokens consumed</span>
+<span class="cv">tokens_out</span>       <span class="cs">— Output tokens generated</span>
+<span class="cv">cost</span>             <span class="cs">— Calculated cost in currency</span>
+<span class="cv">model</span>            <span class="cs">— Which model was called</span>
+<span class="cv">provider</span>         <span class="cs">— Which provider served the request</span>
+<span class="cv">tools_used</span>       <span class="cs">— Which tools / functions were invoked</span>
+<span class="cv">timestamp</span>        <span class="cs">— When it happened (UTC)</span>
+<span class="cv">trace_id</span>         <span class="cs">— OpenTelemetry trace ID for full context</span></pre>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:32px;">
+    <div class="card">
+      <h3>Imbila.AI</h3>
+      <h4>Stay in the Loop</h4>
+      <p style="font-size:14px; margin-top:8px;">
+        We publish twice-weekly AI briefings covering tools, frameworks, and developments that matter for South African businesses. No hype, no fluff — just what's useful and what's not.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-primary">Get in touch</a>
+        <a href="https://imbila.ai" target="_blank" rel="noopener" class="btn btn-secondary">Read the blog ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Disclaimer</h3>
+      <h4>Sources &amp; Attribution</h4>
+      <p style="font-size:13px; margin-top:8px; color:var(--text-secondary);">Content validated March 2026. OpenTelemetry is a trademark of the Cloud Native Computing Foundation. Langfuse, LiteLLM, Helicone, Portkey, Temporal, Inngest, immudb, ClickHouse, Apache Kafka, and Open Policy Agent are trademarks of their respective owners. This is an independent educational explainer by Imbila.AI.</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+
+<!-- ═══════ AGENT COPY ═══════ -->
+<section class="agent-copy fade-up">
+  <div class="agent-copy-label">For AI Agents</div>
+  <p>Give this URL to any AI agent — it can fetch the full explainer as structured markdown, no Cloudflare blocking.</p>
+  <code class="agent-url" id="agentUrl"></code>
+  <button class="btn btn-agent" id="agentCopyBtn" onclick="copyForAgent()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M5 11H3.5A1.5 1.5 0 012 9.5v-7A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5V5"/></svg>
+    Copy URL
+  </button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="page">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px; height:36px; margin:0 auto 16px;">
+      <circle cx="16" cy="16" r="15" fill="var(--bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <circle cx="16" cy="16" r="6" fill="#EDAF42"/>
+    </svg>
+    <div class="footer-brand">Imbila<span>.AI</span></div>
+    <p style="font-size:14px; color:var(--text-secondary);">AI Strategy & Implementation That Actually Delivers ROI</p>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Johannesburg, South Africa</p>
+    <div class="footer-links">
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Website</a>
+      <a href="https://www.linkedin.com/company/imbila-ai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://imbila.ai" target="_blank" rel="noopener">Blog</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  const icon = next === 'light' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = icon;
+  document.getElementById('themeBtnMobile').textContent = icon;
+  localStorage.setItem('imbila-theme', next);
+}
+
+// Persist theme
+(function() {
+  const saved = localStorage.getItem('imbila-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    const icon = saved === 'light' ? '☀️' : '🌙';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = icon;
+      document.getElementById('themeBtnMobile').textContent = icon;
+    });
+  }
+})();
+
+// Show mobile toggle
+(function() {
+  function checkMobile() {
+    const isMobile = window.innerWidth <= 768;
+    document.getElementById('themeBtnMobile').style.display = isMobile ? 'flex' : 'none';
+  }
+  window.addEventListener('resize', checkMobile);
+  document.addEventListener('DOMContentLoaded', checkMobile);
+  checkMobile();
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// Agent-friendly URL copy
+(function() {
+  const agentId = document.documentElement.dataset.agentId;
+  if (!agentId) return;
+  const mdUrl = 'https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/' + agentId + '.md';
+  const el = document.getElementById('agentUrl');
+  if (el) el.textContent = mdUrl;
+})();
+function copyForAgent() {
+  const btn = document.getElementById('agentCopyBtn');
+  const url = document.getElementById('agentUrl').textContent;
+  const originalHTML = btn.innerHTML;
+  navigator.clipboard.writeText(url).then(function() {
+    btn.classList.add('copied'); btn.textContent = 'Copied!';
+  }).catch(function() {
+    btn.textContent = 'Copy failed';
+  });
+  setTimeout(function() { btn.innerHTML = originalHTML; btn.classList.remove('copied'); }, 2000);
+}
+</script>
+
+</body>
+</html>

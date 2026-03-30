@@ -68,6 +68,7 @@ The JSON files are designed to be returned directly as tool responses. Each file
 |----|-------|-------|
 | `arc-agi-3` | ARC-AGI-3 Explained | Interactive reasoning benchmark for AGI |
 | `agents2026` | Top Agent Frameworks — Q2 2026 | Comparison of 10 agent frameworks |
+| `ai-token-ledger` | AI Token Ledger Explained | System of record for AI token economics |
 | `agent-skills` | Agent Skills Explained | Open standard for modular AI agent capabilities |
 | `claude-code-skills` | Claude Code Skills Explained | Skill system for AI coding agents |
 | `crewai` | CrewAI Explained | Multi-agent orchestration framework |
