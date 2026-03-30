@@ -437,6 +437,74 @@ footer p {
 .footer-links a:hover { color: var(--honey); }
 
 /* ═══════════════════════════════════════════════
+   AGENT BANNER
+   ═══════════════════════════════════════════════ */
+.agent-banner { padding: 0 0 40px; }
+.agent-banner-box {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--bg-card); border: 1px solid var(--honey-25);
+  border-radius: var(--radius-lg); padding: 20px 28px;
+  box-shadow: var(--shadow-card);
+  max-width: 800px; margin: 0 auto;
+}
+.agent-banner-icon { font-size: 28px; flex-shrink: 0; }
+.agent-banner-content h3 { font-size: 14px; font-weight: 700; color: var(--text-heading); margin-bottom: 4px; text-transform: none; letter-spacing: 0; }
+.agent-banner-content p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; max-width: none; }
+.agent-banner-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.agent-banner-links a {
+  font-size: 12px; font-weight: 600; color: var(--honey-dark);
+  padding: 4px 12px; border: 1px solid var(--honey-25);
+  border-radius: var(--radius-pill); transition: all 0.2s;
+}
+.agent-banner-links a:hover { background: var(--honey-10); border-color: var(--honey); }
+[data-theme="dark"] .agent-banner-links a { color: var(--honey); }
+.agent-banner-pattern {
+  display: block; font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px; color: var(--text-muted); margin-top: 8px;
+  word-break: break-all;
+}
+@media (max-width: 600px) {
+  .agent-banner-box { flex-direction: column; text-align: center; }
+  .agent-banner-links { justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════════
+   CATEGORY FILTERS
+   ═══════════════════════════════════════════════ */
+.category-filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin: 24px 0 32px; align-items: center;
+}
+.cat-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  color: var(--text-secondary); background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+  padding: 6px 16px; cursor: pointer; transition: all 0.2s;
+}
+.cat-pill:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .cat-pill:hover { color: var(--honey); }
+.cat-pill.active {
+  background: var(--honey); color: #0A0A0A;
+  border-color: var(--honey); font-weight: 700;
+}
+.cat-pill .cat-count {
+  font-size: 11px; font-weight: 700; opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════
+   AGENT BADGE (on cards)
+   ═══════════════════════════════════════════════ */
+.agent-badge {
+  font-size: 10px; font-weight: 700; color: var(--honey-dark);
+  background: var(--honey-10); border: 1px solid var(--honey-25);
+  border-radius: 4px; padding: 2px 6px;
+  text-decoration: none; transition: all 0.2s;
+}
+.agent-badge:hover { background: var(--honey-15); border-color: var(--honey); }
+[data-theme="dark"] .agent-badge { color: var(--honey); }
+
+/* ═══════════════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════════════ */
 .fade-up {
@@ -496,8 +564,27 @@ footer p {
       <div class="hero-stat-label">2026</div>
     </div>
     <div>
-      <div class="hero-stat-value">Open</div>
-      <div class="hero-stat-label">Access</div>
+      <div class="hero-stat-value">{{CATEGORY_COUNT}}</div>
+      <div class="hero-stat-label">Categories</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AGENT BANNER ═══ -->
+<div class="agent-banner">
+  <div class="container">
+    <div class="agent-banner-box fade-up">
+      <div class="agent-banner-icon">🤖</div>
+      <div class="agent-banner-content">
+        <h3>For AI Agents</h3>
+        <p>Every explainer is available as structured markdown and JSON — feed directly to Claude, ChatGPT, or any agent.</p>
+        <div class="agent-banner-links">
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/llms.txt" target="_blank">llms.txt</a>
+          <a href="https://github.com/imbilawork/know.agent" target="_blank">GitHub repo</a>
+          <a href="https://github.com/imbilawork/know.agent/tree/main/agentapi/data" target="_blank">JSON data</a>
+        </div>
+        <span class="agent-banner-pattern">raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/{id}.md</span>
+      </div>
     </div>
   </div>
 </div>
@@ -508,6 +595,11 @@ footer p {
     <div class="section-label fade-up">01 · Explainers</div>
     <h2 class="fade-up">What we've been <span class="accent">writing about.</span></h2>
     <p class="section-intro fade-up">Each explainer is a standalone deep-dive into an AI technology, framework, or concept — written to be useful, not to sell anything.</p>
+
+    <div class="category-filters fade-up">
+      <button class="cat-pill active" data-filter="all">All <span class="cat-count">{{COUNT}}</span></button>
+      {{CATEGORY_FILTERS}}
+    </div>
 
     <div class="articles-grid">
 {{ARTICLES}}
@@ -521,10 +613,8 @@ footer p {
     <div class="section-label fade-up">02 · About This Site</div>
     <h2 class="fade-up">What <span class="accent">Know</span> is for.</h2>
     <div class="about-box fade-up">
-      <p><strong>Know</strong> is Imbila.AI's public knowledge base — independent, fact-checked explainers on AI technologies and frameworks, built for humans and agents alike. Share a page with a colleague instead of a 40-page whitepaper, or copy the agent-friendly version straight into Claude Code, ChatGPT, or any AI assistant as instant reference material.</p>
-      <p>Every explainer is available as structured markdown and JSON via our <a href="https://github.com/imbilawork/know.agent" style="color: var(--honey-deep); font-weight: 600;">open agent API</a> — no Cloudflare blocking, no HTML parsing. These are reference documents, not marketing. Accurate, practical, and honest about trade-offs.</p>
-      <p>Want to see these technologies in action? <a href="https://demo.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Try the live demos ↗</a></p>
-      <p>If there's a topic you'd like covered, <a href="https://platform.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">get in touch ↗</a></p>
+      <p><strong>Know</strong> is Imbila.AI's public knowledge base — independent, fact-checked explainers on AI technologies and frameworks. Reference documents, not marketing. Accurate, practical, and honest about trade-offs.</p>
+      <p><a href="https://platform.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Sign up free</a> to read full guides, track your learning, and get R10 in AI demo credits. Want to see these technologies in action? <a href="https://demo.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Try the live demos ↗</a></p>
     </div>
   </div>
 </section>
@@ -563,6 +653,22 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+/* ─── Category Filter ─── */
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.article-card').forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
 </script>
 <script src="https://platform.imbila.ai/auth-widget.js"></script>
 <script>

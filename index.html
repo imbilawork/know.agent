@@ -437,6 +437,74 @@ footer p {
 .footer-links a:hover { color: var(--honey); }
 
 /* ═══════════════════════════════════════════════
+   AGENT BANNER
+   ═══════════════════════════════════════════════ */
+.agent-banner { padding: 0 0 40px; }
+.agent-banner-box {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--bg-card); border: 1px solid var(--honey-25);
+  border-radius: var(--radius-lg); padding: 20px 28px;
+  box-shadow: var(--shadow-card);
+  max-width: 800px; margin: 0 auto;
+}
+.agent-banner-icon { font-size: 28px; flex-shrink: 0; }
+.agent-banner-content h3 { font-size: 14px; font-weight: 700; color: var(--text-heading); margin-bottom: 4px; text-transform: none; letter-spacing: 0; }
+.agent-banner-content p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; max-width: none; }
+.agent-banner-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.agent-banner-links a {
+  font-size: 12px; font-weight: 600; color: var(--honey-dark);
+  padding: 4px 12px; border: 1px solid var(--honey-25);
+  border-radius: var(--radius-pill); transition: all 0.2s;
+}
+.agent-banner-links a:hover { background: var(--honey-10); border-color: var(--honey); }
+[data-theme="dark"] .agent-banner-links a { color: var(--honey); }
+.agent-banner-pattern {
+  display: block; font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px; color: var(--text-muted); margin-top: 8px;
+  word-break: break-all;
+}
+@media (max-width: 600px) {
+  .agent-banner-box { flex-direction: column; text-align: center; }
+  .agent-banner-links { justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════════
+   CATEGORY FILTERS
+   ═══════════════════════════════════════════════ */
+.category-filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin: 24px 0 32px; align-items: center;
+}
+.cat-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  color: var(--text-secondary); background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+  padding: 6px 16px; cursor: pointer; transition: all 0.2s;
+}
+.cat-pill:hover { border-color: var(--honey); color: var(--honey-dark); }
+[data-theme="dark"] .cat-pill:hover { color: var(--honey); }
+.cat-pill.active {
+  background: var(--honey); color: #0A0A0A;
+  border-color: var(--honey); font-weight: 700;
+}
+.cat-pill .cat-count {
+  font-size: 11px; font-weight: 700; opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════
+   AGENT BADGE (on cards)
+   ═══════════════════════════════════════════════ */
+.agent-badge {
+  font-size: 10px; font-weight: 700; color: var(--honey-dark);
+  background: var(--honey-10); border: 1px solid var(--honey-25);
+  border-radius: 4px; padding: 2px 6px;
+  text-decoration: none; transition: all 0.2s;
+}
+.agent-badge:hover { background: var(--honey-15); border-color: var(--honey); }
+[data-theme="dark"] .agent-badge { color: var(--honey); }
+
+/* ═══════════════════════════════════════════════
    ANIMATIONS
    ═══════════════════════════════════════════════ */
 .fade-up {
@@ -496,8 +564,27 @@ footer p {
       <div class="hero-stat-label">2026</div>
     </div>
     <div>
-      <div class="hero-stat-value">Open</div>
-      <div class="hero-stat-label">Access</div>
+      <div class="hero-stat-value">6</div>
+      <div class="hero-stat-label">Categories</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AGENT BANNER ═══ -->
+<div class="agent-banner">
+  <div class="container">
+    <div class="agent-banner-box fade-up">
+      <div class="agent-banner-icon">🤖</div>
+      <div class="agent-banner-content">
+        <h3>For AI Agents</h3>
+        <p>Every explainer is available as structured markdown and JSON — feed directly to Claude, ChatGPT, or any agent.</p>
+        <div class="agent-banner-links">
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/llms.txt" target="_blank">llms.txt</a>
+          <a href="https://github.com/imbilawork/know.agent" target="_blank">GitHub repo</a>
+          <a href="https://github.com/imbilawork/know.agent/tree/main/agentapi/data" target="_blank">JSON data</a>
+        </div>
+        <span class="agent-banner-pattern">raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/{id}.md</span>
+      </div>
     </div>
   </div>
 </div>
@@ -509,20 +596,30 @@ footer p {
     <h2 class="fade-up">What we've been <span class="accent">writing about.</span></h2>
     <p class="section-intro fade-up">Each explainer is a standalone deep-dive into an AI technology, framework, or concept — written to be useful, not to sell anything.</p>
 
+    <div class="category-filters fade-up">
+      <button class="cat-pill active" data-filter="all">All <span class="cat-count">{{COUNT}}</span></button>
+      <button class="cat-pill" data-filter="agent-frameworks">🤖 Agent Frameworks <span class="cat-count">3</span></button>
+          <button class="cat-pill" data-filter="agent-skills">🧩 Agent Skills <span class="cat-count">2</span></button>
+          <button class="cat-pill" data-filter="ai-infrastructure">☁️ AI Infrastructure <span class="cat-count">4</span></button>
+          <button class="cat-pill" data-filter="enterprise">🏢 Enterprise <span class="cat-count">2</span></button>
+          <button class="cat-pill" data-filter="creative-ai">🎨 Creative AI <span class="cat-count">2</span></button>
+          <button class="cat-pill" data-filter="benchmarks">📊 Benchmarks <span class="cat-count">1</span></button>
+    </div>
+
     <div class="articles-grid">
 
       <!-- Card: Top Agent Frameworks — Q2 2026 -->
-      <a href="agents2026.html" class="article-card fade-up">
+      <a href="agents2026.html" class="article-card fade-up" data-category="agent-frameworks">
         <div class="card-icon">🤖</div>
         <div class="card-tags">
-          <span class="tag">Agents</span>
-          <span class="tag">Frameworks</span>
-          <span class="tag">Comparison</span>
+          <span class="tag">Agent Frameworks</span>
+          <span class="tag">Explainer</span>
         </div>
         <div class="card-title">Top Agent Frameworks — Q2 2026</div>
         <div class="card-desc">The top 10 autonomous agent frameworks ranked by OpenAI and Gemini, compared side by side. Production depth, architectural paradigms, and where the two models agree — and where they don't.</div>
         <div class="card-meta">
           <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agents2026.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -531,109 +628,17 @@ footer p {
       </a>
 
       <!-- Card: LangChain Explained -->
-      <a href="langchain-explainer.html" class="article-card fade-up">
+      <a href="langchain-explainer.html" class="article-card fade-up" data-category="agent-frameworks">
         <div class="card-icon">🔗</div>
         <div class="card-tags">
-          <span class="tag">LangChain</span>
-          <span class="tag">Framework</span>
-          <span class="tag">Deep Dive</span>
+          <span class="tag">Agent Frameworks</span>
+          <span class="tag">Explainer</span>
         </div>
         <div class="card-title">LangChain Explained</div>
         <div class="card-desc">The framework that makes AI agents buildable, debuggable, and deployable. Five core concepts that handle 90% of use cases, the full ecosystem from library to platform, and an honest decision guide.</div>
         <div class="card-meta">
           <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: llama.cpp Explained -->
-      <a href="llama-cpp-explainer.html" class="article-card fade-up">
-        <div class="card-icon">🦙</div>
-        <div class="card-tags">
-          <span class="tag">llama.cpp</span>
-          <span class="tag">Local AI</span>
-          <span class="tag">Deep Dive</span>
-        </div>
-        <div class="card-title">llama.cpp Explained</div>
-        <div class="card-desc">The open-source C/C++ engine that made running LLMs on your own hardware possible. GGUF quantisation, the Ollama ecosystem, hardware requirements, and when local inference beats the cloud.</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: AI Token Ledger Explained -->
-      <a href="ai-token-ledger-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
-        <div class="card-tags">
-          <span class="tag">AI Token Ledger</span>
-          <span class="tag">an AI Token Ledger</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">AI Token Ledger Explained</div>
-        <div class="card-desc">The emerging system of record for AI work</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: ARC-AGI-3 Explained -->
-      <a href="arc-agi-3-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
-        <div class="card-tags">
-          <span class="tag">ARC-AGI-3</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">ARC-AGI-3 Explained</div>
-        <div class="card-desc">The first interactive reasoning benchmark — and the hardest reality check for AGI claims</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: Claude Code Skills Explained -->
-      <a href="claude-code-skills-explainer.html" class="article-card fade-up">
-        <div class="card-icon">🟠</div>
-        <div class="card-tags">
-          <span class="tag">Claude Code Skills</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">Claude Code Skills Explained</div>
-        <div class="card-desc">Turn your AI coding agent into a specialist. On demand.</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: Cloudflare AI Explained -->
-      <a href="cloudflare-ai-explainer.html" class="article-card fade-up">
-        <div class="card-icon">☁️</div>
-        <div class="card-tags">
-          <span class="tag">Cloudflare AI</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">Cloudflare AI Explained</div>
-        <div class="card-desc">Serverless AI inference, agents, and RAG — running on the network that powers 20% of the internet</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/langchain.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -642,16 +647,17 @@ footer p {
       </a>
 
       <!-- Card: CrewAI Explained -->
-      <a href="crewai-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
+      <a href="crewai-explainer.html" class="article-card fade-up" data-category="agent-frameworks">
+        <div class="card-icon">🤖</div>
         <div class="card-tags">
-          <span class="tag">CrewAI</span>
+          <span class="tag">Agent Frameworks</span>
           <span class="tag">Explainer</span>
         </div>
         <div class="card-title">CrewAI Explained</div>
         <div class="card-desc">The open-source framework for orchestrating multi-agent AI teams</div>
         <div class="card-meta">
           <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/crewai.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -659,92 +665,18 @@ footer p {
         </div>
       </a>
 
-      <!-- Card: NVIDIA DLSS 5 Explained -->
-      <a href="dlss5-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
+      <!-- Card: Claude Code Skills Explained -->
+      <a href="claude-code-skills-explainer.html" class="article-card fade-up" data-category="agent-skills">
+        <div class="card-icon">🧩</div>
         <div class="card-tags">
-          <span class="tag">NVIDIA DLSS 5</span>
-          <span class="tag">DLSS 5</span>
+          <span class="tag">Agent Skills</span>
           <span class="tag">Explainer</span>
         </div>
-        <div class="card-title">NVIDIA DLSS 5 Explained</div>
-        <div class="card-desc">Neural rendering for visual fidelity — and the firestorm it ignited</div>
+        <div class="card-title">Claude Code Skills Explained</div>
+        <div class="card-desc">Turn your AI coding agent into a specialist. On demand.</div>
         <div class="card-meta">
           <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: ElevenCreative Explained -->
-      <a href="elevencreative-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
-        <div class="card-tags">
-          <span class="tag">ElevenCreative</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">ElevenCreative Explained</div>
-        <div class="card-desc">ElevenLabs' all-in-one AI workspace for speech, music, video, and global localisation</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: LiteParse Explained -->
-      <a href="liteparse-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
-        <div class="card-tags">
-          <span class="tag">LiteParse</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">LiteParse Explained</div>
-        <div class="card-desc">Fast, local document parsing for AI agents</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: NVIDIA NemoClaw Explained -->
-      <a href="nemoclaw-explainer.html" class="article-card fade-up">
-        <div class="card-icon">📄</div>
-        <div class="card-tags">
-          <span class="tag">NVIDIA NemoClaw</span>
-          <span class="tag">NemoClaw</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">NVIDIA NemoClaw Explained</div>
-        <div class="card-desc">Secure, sandboxed infrastructure for always-on AI agents</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
-          <span class="card-read">
-            Read
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </span>
-        </div>
-      </a>
-
-      <!-- Card: Microsoft Teams as an AI Agent Channel -->
-      <a href="teams-agent-channel-explainer.html" class="article-card fade-up">
-        <div class="card-icon">🤖</div>
-        <div class="card-tags">
-          <span class="tag">Microsoft Teams as an AI Agent Channel</span>
-          <span class="tag">an Agent Channel in Teams</span>
-          <span class="tag">Explainer</span>
-        </div>
-        <div class="card-title">Microsoft Teams as an AI Agent Channel</div>
-        <div class="card-desc">How to build a production-grade AI agent inside Microsoft Teams — architecture, auth, Adaptive Cards, and the gotchas nobody warns you about</div>
-        <div class="card-meta">
-          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/claude-code-skills.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -753,8 +685,8 @@ footer p {
       </a>
 
       <!-- Card: Agent Skills Explained -->
-      <a href="agent-skills-explainer.html" class="article-card fade-up">
-        <div class="card-icon">🤖</div>
+      <a href="agent-skills-explainer.html" class="article-card fade-up" data-category="agent-skills">
+        <div class="card-icon">🧩</div>
         <div class="card-tags">
           <span class="tag">Agent Skills</span>
           <span class="tag">Explainer</span>
@@ -763,6 +695,178 @@ footer p {
         <div class="card-desc">The open standard for teaching AI agents reusable, modular capabilities</div>
         <div class="card-meta">
           <span class="card-date">Dec 2025</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/agent-skills.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: llama.cpp Explained -->
+      <a href="llama-cpp-explainer.html" class="article-card fade-up" data-category="ai-infrastructure">
+        <div class="card-icon">🦙</div>
+        <div class="card-tags">
+          <span class="tag">AI Infrastructure</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">llama.cpp Explained</div>
+        <div class="card-desc">The open-source C/C++ engine that made running LLMs on your own hardware possible. GGUF quantisation, the Ollama ecosystem, hardware requirements, and when local inference beats the cloud.</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/llama-cpp.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: AI Token Ledger Explained -->
+      <a href="ai-token-ledger-explainer.html" class="article-card fade-up" data-category="ai-infrastructure">
+        <div class="card-icon">☁️</div>
+        <div class="card-tags">
+          <span class="tag">AI Infrastructure</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">AI Token Ledger Explained</div>
+        <div class="card-desc">The emerging system of record for AI work</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/ai-token-ledger.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: Cloudflare AI Explained -->
+      <a href="cloudflare-ai-explainer.html" class="article-card fade-up" data-category="ai-infrastructure">
+        <div class="card-icon">☁️</div>
+        <div class="card-tags">
+          <span class="tag">AI Infrastructure</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">Cloudflare AI Explained</div>
+        <div class="card-desc">Serverless AI inference, agents, and RAG — running on the network that powers 20% of the internet</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/cloudflare-ai.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: LiteParse Explained -->
+      <a href="liteparse-explainer.html" class="article-card fade-up" data-category="ai-infrastructure">
+        <div class="card-icon">☁️</div>
+        <div class="card-tags">
+          <span class="tag">AI Infrastructure</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">LiteParse Explained</div>
+        <div class="card-desc">Fast, local document parsing for AI agents</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/liteparse.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: NVIDIA NemoClaw Explained -->
+      <a href="nemoclaw-explainer.html" class="article-card fade-up" data-category="enterprise">
+        <div class="card-icon">🏢</div>
+        <div class="card-tags">
+          <span class="tag">Enterprise</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">NVIDIA NemoClaw Explained</div>
+        <div class="card-desc">Secure, sandboxed infrastructure for always-on AI agents</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/nemoclaw.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: Microsoft Teams as an AI Agent Channel -->
+      <a href="teams-agent-channel-explainer.html" class="article-card fade-up" data-category="enterprise">
+        <div class="card-icon">🏢</div>
+        <div class="card-tags">
+          <span class="tag">Enterprise</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">Microsoft Teams as an AI Agent Channel</div>
+        <div class="card-desc">How to build a production-grade AI agent inside Microsoft Teams — architecture, auth, Adaptive Cards, and the gotchas nobody warns you about</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/teams-agent-channel.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: NVIDIA DLSS 5 Explained -->
+      <a href="dlss5-explainer.html" class="article-card fade-up" data-category="creative-ai">
+        <div class="card-icon">🎨</div>
+        <div class="card-tags">
+          <span class="tag">Creative AI</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">NVIDIA DLSS 5 Explained</div>
+        <div class="card-desc">Neural rendering for visual fidelity — and the firestorm it ignited</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/dlss5.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: ElevenCreative Explained -->
+      <a href="elevencreative-explainer.html" class="article-card fade-up" data-category="creative-ai">
+        <div class="card-icon">🎨</div>
+        <div class="card-tags">
+          <span class="tag">Creative AI</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">ElevenCreative Explained</div>
+        <div class="card-desc">ElevenLabs' all-in-one AI workspace for speech, music, video, and global localisation</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/elevencreative.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
+          <span class="card-read">
+            Read
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Card: ARC-AGI-3 Explained -->
+      <a href="arc-agi-3-explainer.html" class="article-card fade-up" data-category="benchmarks">
+        <div class="card-icon">📊</div>
+        <div class="card-tags">
+          <span class="tag">Benchmarks</span>
+          <span class="tag">Explainer</span>
+        </div>
+        <div class="card-title">ARC-AGI-3 Explained</div>
+        <div class="card-desc">The first interactive reasoning benchmark — and the hardest reality check for AGI claims</div>
+        <div class="card-meta">
+          <span class="card-date">Mar 2026</span>
+          <a href="https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/arc-agi-3.md" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -779,10 +883,8 @@ footer p {
     <div class="section-label fade-up">02 · About This Site</div>
     <h2 class="fade-up">What <span class="accent">Know</span> is for.</h2>
     <div class="about-box fade-up">
-      <p><strong>Know</strong> is Imbila.AI's public knowledge base — independent, fact-checked explainers on AI technologies and frameworks, built for humans and agents alike. Share a page with a colleague instead of a 40-page whitepaper, or copy the agent-friendly version straight into Claude Code, ChatGPT, or any AI assistant as instant reference material.</p>
-      <p>Every explainer is available as structured markdown and JSON via our <a href="https://github.com/imbilawork/know.agent" style="color: var(--honey-deep); font-weight: 600;">open agent API</a> — no Cloudflare blocking, no HTML parsing. These are reference documents, not marketing. Accurate, practical, and honest about trade-offs.</p>
-      <p>Want to see these technologies in action? <a href="https://demo.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Try the live demos ↗</a></p>
-      <p>If there's a topic you'd like covered, <a href="https://platform.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">get in touch ↗</a></p>
+      <p><strong>Know</strong> is Imbila.AI's public knowledge base — independent, fact-checked explainers on AI technologies and frameworks. Reference documents, not marketing. Accurate, practical, and honest about trade-offs.</p>
+      <p><a href="https://platform.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Sign up free</a> to read full guides, track your learning, and get R10 in AI demo credits. Want to see these technologies in action? <a href="https://demo.imbila.ai" style="color: var(--honey-deep); font-weight: 600;">Try the live demos ↗</a></p>
     </div>
   </div>
 </section>
@@ -821,6 +923,22 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+/* ─── Category Filter ─── */
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.article-card').forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
 </script>
 <script src="https://platform.imbila.ai/auth-widget.js"></script>
 <script>

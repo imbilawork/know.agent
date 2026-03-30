@@ -5,7 +5,9 @@
     "title": "Top Agent Frameworks — Q2 2026",
     "description": "The top 10 autonomous agent frameworks ranked by OpenAI and Gemini, compared side by side. Production depth, architectural paradigms, and where the two models agree — and where they don't.",
     "icon": "🤖",
-    "tags": ["Agents", "Frameworks", "Comparison"],
+    "tags": ["Agent Frameworks", "Explainer"],
+    "category": "agent-frameworks",
+    "agentId": "agents2026",
     "date": "2026-03"
   },
   {
@@ -14,7 +16,9 @@
     "title": "LangChain Explained",
     "description": "The framework that makes AI agents buildable, debuggable, and deployable. Five core concepts that handle 90% of use cases, the full ecosystem from library to platform, and an honest decision guide.",
     "icon": "🔗",
-    "tags": ["LangChain", "Framework", "Deep Dive"],
+    "tags": ["Agent Frameworks", "Explainer"],
+    "category": "agent-frameworks",
+    "agentId": "langchain",
     "date": "2026-03"
   },
   {
@@ -23,7 +27,9 @@
     "title": "llama.cpp Explained",
     "description": "The open-source C/C++ engine that made running LLMs on your own hardware possible. GGUF quantisation, the Ollama ecosystem, hardware requirements, and when local inference beats the cloud.",
     "icon": "🦙",
-    "tags": ["llama.cpp", "Local AI", "Deep Dive"],
+    "tags": ["AI Infrastructure", "Explainer"],
+    "category": "ai-infrastructure",
+    "agentId": "llama-cpp",
     "date": "2026-03"
   }
 ]

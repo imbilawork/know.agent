@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-agent-id="elevencreative">
+<html lang="en" data-theme="light" data-category="creative-ai" data-agent-id="elevencreative">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -998,5 +998,19 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 </script>
 
+
+<script src="https://platform.imbila.ai/auth-widget.js"></script>
+<script>
+(async function() {
+  if (!window.ImbilaAuth) return;
+  var authed = await ImbilaAuth.isAuthenticated();
+  if (!authed) ImbilaAuth.showReadingGate('.page', 2);
+  ImbilaAuth.injectAuthUI('nav');
+  ImbilaAuth.trackPageView(null, {
+    category: document.documentElement.dataset.category,
+    agentId: document.documentElement.dataset.agentId
+  });
+})();
+</script>
 </body>
 </html>

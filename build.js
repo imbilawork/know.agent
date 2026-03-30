@@ -31,6 +31,34 @@ const IGNORE = new Set([
   'index.template.html'
 ]);
 
+// ─── Category definitions ───
+const CATEGORIES = {
+  'agent-frameworks':  { label: 'Agent Frameworks',  icon: '🤖', order: 1 },
+  'agent-skills':      { label: 'Agent Skills',      icon: '🧩', order: 2 },
+  'ai-infrastructure': { label: 'AI Infrastructure', icon: '☁️', order: 3 },
+  'enterprise':        { label: 'Enterprise',        icon: '🏢', order: 4 },
+  'creative-ai':       { label: 'Creative AI',       icon: '🎨', order: 5 },
+  'benchmarks':        { label: 'Benchmarks',        icon: '📊', order: 6 },
+};
+
+// ─── Slug → category mapping ───
+const CATEGORY_MAP = {
+  'crewai-explainer':              'agent-frameworks',
+  'langchain-explainer':           'agent-frameworks',
+  'agents2026':                    'agent-frameworks',
+  'agent-skills-explainer':        'agent-skills',
+  'claude-code-skills-explainer':  'agent-skills',
+  'cloudflare-ai-explainer':       'ai-infrastructure',
+  'llama-cpp-explainer':           'ai-infrastructure',
+  'liteparse-explainer':           'ai-infrastructure',
+  'ai-token-ledger-explainer':     'ai-infrastructure',
+  'teams-agent-channel-explainer': 'enterprise',
+  'nemoclaw-explainer':            'enterprise',
+  'elevencreative-explainer':      'creative-ai',
+  'dlss5-explainer':               'creative-ai',
+  'arc-agi-3-explainer':           'benchmarks',
+};
+
 // ─── Read inputs ───
 const template = fs.readFileSync(TEMPLATE, 'utf-8');
 let manifest = [];
@@ -56,6 +84,27 @@ for (const file of htmlFiles) {
   }
 }
 
+// ─── Ensure all articles have category + agentId ───
+for (const article of manifest) {
+  const slug = article.slug || article.file.replace('.html', '');
+  article.slug = slug;
+
+  // Category: from article, then CATEGORY_MAP, then 'general'
+  if (!article.category) {
+    article.category = CATEGORY_MAP[slug] || 'general';
+  }
+
+  // Agent ID: from article, then extract from HTML data-agent-id
+  if (!article.agentId) {
+    const filePath = path.join(ROOT, article.file);
+    if (fs.existsSync(filePath)) {
+      const html = fs.readFileSync(filePath, 'utf-8');
+      const agentMatch = html.match(/data-agent-id="([^"]+)"/);
+      if (agentMatch) article.agentId = agentMatch[1];
+    }
+  }
+}
+
 // ─── Extract metadata from an HTML file ───
 function extractMetadata(file, html) {
   // Title: extract from <title> tag, strip " — An Imbila.AI Explainer" suffix
@@ -72,41 +121,28 @@ function extractMetadata(file, html) {
     ? heroSubMatch[1].trim()
     : `An Imbila.AI explainer on ${title}.`;
 
-  // Tags: derive from the title subject + first "What Is" section label
+  // Tags: derive from category label + "Explainer"
+  const slug = file.replace('.html', '');
+  const cat = CATEGORY_MAP[slug];
+  const catLabel = cat ? CATEGORIES[cat]?.label : null;
   const tags = [];
-
-  // Primary tag: the main subject from the title (e.g. "Claude Code Skills" from "Claude Code Skills Explained")
-  const subject = title
-    .replace(/\s+Explained$/i, '')
-    .replace(/^Top\s+/i, '')
-    .replace(/\s*[—–-]\s*Q\d+\s+\d{4}$/i, '')
-    .trim();
-  if (subject) tags.push(subject);
-
-  // Secondary tag: extract topic from "01 · What Is [Topic]" section if present
-  const whatMatch = html.match(/class="section-label">\d+\s*·\s*What (?:Is|Are)\s+([^<]+)/i);
-  if (whatMatch) {
-    const topic = whatMatch[1].trim();
-    if (topic.toLowerCase() !== subject.toLowerCase()) {
-      tags.push(topic);
-    }
-  }
-
+  if (catLabel) tags.push(catLabel);
   tags.push('Explainer');
 
-  // Slug from filename
-  const slug = file.replace('.html', '');
-
-  // Icon: pick based on common keywords, default to 📄
-  const icon = pickIcon(title, slug);
+  // Icon: from category, or keyword-based fallback
+  const icon = cat ? CATEGORIES[cat].icon : pickIcon(title, slug);
 
   // Date: try to find in the HTML, fall back to file modification time
   const date = extractDate(html, path.join(ROOT, file));
 
-  return { slug, file, title, description, icon, tags, date };
+  // Agent ID
+  const agentMatch = html.match(/data-agent-id="([^"]+)"/);
+  const agentId = agentMatch ? agentMatch[1] : null;
+
+  return { slug, file, title, description, icon, tags, date, category: CATEGORY_MAP[slug] || 'general', agentId };
 }
 
-// ─── Pick an icon based on keywords ───
+// ─── Pick an icon based on keywords (fallback for uncategorised articles) ───
 function pickIcon(title, slug) {
   const t = (title + ' ' + slug).toLowerCase();
   if (t.includes('agent')) return '🤖';
@@ -114,7 +150,6 @@ function pickIcon(title, slug) {
   if (t.includes('llama') || t.includes('gguf')) return '🦙';
   if (t.includes('claude')) return '🟠';
   if (t.includes('openai') || t.includes('gpt')) return '💚';
-  if (t.includes('python') || t.includes('code')) return '🐍';
   if (t.includes('skill')) return '🧩';
   if (t.includes('rag') || t.includes('retrieval')) return '🔎';
   if (t.includes('vector') || t.includes('embed')) return '📐';
@@ -126,14 +161,11 @@ function pickIcon(title, slug) {
 
 // ─── Extract date from HTML or fall back to file mtime ───
 function extractDate(html, filePath) {
-  // Look for patterns like "March 2026", "Mar 2026", "2026-03"
   const dateMatch = html.match(/(?:validated|updated|published)\s+(\w+\s+\d{4})/i);
   if (dateMatch) {
     const parsed = parseMonthYear(dateMatch[1]);
     if (parsed) return parsed;
   }
-
-  // Fall back to file modification time
   const stat = fs.statSync(filePath);
   const d = stat.mtime;
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -170,9 +202,18 @@ function renderCard(article) {
     .map(t => `          <span class="tag">${t}</span>`)
     .join('\n');
 
+  const catAttr = article.category ? ` data-category="${article.category}"` : '';
+
+  // Agent-ready badge (links to raw markdown on GitHub)
+  let agentBadge = '';
+  if (article.agentId) {
+    const mdUrl = `https://raw.githubusercontent.com/imbilawork/know.agent/main/agentapi/content/${article.agentId}.md`;
+    agentBadge = `<a href="${mdUrl}" class="agent-badge" title="Agent-ready markdown" onclick="event.stopPropagation()">🤖 MD</a>`;
+  }
+
   return `
       <!-- Card: ${article.title} -->
-      <a href="${article.file}" class="article-card fade-up">
+      <a href="${article.file}" class="article-card fade-up"${catAttr}>
         <div class="card-icon">${article.icon}</div>
         <div class="card-tags">
 ${tags}
@@ -181,6 +222,7 @@ ${tags}
         <div class="card-desc">${article.description}</div>
         <div class="card-meta">
           <span class="card-date">${formatDate(article.date)}</span>
+          ${agentBadge}
           <span class="card-read">
             Read
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -189,18 +231,40 @@ ${tags}
       </a>`;
 }
 
-// ─── Sort articles by date descending (newest first) ───
-manifest.sort((a, b) => b.date.localeCompare(a.date));
+// ─── Generate category filter pills ───
+function renderCategoryFilters() {
+  // Only include categories that have articles
+  const usedCategories = new Set(manifest.map(a => a.category).filter(c => c && CATEGORIES[c]));
+  const sorted = [...usedCategories].sort((a, b) => (CATEGORIES[a]?.order || 99) - (CATEGORIES[b]?.order || 99));
+
+  return sorted.map(catId => {
+    const cat = CATEGORIES[catId];
+    const count = manifest.filter(a => a.category === catId).length;
+    return `<button class="cat-pill" data-filter="${catId}">${cat.icon} ${cat.label} <span class="cat-count">${count}</span></button>`;
+  }).join('\n          ');
+}
+
+// ─── Sort articles: by category order, then by date within category ───
+manifest.sort((a, b) => {
+  const catA = CATEGORIES[a.category]?.order || 99;
+  const catB = CATEGORIES[b.category]?.order || 99;
+  if (catA !== catB) return catA - catB;
+  return b.date.localeCompare(a.date);
+});
 
 // ─── Build ───
 const cardsHtml = manifest.map(renderCard).join('\n');
+const filtersHtml = renderCategoryFilters();
 const count = manifest.length;
+const categoryCount = new Set(manifest.map(a => a.category).filter(c => c && CATEGORIES[c])).size;
 
 let output = template
   .replace('{{ARTICLES}}', cardsHtml)
-  .replace('{{COUNT}}', count.toString());
+  .replace('{{COUNT}}', count.toString())
+  .replace('{{CATEGORY_FILTERS}}', filtersHtml)
+  .replace('{{CATEGORY_COUNT}}', categoryCount.toString());
 
 fs.writeFileSync(OUTPUT, output, 'utf-8');
 
-console.log(`\n✅ Built index.html with ${count} articles`);
-manifest.forEach(a => console.log(`   · ${a.title} (${a.file})`));
+console.log(`\n✅ Built index.html with ${count} articles across ${categoryCount} categories`);
+manifest.forEach(a => console.log(`   · ${a.title} (${a.file}) [${a.category}]`));

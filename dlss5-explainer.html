@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-agent-id="dlss5">
+<html lang="en" data-theme="light" data-category="creative-ai" data-agent-id="dlss5">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -954,9 +954,12 @@ function copyForAgent() {
 (async function() {
   if (!window.ImbilaAuth) return;
   const authed = await ImbilaAuth.isAuthenticated();
-  if (!authed) ImbilaAuth.showReadingGate('.page', 3);
+  if (!authed) ImbilaAuth.showReadingGate('.page', 2);
   ImbilaAuth.injectAuthUI('nav');
-  ImbilaAuth.trackPageView();
+  ImbilaAuth.trackPageView(null, {
+    category: document.documentElement.dataset.category,
+    agentId: document.documentElement.dataset.agentId
+  });
 })();
 </script>
 </body>
